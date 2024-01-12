@@ -1,0 +1,89 @@
+<ion-header dir="{{languageService.langDir}}">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'check_out'|translate}}</ion-title>
+        <ion-buttons slot="start">
+            <ion-button color="light" (click)="onDismiss()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class='ion-content'dir="{{languageService.langDir}}" >
+    <ion-grid class="custom-cover">
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card">
+                <ion-text class="checkout-sub-header-sub-header">
+                    <h3>
+                        {{'totals'|translate}}
+                    </h3>
+                </ion-text>
+                <ion-list class="ion-no-margin">
+                    <ion-item-group>
+                        <ion-item lines="none" class="full-width">
+                            <ion-label>{{'sub_total'|translate}}</ion-label>
+                            <ion-text>${{ cartData.TotalAmountDue | number : '.2'}}</ion-text>
+                        </ion-item>
+
+                        <ion-item lines="none" class="full-width" *ngIf="ProcessingFee >= 0 && cartData.TotalAmountDue > 0">
+                            <ion-label  class="custom-wrap displayElement" [ngClass]="{'marginLabel': languageService.langDir === 'rtl'}">
+                                {{ (PaymentType == 'ACH' ? 'transaction_Fee' : 'internet_con_fee')|translate }}
+                                <p><ion-icon color="primary" name="help-circle" class="information_circle information-font" (click)="onInfo()">
+                                </ion-icon></p>
+                            </ion-label>
+                            <ion-text>${{ ProcessingFee | number : '.2'}}</ion-text>
+                        </ion-item>
+
+                        <ion-item lines="none" class="full-width" *ngIf="ProcessingFee >= 0">
+                            <ion-label>{{'total_amount_due'|translate}}</ion-label>
+                            <ion-text>${{ cartData.TotalAmountDue + ProcessingFee | number : '.2'}}</ion-text>
+                        </ion-item>
+
+                        <ion-item lines="none" class="ion-margin-top" *ngIf="cartData.TotalAmountDue > 0">
+                            <ion-checkbox class="custom-checkboxs ion-margin-end" aria-label="agreeTermChecked" color="secondary"
+                                checked="agreeTermChecked" 
+                                [(ngModel)]="agreeTermChecked" 
+                                [disabled]="">
+                            </ion-checkbox>
+                            <ion-label class="ion-text-wrap">{{'checking_checkbox'|translate}},
+                                <a (click)="showTerms()" class="terms-agree">{{'Agree_TC_Txt'|translate}}</a>
+                            </ion-label>
+                        </ion-item>
+
+                        <ion-item lines="none" class="ion-margin-top" *ngIf="(cartData.TotalAmountDue + ProcessingFee > 999)">
+                            <ion-checkbox aria-label="cartTotalChecked" color="secondary" checked="cartTotalChecked" [(ngModel)]="cartTotalChecked"></ion-checkbox>
+                            <ion-label class="ion-text-wrap">{{'cart_total'|translate}}.
+                                <ion-button class="help-alert" fill="clear" (click)="helpAlert()">
+                                    <ion-icon name="md-help-circle" slot="icon-only"></ion-icon>
+                                </ion-button>
+                            </ion-label>
+                        </ion-item>
+                    </ion-item-group>
+                </ion-list>
+
+                <ion-row class="ion-margin-top" *ngIf="!isGuest">
+                    <ion-button [disabled]="!agreeTermChecked || ((cartData.TotalAmountDue + ProcessingFee > 999) ? !cartTotalChecked : false)" class="full-width" color="secondary" (click)="onMakePayemnt()">
+                        <ion-text color="light">{{'make_payment'|translate}}</ion-text>
+                    </ion-button>
+                </ion-row>
+
+                <ion-row class="ion-margin-top" *ngIf="isGuest">
+                    <ion-button [disabled]="!agreeTermChecked || ((cartData.TotalAmountDue + ProcessingFee > 999) ? !cartTotalChecked : false)" class="full-width" color="secondary" (click)="guestPayemnt()">
+                        <ion-text color="light">{{'make_payment'|translate}}</ion-text>
+                    </ion-button>
+                </ion-row>
+
+
+
+
+                <!-- <ion-col size="12">
+                    <ion-item lines="none">
+                        <ion-checkbox *ngIf="cardType==1" checked="card.Default" name="Default" [(ngModel)]="card.Default"></ion-checkbox>
+                        <ion-label class="ion-text-wrap terms-agree">{{'default_terms_mandatory' | translate}}.</ion-label>
+                    </ion-item>
+                </ion-col> -->
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

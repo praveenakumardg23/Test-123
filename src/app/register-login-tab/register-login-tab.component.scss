@@ -1,0 +1,36 @@
+.imgPclass
+{
+    font-size: x-small;
+    color: white;
+    padding: 2px;
+    margin: 0px;
+}
+.nopadding
+{
+    padding: 0px;
+    
+}
+.langBtn1{
+    border: 1px solid #f4f5f8;
+    border-radius: 4px !important;
+    height: 30px;
+    min-height: 2em;
+    /* border-radius: 5px; */
+    // margin-top: 17px;
+}
+.langBtn
+{
+    height: 30px;
+    /* border-radius: 5px; */
+    --border-radius: 4px !important;
+    // margin-top: 17px;
+    min-height: 2em;
+}
+.popover-content {
+    top: 15%;
+    left: 40%;
+    transform-origin: left top;
+}
+.langBtn::part(native) {
+    padding: 0px 10px !important;
+}

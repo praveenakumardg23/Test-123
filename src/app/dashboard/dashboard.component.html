@@ -1,0 +1,125 @@
+<ion-menu dir="{{languageService.langDir}}" menuId="first" id="authenticated" contentId="content1" side="end" swipeGesture="false" (ionDidOpen)="menuOpened()">
+    <ion-header>
+        <ion-toolbar   style="color:#fff;">
+            <ion-title>{{'menu' | translate}}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content >
+        <ion-menu-toggle auto-hide="true">
+            <ion-list class="custom-margin">
+                <ion-item [ngClass]="{'mainmanuSelected' : activemenu =='Home'}" lines="none" tappable (click)="redirectTo('Home')">
+                    <ion-icon   name="home" slot="start"  ></ion-icon>
+                    <ion-label>{{'dashboard' | translate}}</ion-label>
+                </ion-item>
+                <p class="sub-header">{{'notifications' | translate}}</p>
+                <ion-item lines="none" [ngClass]="{'mainmanuSelected' : activemenu =='Messages'}" tappable (click)="redirectTo('Messages')" menuClose="left">
+                    <ion-icon name="chatbubbles" slot="start"  ></ion-icon>
+                    <ion-label>{{'messages' | translate}}
+                        <ng-container *ngIf="messageCount > 0">
+                            <span class="message-space">(</span>
+                            <span class="message-count">{{messageCount}}</span>
+                            <span>)</span>
+                        </ng-container>
+                    </ion-label>
+                </ion-item>
+                <ion-item dir="{{languageService.langDir}}" lines="none" tappable [ngClass]="{'mainmanuSelected' : activemenu =='Notifications'}" (click)="redirectTo('Notifications')" [disabled]="userPatronList?.length == 0">
+                    <ion-icon name="notifications" slot="start"  ></ion-icon>
+                    <ion-label>{{'notifications' | translate}}</ion-label>
+                </ion-item>
+                <p class="sub-header">{{'account' | translate}}</p>
+                <ion-item dir="{{languageService.langDir}}" lines="none" [ngClass]="{'mainmanuSelected' : activemenu =='YourProfile'}" tappable (click)="redirectTo('YourProfile')">
+                    <ion-icon name="person-circle-outline" slot="start"  ></ion-icon>
+                    <ion-label>{{'your_profile' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable [ngClass]="{'mainmanuSelected' : activemenu =='SecureAccount'}" (click)="redirectTo('SecureAccount')">
+                    <ion-icon name="lock-closed" slot="start"  ></ion-icon>
+                    <ion-label>{{'secure_account' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable [ngClass]="{'mainmanuSelected' : activemenu =='YourStudents'}" (click)="redirectTo('YourStudents')">
+                    <ion-icon name="people-circle" slot="start"  ></ion-icon>
+                    <ion-label>{{'your_student' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" [ngClass]="{'mainmanuSelected' : activemenu =='PaymentMethods'}" tappable (click)="redirectTo('PaymentMethods')">
+                    <ion-icon name="card" slot="start"  ></ion-icon>
+                    <ion-label>{{'paymnet_methods' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" [ngClass]="{'mainmanuSelected' : activemenu =='AutoReplenishment'}" tappable (click)="autoReplenishment()" [disabled]="userPatronList?.length == 0 || activePatronsFlag || (!districtFeaturelist?.Lunch && !districtFeaturelist?.SourceAccount)">
+                    <ion-icon name="sync" slot="start"  ></ion-icon>
+                    <ion-label>{{'auto_replenishment' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable [ngClass]="{'mainmanuSelected' : activemenu =='MealRestrictions'}" (click)="redirectTo('MealRestrictions')" [disabled]="!districtFeaturelist?.Lunch || !districtFeaturelist?.QuikLunchRestriction || userPatronList?.length == 0 || activePatronsFlag">
+                    <ion-icon name="restaurant" slot="start"  ></ion-icon>
+                    <ion-label>{{'meal_restriction' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable [ngClass]="{'mainmanuSelected' : activemenu =='digitalid'}" (click)="redirectTo('digitalid')" [disabled]="userPatronList?.length == 0 || activePatronsFlag">
+                    <ion-icon name="barcode-outline" slot="start"  ></ion-icon>
+                    <ion-label>{{'digital_id' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable (click)="showAlert()" *ngIf="!(userPatronList?.length == 0)&& districtFeaturelist?.PreOrder" [disabled]="activePatronsFlag">
+                    <ion-icon name="pricetags" slot="start"  ></ion-icon>
+                    <ion-label>{{'pre_order_meals' | translate}}</ion-label>
+                </ion-item>
+                <p class="sub-header">{{'History'|translate}}</p>
+                <ion-item lines="none" [ngClass]="{'mainmanuSelected' : activemenu =='PaymentHistory'}" tappable (click)="redirectTo('PaymentHistory')" [disabled]="userPatronList?.length == 0">
+                    <ion-icon name="person-circle-outline" slot="start"  ></ion-icon>
+                    <ion-label>{{'payment_history' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable (click)="redirectTo('Reports')" [ngClass]="{'mainmanuSelected' : activemenu =='Reports'}" [disabled]="userPatronList?.length == 0">
+                    <ion-icon name="document" slot="start"  ></ion-icon>
+                    <ion-label>{{'reports' | translate}}</ion-label>
+                </ion-item>
+                <p class="sub-header">{{'school_district' | translate}}</p>
+                <ion-item lines="none" tappable (click)="openQuikappsUrl('freeReducedMealApplication')" [disabled]="!districtFeaturelist?.QuikApps.HasPortalLicense || userInfo?.QuikApps.PatronsInVerification || userPatronList?.length == 0">
+                    <ion-icon name="clipboard" slot="start"  ></ion-icon>
+                    <ion-label  *ngIf="!IsDefaultMenuName" class="custom-text-wrap" >
+                        {{quikAppsMenuName}}
+                    </ion-label>
+                    <ion-label *ngIf="IsDefaultMenuName" class="custom-text-wrap" >
+                        {{'meal_applications' | translate}}
+                    </ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable (click)="openQuikappsUrl('shareBenefits')" [disabled]="(!districtFeaturelist?.QuikApps.HasPortalLicense) || ((districtFeaturelist?.QuikApps.HasPortalLicense) && (!userInfo?.QuikApps.HasApplicationsOrDC)) || (userPatronList?.length == 0) || (!userInfo?.QuikApps.HasDisclosures)">
+                    <ion-icon name="share" slot="start"  ></ion-icon>
+                    <ion-label class="custom-text-wrap">
+                        {{'share_benefits' | translate}}
+                    </ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable (click)="openQuikappsUrl('viewCompletedApplication')" [disabled]="(!districtFeaturelist?.QuikApps.HasPortalLicense) || ((districtFeaturelist?.QuikApps.HasPortalLicense) && (!userInfo?.QuikApps.HasSignedApplications)) || (userPatronList?.length == 0)">
+                    <ion-icon name="checkmark-circle" slot="start"  ></ion-icon>
+                    <ion-label class="custom-text-wrap">
+                        {{'view_app' | translate}}
+                    </ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable (click)="openUrl()">
+                    <ion-icon name="calendar" slot="start"  ></ion-icon>
+                    <ion-label>{{'school_event' | translate}}</ion-label>
+                </ion-item>
+                <p class="sub-header">{{'info' | translate}}</p>
+                <ion-item lines="none" tappable (click)="redirectTo('Help')">
+                    <ion-icon name="help-circle" slot="start"  ></ion-icon>
+                    <ion-label>{{'help' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable (click)="redirectTo('Privacy')">
+                    <ion-icon name="lock-closed" slot="start"  ></ion-icon>
+                    <ion-label>{{'privacy' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable (click)="redirectTo('Terms')">
+                    <ion-icon name="newspaper" slot="start"  ></ion-icon>
+                    <ion-label>{{'termsnconditions' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable (click)="redirectTo('RateOurApp')">
+                    <ion-icon name="star" slot="start"  ></ion-icon>
+                    <ion-label>{{'Rate Our App' | translate}}</ion-label>
+                </ion-item>
+                <ion-item lines="none" tappable (click)="redirectTo('logout')">
+                    <!-- <ion-icon name="log-out" slot="start"  ></ion-icon> -->
+                    <ion-icon  slot="start"  name="log-out-outline"></ion-icon>
+                    <ion-label>{{'logout' | translate}}</ion-label>
+                </ion-item>
+                <p class="version">{{'version' | translate}}: {{appversion}}</p>
+            </ion-list>
+        </ion-menu-toggle>
+    </ion-content>
+</ion-menu>
+<ion-router-outlet id="content1" main></ion-router-outlet>
+<!-- <ion-router-outlet></ion-router-outlet> -->

@@ -1,0 +1,344 @@
+<ion-header  dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'fees' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <!-- <ion-back-button icon="home" text="" defaultHref="/dashboard/home"></ion-back-button> -->
+            <ion-button (click)="onDisplayLang()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="primary">
+            <ion-button (click)="onGotoCart()" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover">
+        <form #f="ngForm" autocomplete="off">
+            <ion-row class="main-row">
+                <ion-col size="12" class="ps-card">
+
+                    <div class="container">
+                        <div class="scroll" scrollX="true" #widgetsContent>
+                            <div *ngFor="let patron of patrons" style="text-align: center;margin: auto;" tappable (click)="onSelectedStudent(patron)">
+                                <ion-avatar [ngClass]="{'patron-active' : IntPatronId == patron.IntPatronId }" style="padding: 2px;height: 60px;width: 60px;margin: auto;margin-bottom: 8px;margin-left: 20px;margin-right: 20px;border: 1px solid #ccc;">
+                                    <!-- <img src="assets/images/individual-1.jpg" *ngIf="patron.PictureData == 'allStudentPicture'"> -->
+                                    <img src="../../../assets/icon/all_stud.svg" class="all-student-icon" *ngIf="patron.PictureData == 'allStudentPicture'">
+                                    <img *ngIf="patron.PictureData != 'allStudentPicture' && patron.PictureData != null && patron.PictureData != ''" src="data:image/png;base64,{{patron.PictureData}}">
+                                </ion-avatar>
+                                <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }" style="margin-top: 2px;display: block;color: #757575;">{{patron.FirstName}}
+                                </ion-label>
+                                <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }" style="margin-top: 2px;color:#757575">{{patron.LastName}}</ion-label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ion-item class="ion-margin-top">
+                        <!-- <ion-label position="floating">{{'fees' | translate}}</ion-label> -->
+                        <ion-select label="{{'fees' | translate}}" label-placement="floating" class="fee-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" name="feeTypes" [(ngModel)]="selectedFeeType" (ngModelChange)="onSelectedTypeChange()">
+                            <!-- <ion-select-option value="0" [disabled]="(selectedPatronData?.type == 'individual') ? !Active : false">{{'all_fees' | translate}}</ion-select-option>
+                            <ion-select-option value="1">{{'assigned_fees' | translate}}</ion-select-option>
+                            <ion-select-option value="2" [disabled]="(selectedPatronData?.type == 'individual') ? !Active : false">{{'optional_fees' | translate}}</ion-select-option>
+                            <ion-select-option value="5" [disabled]="(selectedPatronData?.type == 'individual') ? !Active : false">{{'scheduled_fees' | translate}}</ion-select-option>
+                            <ion-select-option value="3" [disabled]="(selectedPatronData?.type == 'individual') ? !Active : false">{{'variable_fees' | translate}}</ion-select-option>
+                            <ion-select-option value="4" [disabled]="(selectedPatronData?.type == 'individual') ? !Active : false">{{'spot_fees' | translate}}</ion-select-option>
+                            <ion-select-option *ngFor = "let category of SessionCategories" [value] = "category.value">{{ category.SessionCategory }}</ion-select-option>
+                            <ion-select-option value="6">{{'paid_fees' | translate}}</ion-select-option> -->
+                            <ion-select-option 
+                                *ngFor="let FeesType of FeesTypes" [value]="FeesType.option"
+                        [disabled]="(assignedFeesCount===false &&  FeesType.value==='Assigned Fees') ||(optionalFeesCount===false && FeesType.value==='Optional Fees') ||(spotFeesCount == false && FeesType.value==='Spot Fees') || (variableFeesCount == false && FeesType.value==='Variable Fees') || (scheduledFeesCount===false &&  FeesType.value==='Scheduled Fees')">
+                        {{FeesType.value}}
+                            </ion-select-option>
+                            <ion-select-option *ngFor = "let category of SessionCategories" [value] = "category.value">{{ category.SessionCategory }}</ion-select-option>
+                            <ion-select-option value="6" [disabled]="!paidFees">{{'paid_fees' | translate}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+
+                    <!-- <ion-item class="ion-margin-top" *ngIf="!((selectedFeeType === '6' && ModifiedPaidFeesArray && ModifiedPaidFeesArray.length == 0) || (selectedFeeType != '6' && fees && fees.length == 0))">
+                        <ion-label position="floating">{{'Sort_By' | translate}}</ion-label>
+                        <ion-select name="sortBy" [(ngModel)]="selectedSorting" (ngModelChange)="sortFees()" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" name="sortBy">
+                            <ion-select-option *ngFor = "let opt of sortOptions" [value]="opt.value">{{opt.option | translate}}</ion-select-option>
+                        </ion-select>
+                    </ion-item> -->
+
+                    <!--  -->
+                    <ng-container *ngIf="selectedFeeType == '6'">
+                        <ion-row>
+                            <!-- <ion-col [size]=" date.value < 'Custom Date' ? 10 : 12"> -->
+                            <ion-col size="12">
+                                <ion-item>
+                                    <!-- <ion-label position="floating">{{'date' | translate}}
+                                    </ion-label> -->
+                                    <ion-select label="{{'date' | translate}}" label-placement="floating" class="fee-down" toggleIcon="caret-down-sharp" [(ngModel)]="selectedDateType" (ionChange)="onDateChange(date.value)" name="date" ngModel #date="ngModel" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required>
+                                        <ion-select-option *ngFor="let day of days" [value]="day.id">{{day.date}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                            </ion-col>
+                            <!-- <ion-col size="2" *ngIf="date.value < 'Custom Date' ">
+                                <ion-button fill="clear" [disabled]="!IsFormValid || !f.valid" class="funnel-icon ion-margin-top" (click)="getPaymentHistory(selectedDateType)">
+                                    <ion-icon name="funnel"></ion-icon>
+                                </ion-button>
+                            </ion-col> -->
+                        </ion-row>
+
+
+                        <ion-row class="ion-margin-bottom" *ngIf="date.value == 'Custom Date'">
+                            <ion-col size="5">
+                                <ion-item>
+                                    <ion-label class="custom-text-wrap" position="floating">{{'start_date' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-datetime class="custom-text-wrap" name="startDate" [(ngModel)]="selectStartDate" #startDate="ngModel" value="MM/DD/YYYY" displayFormat="MM/DD/YYYY" (ionChange)="startDateChange(startDate.value,f)" required [doneText]="'DONE' | translate" [cancelText]="'cancel' | translate"></ion-datetime>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="!startDate.valid && startDate.touched">
+                                    <p class="error-text-message">{{'Valid_startdate' | translate}}</p>
+                                </ion-text>
+                            </ion-col>
+
+                            <ion-col size="5">
+                                <ion-item>
+                                    <ion-label class="custom-text-wrap" position="floating">{{'end_date' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-datetime class="custom-text-wrap" name="endDate" [(ngModel)]="selectEndDate" #endDate="ngModel" value="MM/DD/YYYY" displayFormat="MM/DD/YYYY" (ionChange)="endDateChange(endDate.value,f)" required [doneText]="'DONE' | translate" [cancelText]="'cancel' | translate"></ion-datetime>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="!IsFormValid">
+                                    <p class="error-text-message">{{'Enddate_greaterthan_startdate' | translate}}</p>
+                                </ion-text>
+                            </ion-col>
+
+                            <ion-col size="2">
+                                <ion-button fill="clear" [disabled]="!IsFormValid || !f.valid" class="funnel-icon ion-margin-top" (click)="getPaymentHistoryForCustomDates()">
+                                    <ion-icon name="funnel"></ion-icon>
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
+                    </ng-container>
+                    <!--  -->
+
+                    <ion-item class="ion-margin-top" *ngIf="!((selectedFeeType === '6' && ModifiedPaidFeesArray && ModifiedPaidFeesArray.length == 0) || (selectedFeeType != '6' && fees && fees.length == 0))">
+                        <!-- <ion-label position="floating">{{'Sort_By' | translate}}</ion-label> -->
+                        <ion-select label="{{'Sort_By' | translate}}" label-placement="floating" class="fee-down" toggleIcon="caret-down-sharp" name="sortBy" [(ngModel)]="selectedSorting" (ngModelChange)="sortFees()" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" name="sortBy">
+                            <ion-select-option *ngFor = "let opt of sortOptions" [value]="opt.value">{{opt.option | translate}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+
+                    <ion-searchbar *ngIf="selectedFeeType != '6'" class="ion-no-padding ion-margin-top" animated="true" inputmode="search" name="searchBar" [(ngModel)]="searchText" (ngModelChange)="filterFees(searchText,'searchbar')" placeholder="{{'Search' | translate}}">
+                    </ion-searchbar>
+
+                    <ion-searchbar *ngIf="selectedFeeType == '6'" class="ion-no-padding ion-margin-top" animated="true" inputmode="search" name="searchBar" [(ngModel)]="searchText" (ngModelChange)="filterPaidFees(searchText)" placeholder="{{'Search' | translate}}">
+                    </ion-searchbar>
+
+                    <ng-container *ngIf="selectedFeeType != '6'">
+                        <ion-row class="ion-padding" *ngIf="fees && fees.length == 0">
+                            <ion-col class="ion-text-center">
+                                <ion-text>{{'No_Fee_display' | translate}}</ion-text>
+                               
+                            </ion-col>
+                        </ion-row>
+                        <ng-container *ngFor="let fee of fees">
+                            <ion-card class="custom-feecard ion-margin-top ion-margin-bottom" style="box-shadow: none !important;margin-top: 20px;">
+                                <ion-card-content>
+                                    <ion-row class="ion-no-padding" style="display: flex;align-items: center;">
+                                        <ion-col size="8" class="ion-no-padding">
+                                            <ion-text color="secondary" style="font-weight: 500;" *ngIf="selectedPatronData.type != 'individual'">
+                                                {{fee.name}}
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="2" class="ion-no-padding">
+                                            <ion-button fill="clear" (click)="checkDisclosure(fee , 'cart')" [disabled]="(!fee.isPatronActive && fee.modifiedFeeType == 'Optional Fee')" *ngIf="selectedFeeType != '5'">
+                                                <!-- <ion-icon name="create"  class="custom-fee-icon" *ngIf="fee.CartAmount">
+                                                </ion-icon> -->
+                                                <span class="edit-icn-list-img" *ngIf="fee.CartAmount >=0">
+                                                    <img slot="icon-only" src="../../../assets/icon/icn_edit.svg">
+                                                </span>
+                                                <!-- <ion-icon name="cart"  color='secondary' class="custom-fee-icon" *ngIf="!fee.CartAmount">
+                                                </ion-icon> -->
+                                                <span class="cart-icn-list-img" *ngIf="fee.CartAmount === undefined">
+                                                    <img slot="icon-only" src="../../../assets/icon/teal-cart.svg">
+                                                </span>
+                                            </ion-button>
+                                        </ion-col>
+                                        
+                                        <ion-col size="2" class="ion-no-padding" *ngIf="!districtFeaturelist.DisableScheduleFee">
+                                            <ion-button fill="clear" (click)="checkDisclosure(fee , 'calender')" [disabled]="(fee.LimitedSpotsAvailable || fee.VariablePricedSw) || (ViewPayments?.length == 0 || !ViewPayments) || ((fee.NetAmount - fee.ScheduledAmount) == fee.CartAmount) || !fee.isPatronActive || (fee.Installments == -1) || !(fee.IsValidEndDate)">
+                                                <!-- <ion-icon color='secondary' ios="ios-calendar"  md="md-calendar" class="custom-fee-icon">
+                                                </ion-icon> -->
+                                                <span class="cart-icn-list-img">
+                                                    <img slot="icon-only" src="../../../assets/icon/calendar.svg">
+                                                </span>
+                                            </ion-button>
+                                           
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row class="ion-no-padding ion-justify-content-center" *ngIf="fee.Scheduled && selectedFeeType == '5'">
+                                        <ng-container *ngFor="let Scheduled of ScheduledPaymentMethod">
+                                            <ng-container *ngIf="Scheduled.IntPatronid == fee.IntPatronid  && Scheduled.IntFeePatronId == fee.IntFeePatronId">
+                                                <p class="scheduled" style="margin-top: 4px;margin-bottom: 4px;font-size: small;">
+                                                    {{'schedule_to_be' | translate}} <span style="margin-left: 10px;">{{Scheduled.PaymentDate|date: 'MMM d, y'}}</span>
+                                                </p>
+                                            </ng-container>
+                                        </ng-container>
+                                    </ion-row>
+                                    <ion-row class="ion-no-padding" style="margin-top: 5px;">
+                                        <ion-col class="ion-no-padding custom-label" size="6">{{'fee_name' | translate}}<span>
+                                                <!-- <ion-icon name="information-circle" class="information_circle"
+                                                    (click)="onInfo(fee)">
+                                                </ion-icon> -->
+                                            </span></ion-col>
+                                        <ion-col class="ion-no-padding custom-label" size="6" style="word-break: break-all;">
+                                            {{fee.FeeName}}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row class="ion-no-padding">
+                                        <ion-col class="ion-no-padding custom-label" size="6">{{'Fee_Details' | translate}}</ion-col>
+                                        <ion-col class="ion-no-padding custom-label" size="6" style="display: flex;align-items:center">
+                                            <!-- <ion-label>{{fee.FeeOrigin ? fee.FeeOrigin : fee.modifiedFeeType}}</ion-label> -->
+                                            <ion-label class="details-link" (click)="OpenInfoPopUp(fee)">{{'click_here' | translate}}</ion-label>
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row class="ion-no-padding">
+                                        <ion-col class="ion-no-padding custom-label" size="6">{{'fee_type' | translate}}</ion-col>
+                                        <ion-col class="ion-no-padding custom-label" size="6" style="display: flex;align-items:center">
+                                            <!-- <ion-label>{{fee.FeeOrigin ? fee.FeeOrigin : fee.modifiedFeeType}}</ion-label> -->
+                                            <ion-label>{{fee.modifiedFeeType | translate}}</ion-label>
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row class="ion-no-padding"  *ngIf="selectedFeeType !=='1'">
+                                        <ion-col class="ion-no-padding custom-label" size="6">{{'end_date' | translate}}</ion-col>
+                                        <ion-col class="ion-no-padding custom-label" size="6">{{fee.EndDate | date:'MM/dd/yyyy'}}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row class="ion-no-padding">
+                                        <ion-col class="ion-no-padding custom-label" size="6">{{'amount_due' | translate}}</ion-col>
+                                        <ion-col class="ion-no-padding custom-label" size="6" *ngIf="fee.modifiedFeeType == 'Assigned Fee'">
+                                            ${{fee.NetAmount - fee.ScheduledAmount| number : '.2'}}
+                                            <!-- ${{fee.AmountDue| number : '.2'}} -->
+                                        </ion-col>
+                                        <ion-col class="ion-no-padding custom-label" size="6" *ngIf="fee.modifiedFeeType == 'Optional Fee'">
+                                            ${{fee.AmountDue | number : '.2'}}</ion-col>
+                                    </ion-row>
+                                    <!-- <ion-item  style='--ion-background-color: none;'   class="ion-no-margin ion-no-padding" *ngIf="(fee.modifiedFeeType == 'Optional Fee' || fee.modifiedFeeType == 'Assigned Fee') && fee.Attribute?.Type=='Dropdown'">
+                                        <ion-label position="floating">{{fee.Attribute.Name}}* </ion-label>
+
+                                        
+                                        <ion-select *ngIf="fee.CartAmount || fee.modifiedFeeType == 'Assigned Fee'" [value]='fee.selectedAttributeValue' disabled='true' [okText]="'select' | translate" [cancelText]="'cancel' | translate" name="attributesSelect" >
+                                            <ion-select-option  *ngFor = "let option of fee.Attribute.Options" [value] = "option.IntFeeAttributeId" >{{ option.AttributeValue }}</ion-select-option>
+                                        </ion-select>
+                                        <ion-select *ngIf="!fee.CartAmount && fee.modifiedFeeType == 'Optional Fee'" [okText]="'select' | translate" [cancelText]="'cancel' | translate" name="attributesSelect" [(ngModel)]="fee.disabledAttribute"  (ionChange)="selectRadioOption(fee.disabledAttribute, fee)">
+                                            <ion-select-option [disabled]='fee.CartAmount ' *ngFor = "let option of fee.Attribute.Options" [value] = "option" >{{ option.AttributeValue }}</ion-select-option>
+                                        </ion-select>
+                                    </ion-item> -->
+                                    <!-- <div *ngIf="!fee.attributeSelected && fee.clikedOnCard && fee.modifiedFeeType == 'Optional Fee' && fee.Attribute?.Type=='Dropdown'" style='color: red;'>{{'select' | translate}} {{fee.Attribute.Name}}</div>
+
+
+                                      <ion-list  class="ion-no-margin ion-no-padding" style='background: none;' *ngIf='(fee.modifiedFeeType == "Optional Fee" || fee.modifiedFeeType == "Assigned Fee" ) && fee.Attribute?.Type=="Radio Button"'>
+                                        <ion-radio-group  name="selectedAttributesOptions"  [value]='fee.selectedAttributeValue' >
+                                            <ion-list-header style='padding: 0px;margin-bottom: -13px;'>
+                                                {{fee.Attribute.Name}}*
+                                            </ion-list-header>
+                                            <ion-row >
+                                                <ion-col col-auto text-left *ngFor = "let option of fee.Attribute.Options" class="ion-no-margin ion-no-padding">
+                                                        <ion-item lines="none" [style.color]="fee.CartAmount? 'lightgray' : black" style='--ion-background-color: none; --padding-start: 0px;--inner-padding-end: 5px;font-size: 15px;' class='radioButtonBg'>
+                                                        
+                                                        <ion-radio color="secondary" [disabled]='fee.CartAmount || fee.modifiedFeeType == "Assigned Fee"'  style='margin:7px;width: 17px;height: 17px;'   mode="md" slot="start" [value]="option.IntFeeAttributeId" (ionSelect)='selectRadioOption(option,fee)' ></ion-radio>
+                                                        {{option.AttributeValue}}
+
+                                                    </ion-item>
+                                                    </ion-col>
+                                            
+                                            </ion-row>
+                                        </ion-radio-group>
+                                        <div *ngIf='!fee.attributeSelected && fee.clikedOnCard' style='color: red;'>{{'select' | translate}} {{fee.Attribute.Name}}</div>
+                                    </ion-list> -->
+                                    
+                                    <ion-row class="ion-no-padding" *ngIf="fee.CartAmount">
+                                        <ion-col class="ion-no-padding custom-label" size="6">{{'in_cart' | translate}}</ion-col>
+                                        <ion-col class="ion-no-padding custom-label" size="6">
+                                            ${{fee.CartAmount ? fee.CartAmount.toFixed(2) : 0 | number : '.2'}}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row class="ion-no-padding" *ngIf="fee.Scheduled && selectedFeeType != '5'">
+                                        <ion-col class="ion-no-padding custom-label" size="6">{{'scheduled' | translate}}</ion-col>
+                                        <ion-col class="ion-no-padding custom-label" size="6">${{fee.ScheduledAmount | number : '.2'}}
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-card-content>
+                            </ion-card>
+                        </ng-container>
+                    </ng-container>
+                    <!--  -->
+                    <ng-container *ngIf="selectedFeeType == '6'">
+                        <ion-row class="ion-padding" *ngIf="ModifiedPaidFeesArray && ModifiedPaidFeesArray.length == 0 || !ModifiedPaidFeesArray">
+                            <ion-col class="ion-text-center">
+                                <ion-text *ngIf="(selectedDateType == 'Custom Date' ? selectStartDate : true)">{{'no_fees' | translate}}.</ion-text>
+                            </ion-col>
+                        </ion-row>
+                        <ion-card class="custom-feecard ion-margin-top ion-margin-bottom" style="box-shadow: none !important;margin-top: 20px;" *ngFor="let paidFees of ModifiedPaidFeesArray">
+                            <ion-card-content>
+                                <ion-row class="ion-no-padding ion-margin-bottom" style="display: flex;align-items: center;">
+                                    <ion-text color="primary" style="font-weight: 500;" *ngIf="selectedPatronData.type != 'individual'">
+                                        {{ paidFees.FirstName }} {{ paidFees.LastName }}
+                                    </ion-text>
+                                </ion-row>
+
+                                <ion-row class="ion-no-padding">
+                                    <ion-col class="ion-no-padding custom-label" size="6">{{'fee_name' | translate}}<span>
+                                            <!-- <ion-icon name="information-circle" class="information_circle"
+                                                (click)="onInfoPaidFees(paidFees)">
+                                            </ion-icon> -->
+                                        </span>
+                                    </ion-col>
+
+                                    <ion-col class="ion-no-padding" size="6">{{ paidFees.FeeName }}</ion-col>
+                                </ion-row>
+                                <ion-row class="ion-no-padding">
+                                    <ion-col class="ion-no-padding custom-label" size="6">{{'Fee_Details' | translate}}</ion-col>
+                                    <ion-col class="ion-no-padding custom-label" size="6" style="display: flex;align-items:center">
+                                        <!-- <ion-label>{{fee.FeeOrigin ? fee.FeeOrigin : fee.modifiedFeeType}}</ion-label> -->
+                                        <ion-label class="details-link" (click)="OpenInfoPopUp(paidFees)">{{'click_here' | translate}}</ion-label>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row class="ion-no-padding">
+                                    <ion-col class="ion-no-padding custom-label" size="6">{{'fee_type' | translate}}</ion-col>
+                                    <ion-col class="ion-no-padding" size="6" style="display: flex;align-items:center">
+                                        <ion-label>{{ paidFees.FeeType }}</ion-label>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row class="ion-no-padding">
+                                    <ion-col class="ion-no-padding custom-label" size="6">{{'paid_date' | translate}}</ion-col>
+                                    <ion-col class="ion-no-padding" size="6">
+                                        {{ paidFees.TransactionDate | date: 'MM/dd/yyyy h:mm a' }}
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row class="ion-no-padding">
+                                    <ion-col class="ion-no-padding custom-label" size="6">{{'paid' | translate}}</ion-col>
+                                    <ion-col class="ion-no-padding" size="6">${{ paidFees.TransactionAmount | number : '.2'}}</ion-col>
+                                </ion-row>
+                                <!-- <ion-row class="ion-no-padding">
+                                    <ion-col class="ion-no-padding custom-label" size="6">Student</ion-col>
+                                    <ion-col class="ion-no-padding" size="6">{{ paidFees.FirstName }} {{ paidFees.LastName }}</ion-col>
+                                </ion-row> -->
+
+                            </ion-card-content>
+                        </ion-card>
+                    </ng-container>
+                    <!--  -->
+
+
+                </ion-col>
+            </ion-row>
+        </form>
+    </ion-grid>
+</ion-content>

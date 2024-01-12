@@ -1,0 +1,144 @@
+<ion-header dir="ltr">
+  <ion-toolbar color="primary" style="color: #fff;">
+    <ion-title>{{'Fundraiser_and_Guest_Checkout' | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="onDisplayLang()">
+        <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="primary">
+      <ion-button >
+        <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+        <ion-badge class="cart-badge"></ion-badge>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" (click)="presentPopover()">
+      <!-- <ion-icon slot="icon-only" name="menu" color="light" class="custom-caret"></ion-icon> -->
+      <img class="hamburger-icn-img" src="../../../assets/icon/hamburger-menu.png">
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class='ion-content'>
+  <!-- <ion-button fill="clear" (click)="onReturn('/login')" style="color: #fff;"  class="backButton"><ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+    {{"Back" |translate}}</ion-button> -->
+  <ion-grid class="custom-cover">
+    <ion-row class="main-row">
+      <ion-col size="12" class="ps-card">
+        <form #f="ngForm" (ngSubmit)="onContinue(f)" autocomplete="off">
+
+          <ion-item class="ion-margin-top">
+            <!-- <ion-label position="floating">{{'state' | translate}}
+              <ion-text color="danger">*</ion-text>
+            </ion-label> -->
+            <ion-select label="{{'state' | translate}}" label-placement="floating" class="arrow-down" toggleIcon="caret-down-sharp" name="State" [(ngModel)]="selectedState" (ionChange)="getDistrictsByStateId(State.value,f)"
+              [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required #State="ngModel" ngModel>
+              <ion-select-option  [value]="0">
+                {{'all_states' | translate}}
+              </ion-select-option>
+              <ion-select-option *ngFor="let state of states" [value]="state.IntStateId">
+                {{state.StateName}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-text color="danger" class="error-message" *ngIf="!State.valid && State.touched">
+            <p class="error-text-message">{{'state_required' | translate}}</p>
+          </ion-text>
+
+
+          <div class="" (click)="showDisableError()">
+            <ion-item class="ion-margin-top">
+              <!-- <ion-label position="floating">{{'District' | translate}}
+                <ion-text color="danger">*</ion-text>
+              </ion-label> -->
+              <ion-select label="{{'District' | translate}}" label-placement="floating" class="arrow-down" toggleIcon="caret-down-sharp" name="District" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required
+                [disabled]="disableDistrict" (ionChange)="getSchoolsByDistrictId(district.value,f)" #district="ngModel"
+                ngModel>
+                <ion-select-option *ngFor="let district of districts" [value]="district.DistrictName">
+                  {{district.DistrictName}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </div>
+          <ion-text color="danger" class="error-message" *ngIf="!district.valid && district.touched">
+            <p class="error-text-message">{{'District_req' | translate}}</p>
+          </ion-text>
+
+
+          <ion-item class="ion-margin-top">
+            <!-- <ion-label position="floating">{{'school' | translate}}
+              <ion-text color="danger">*</ion-text>
+            </ion-label> -->
+            <ion-select label="{{'school' | translate}}" label-placement="floating" class="arrow-down" toggleIcon="caret-down-sharp" [(ngModel)]="selectedSchool" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required name="school"
+              [disabled]="disableSchool" #School="ngModel" ngModel>
+              <ion-select-option [value]="0">
+                {{'All_School' | translate}}</ion-select-option>
+              <ion-select-option *ngFor="let school of schools" [value]="school.IntSchoolId">
+                {{school.SchoolName}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-text color="danger" class="error-message" *ngIf="!School.valid && School.touched">
+            <p class="error-text-message">{{'school_required' | translate}}</p>
+          </ion-text>
+
+          <ion-row class="mt1p">
+            <ion-button expand="block" type="submit" [disabled]="!(f.valid)"
+              (click)="onContinue(f)" class="full-width custom-orange-btn">{{'Continue' |
+              translate}}</ion-button>
+            <ion-row class="back-login-row">
+              <ion-col size="12">
+                <p class="back-login-para" >
+                 <a (click)="backtoLogin()" class="back-to-login">{{'Back_To_Login' | translate}}</a>
+                </p>
+              </ion-col>
+            </ion-row>
+          </ion-row>
+
+          <!-- <ion-row>
+            <ion-col size="4">
+              <ion-button expand="block" class="full-width custom-orange-btn" (click)="onReturn('/login')">
+                <ion-icon slot="icon-only" style="transform: rotate(180deg)" name="log-in" class="custom-space">
+                </ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col size="8">
+              <ion-button expand="block" class="full-width" (click)="onClearAll(f)">{{'clear_all' | translate}}
+              </ion-button>
+            </ion-col>
+          </ion-row> -->
+
+          <!-- <ion-row class="mt1p">
+            <ion-button expand="block" type="button" 
+            (click)="alertWithReturnToDashboard()" class="full-width custom-orange-btn">Receipt Testing</ion-button>
+          </ion-row> -->
+        </form>
+      </ion-col>
+    </ion-row>
+    <ion-row class="main-row">
+      <ion-col size="12" class="ps-card steps-section">
+        <H5 class="steps-heading">{{'Navigation_Steps' | translate}}</H5>
+        <ion-row>
+          <ion-col size="3">{{'St' | translate}}1 -</ion-col>
+          <ion-col class="step-val"> {{'Step1' | translate}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="3">{{'St' | translate}}2 -</ion-col>
+          <ion-col class="step-val"> {{'Step2' | translate}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="3">{{'St' | translate}}3 -</ion-col>
+          <ion-col class="step-val"> {{'Step3' | translate}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="3">{{'St' | translate}}4 -</ion-col>
+          <ion-col class="step-val"> {{'Step4' | translate}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="3">{{'St' | translate}}5 -</ion-col>
+          <ion-col class="step-val"> {{'Step5' | translate}}</ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,36 @@
+// .list-header {
+//     border-radius: 10px;
+// }
+:host(app-notifications) {
+    width: 100%;
+}
+
+.notification-sub-header>h3 {
+    display: flex;
+    align-items: center;
+}
+
+.notification-sub-header>h3>span {
+    // position: relative;
+    // right: 8px;
+    // margin-left: auto;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.ion-activatable {
+    position: relative;
+    overflow: hidden;
+}
+
+ion-select.notification-down::part(icon) {
+    width: .8rem;
+    height: .8rem;
+    color: #b1b1b1;
+}
+
+.toggleWidth{
+    width: 100%;
+}
+

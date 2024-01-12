@@ -1,0 +1,259 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'payment_history' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <ion-button [routerLink]="redirectToDashboard" routerDirection="back">
+                
+                <img class="cart-icn-img" src="../../assets/icon/home-icn.svg">
+            </ion-button>
+            <ion-button (click)="onDisplayLang()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="primary">
+            <ion-button (click)="onGotoCart()" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content cacheView="false" class='ion-content'>
+    <div>
+        <ion-grid class="custom-cover">
+            <ion-row class="main-row">
+                <ion-col size="12" class="ps-card2">
+                    <form #f="ngForm">
+                        <ion-row>
+                            <ion-col size="12">
+                                <ion-item class="item-leftPadding">
+                                    <!-- <ion-label position="floating">{{'type' | translate}}
+                                    </ion-label> -->
+                                    <!-- <ion-icon [ngClass]="{'dummy-select-icon2' : languageService.langDir === 'rtl','dummy-select-icon' : languageService.langDir === 'ltr'}" name="md-arrow-dropdown"></ion-icon> -->
+                                    <ion-select label="{{'type' | translate}}" label-placement="floating" toggleIcon="caret-down-sharp"  class="icon-size history-down" [(ngModel)]="selectedMealType" (ionChange)="onTypeChange(type.value)"
+                                        name="type" #type="ngModel" [okText]="'Continue' | translate"
+                                        [cancelText]="'cancel' | translate" required>
+                                        <ion-select-option *ngFor="let types of mealTypes" [value]="types.id">{{types.name |
+                                            translate}}
+                                            
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+    
+                        <ion-row>
+                            <ion-col>
+                                <ion-item class="item-leftPadding">
+                                    <!-- <ion-label position="floating">{{'date' | translate}}
+                                    </ion-label> -->
+                                    <!-- <ion-icon [ngClass]="{'dummy-select-icon2' : languageService.langDir === 'rtl','dummy-select-icon' : languageService.langDir === 'ltr'}"  name="md-arrow-dropdown"></ion-icon> -->
+                                    <ion-select  label="{{'date' | translate}}" label-placement="floating" toggleIcon="caret-down-sharp" class="select-icon history-down" [(ngModel)]="selectedDateType" (ionChange)="onDateChange(date.value)"
+                                        name="date" ngModel #date="ngModel" [okText]="'Continue' | translate"
+                                        [cancelText]="'cancel' | translate" required>
+                                        <ion-select-option *ngFor="let day of days" [value]="day.id">{{day.date |
+                                            translate}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-margin-bottom" *ngIf="date.value == 'Custom Date'">
+                            <ion-col size="5">
+                                <ion-item>
+                                    <ion-label class="custom-text-wrap paymentLabel" position="floating" (click)="toggleVisibility(0)">{{'start_date' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <div>
+                                        <p *ngIf="selectStartDate != '' ||selectStartDate != null " class="selected-date" (click)="toggleVisibility(0)" >{{selectStartDate | date :  "MM/dd/yyyy" }}</p>
+                                    </div>
+                                        <!-- <ion-datetime class="ion-no-padding" *ngIf="isVisible(i)" presentation="date" [preferWheel]="true"
+                                        placeholder="{{'select_date'|translate}}" required 
+                                        [(ngModel)]="patronDetail.ExpireDate " #StopPayment="ngModel"
+                                        (click)="isFormModified()" (ionChange)="stopPaymentDateChange($event, i)"
+                                        size="cover"
+                                        [showDefaultButtons]="true"
+                                        [min]="todaydate" [max]="maxdate"
+                                        [value]="todaydate"
+                                        name="CustomStopPayment"
+                                        >
+                                    </ion-datetime>  -->
+                                </ion-item>
+                                
+                                <!-- <ion-text color="danger" class="error-message"
+                                    *ngIf="!startDate.valid && startDate.touched">
+                                    <p class="error-text-message">{{'Valid_startdate'| translate}}.</p>
+                                </ion-text> -->
+                            </ion-col>
+                            <ion-col size="5">
+                                <ion-item>
+                                    <ion-label class="custom-text-wrap paymentLabel" position="floating" (click)="toggleVisibility(1)">{{'end_date' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <div>
+                                        <p *ngIf="selectEndDate != '' ||selectEndDate != null " class="selected-date" (click)="toggleVisibility(1)" >{{selectEndDate | date :  "MM/dd/yyyy" }}</p>
+                                    </div>
+                                </ion-item>
+                                
+                                <ion-text color="danger" class="error-message">
+                                    <p class="error-text-message" *ngIf="!selectEndDate.valid && selectEndDate.touched">
+                                        {{ 'end_date_required'| translate }}.</p>
+                                    <p class="error-text-message" *ngIf="!IsFormValid">
+                                        {{ 'Enddate_greaterthan_startdate' | translate }}.</p>
+                                </ion-text>
+                            </ion-col>
+                            <ion-col size="2">
+                                <ion-button fill="clear" [disabled]="!IsFormValid || !f.valid"
+                                    class="funnel-icon ion-margin-top" (click)="getPaymentHistoryForCustomDates()">
+                                    <ion-icon name="funnel"></ion-icon>
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
+                        <span class="paymentHistory">
+                        <ion-datetime class="ion-no-padding" *ngIf="isVisible(0)"  class="custom-text-wrap" name="startDate" [(ngModel)]="selectStartDate"
+                        [showDefaultButtons]="true" #startDate="ngModel" [value]="paymentSelectedDate" min="1994-03-14" [max]="maxDate" displayFormat="MM/DD/YYYY"
+                                        (ionChange)="startDateChange(startDate.value,f, 0)" (ionCancel)="toggleVisibility(0)" required
+                                        [doneText]="'DONE' | translate" size="cover"  presentation="date" [preferWheel]="true" [cancelText]="'cancel' | translate"></ion-datetime>
+                                    </span>
+                                    <span class="paymentHistory">           
+                                         <ion-datetime class="ion-no-padding" *ngIf="isVisible(1)"   class="custom-text-wrap" name="endDate" [(ngModel)]="selectEndDate"
+                                         [showDefaultButtons]="true"  #endDate="ngModel" [value]="paymentSelectedEndDate"  min="1994-03-14" [max]="todayDate" displayFormat="MM/DD/YYYY"
+                                        (ionChange)="endDateChange(selectEndDate,f,1)" (ionCancel)="toggleVisibility(1)" required
+                                        [doneText]="'DONE' | translate"  size="cover" [cancelText]="'cancel' | translate" presentation="date" [preferWheel]="true"></ion-datetime>
+                                        </span>
+
+                    </form>
+    
+                    <ion-row>
+                        <ion-col size="12">
+                            <ion-button expand="block" class="full-width round-button ion-text-uppercase"  (click)="onResetAll()">
+                                {{'reset_all' | translate}}
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+    <div>
+        <div class="div-padding">
+        <ion-row class="ps-card2" *ngIf="!isNorecordsfound">
+            <ion-col class="ion-text-center">
+                <ion-text>{{ 'no_records_found' | translate }}</ion-text>
+            </ion-col>
+        </ion-row>
+    </div>
+        <ion-grid class="custom-cover" *ngIf="isNorecordsfound && payments.length > 0">
+           
+            <ion-row class="main-row ps-card2 padding-top-row">
+                <ion-row class="header-row">
+                    <ion-col size="7" class="payment-report">{{'Payment_Reports' | translate}}</ion-col>
+                    <ion-col size="5" class="collapse-button-all">
+                        <ion-button  class="button-size" color="primary" *ngIf=!collapse (click)="manageAllRows(true)">
+                            {{'Collapse_All' | translate}}
+                        </ion-button>
+                        <ion-button class="button-size" color="primary"*ngIf=collapse (click)="manageAllRows(false)">
+                            {{'Expand_All' | translate}}
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+                <ion-col size="2" class="ion-text-capitalize sub-header">{{'date' | translate}} 
+                    <ion-icon *ngIf=dateBoolean name="arrow-down"  class="sorting-ico-size" (click)="sort('PaymentDate')" ></ion-icon>
+                    <ion-icon *ngIf=!dateBoolean name="arrow-up"  class="sorting-ico-size" (click)="sort('PaymentDate')" ></ion-icon>
+                </ion-col>
+                <ion-col size="4.5" class="ion-text-capitalize sub-header">{{'transaction_id' | translate}}
+                    <ion-icon *ngIf=transaction_idBoolean name="arrow-down"  class="sorting-ico-size" (click)="sort('IntTransactionId' )" ></ion-icon>
+                    <ion-icon *ngIf=!transaction_idBoolean name="arrow-up"  class="sorting-ico-size" (click)="sort('IntTransactionId')" ></ion-icon>
+                </ion-col>
+                <ion-col size="3" class="ion-text-capitalize sub-header">{{'amount' | translate}}
+                    <ion-icon *ngIf=amountBoolean name="arrow-down"  class="sorting-ico-size" (click)="sort('Amount')" ></ion-icon>
+                    <ion-icon *ngIf=!amountBoolean name="arrow-up"  class="sorting-ico-size" (click)="sort('Amount')" ></ion-icon>
+                </ion-col>
+                <ion-col size="2.5" class="ion-text-capitalize sub-header">{{'status' | translate}}
+                    <ion-icon *ngIf=statusBoolean name="arrow-down"  class="sorting-ico-size" (click)="sort('Status')" ></ion-icon>
+                    <ion-icon *ngIf=!statusBoolean name="arrow-up"  class="sorting-ico-size" (click)="sort('Status')" ></ion-icon>
+                </ion-col>
+
+                
+                <ion-list *ngIf="paymentHistory">
+                        <ion-row class="second-row"  *ngFor="let payment of paymentHistory | paginate : { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: count};let i=index">
+                            <span class="margin-name-row">
+                            <ion-col size="2" class="ion-text-uppercase second-sub-header">{{'name' | translate}}</ion-col>
+                            <ion-col size="7" class="ion-text-capatilize second-sub-header name-color">{{ payment.FirstName + ' ' + payment.LastName }}</ion-col>
+                            <ion-col size="3" class="ion-text-capatilize collapse-button">
+                            </ion-col>
+                        </span>
+                        <span class="scroll-span">
+                            <div *ngFor="let data of payment.Payments| orderBy: key ;" class="each-collapse-div">
+                                <ion-row class="single-collapse"  (click)="toggleRow(data, currentPage)">
+                                    <ion-col size="1" *ngIf=!data.expanded class="col-collapse collapse-icon"><ion-icon class="icons-collapes"  name="caret-up-outline"></ion-icon></ion-col>
+                                    <ion-col size="1" *ngIf=data.expanded class="col-collapse collapse-icon"><ion-icon class="icons-collapes"  name="caret-down-outline"></ion-icon></ion-col>
+                                    <ion-col dir="ltr" size="3" class="col-collapse1">{{data.PaymentDate | date: 'MM/dd/yy, hh:mm a'}}</ion-col>
+                                    <ion-col size="2" class="col-collapse1">{{data.IntTransactionId?data.IntTransactionId:'NA'}}</ion-col>
+                                    <ion-col size="3" class="col-collapse">${{data.Amount | number : '1.2-2'}}</ion-col>
+                                    <ion-col size="3" class="col-collapse">{{data.Status? data.Status:'NA'}}</ion-col>
+                                </ion-row>
+                                <div *ngIf=!data.expanded class="div-background">
+                                <ion-row class="each-collapse-row">
+                                    <ion-col size="4" class="col-sub-header-left">{{'payment_history_type' | translate}}</ion-col>
+                                    <ion-col size="4" class="col-sub-header-center">{{'payment_mode' | translate}}</ion-col>
+                                    <ion-col size="4" class="col-sub-header-right">{{'payment_method' | translate}}</ion-col>
+                                </ion-row>
+                                <ion-row class="each-collapse-row">
+                                    <ion-col size="4" class="col-data-left">{{data.PaymentType? data.PaymentType :  'NA'}}</ion-col>
+                                    <ion-col size="4" class="col-data-center">{{data.PaymentMode ? data.PaymentMode : 'NA'}}</ion-col>
+                                    <ion-col size="4" class="col-data-right">{{data.PaymentMethod ? data.PaymentMethod: 'NA'}}</ion-col>
+                                </ion-row>
+                                <ion-row class="third-row-padding each-collapse-row">
+                                    <ion-col size="4" class="col-sub-header-left">{{'balance_level' | translate}}</ion-col>
+                                    <ion-col size="4" class="col-sub-header-center">{{'fee_name' | translate}}</ion-col>
+                                    <ion-col size="4" class="col-sub-header-right">{{'Attribute' | translate}}</ion-col>
+                                </ion-row>
+                                <ion-row  class="each-collapse-row">
+                                    <ion-col size="4" class="col-data-left">{{data.BalanceLevel ? data.BalanceLevel :'NA'}}</ion-col>
+                                    <ion-col size="4" class="col-data-center">{{data.PaymentName?data.PaymentName:'NA'}}</ion-col>
+                                    <ion-col size="4" class="col-data-right">{{data.AttributeValue ? data.AttributeValue :'NA'}}</ion-col>
+                                </ion-row>
+                                <ion-row class="third-row-padding each-collapse-row">
+                                    <ion-col size="4" class="col-sub-header-left">{{'Session' | translate}}</ion-col>
+                                    <ion-col size="4" class="col-sub-header-center">{{'icf' | translate}}</ion-col>
+                                    <ion-col size="4" class="col-sub-header-right"> </ion-col>
+                                </ion-row>
+                                <ion-row  class="each-collapse-row">
+                                    <ion-col size="4" class="col-data-left">{{data.SessionName? data.SessionName:'NA'}}</ion-col>
+                                    <ion-col size="4" class="col-data-center">${{data.ICF| number : '1.2-2'}}</ion-col>
+                                    <ion-col size="4"></ion-col>
+                                </ion-row>
+                            </div>
+                        
+                            </div>
+                        </span>
+                        </ion-row>
+                        <pagination-controls class="paginator" [directionLinks]="true" previousLabel="" nextLabel="" (pageChange)="onChange($event)"></pagination-controls>
+                        <ion-row>
+                            <ion-col size="6" class="col-padding1">
+                                <ion-button color='secondary' [disabled]="!IsFormValid || !f.valid" class="full-width" (click)="onCreateReport('PDF',f)">
+                                  {{'create_pdf' | translate}}</ion-button>
+                            </ion-col>
+                            <ion-col size="6" class="col-padding2">
+                                <ion-button color='secondary' [disabled]="!IsFormValid || !f.valid" class="full-width" (click)="onCreateReport('Excel',f)">
+                                {{'create_excel' | translate}}
+                            </ion-button>
+                            </ion-col>
+                        </ion-row>
+
+                </ion-list>
+                
+            </ion-row>
+        </ion-grid>
+    </div>
+</ion-content>
+

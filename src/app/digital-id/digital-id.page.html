@@ -1,0 +1,140 @@
+<ion-header *ngIf="isDigitalCardDowload" dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'digital_id' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <ion-button [routerLink]="redirectToDashboard" routerDirection="back">
+                <img class="cart-icn-img" src="../../assets/icon/home-icn.svg">
+            </ion-button>
+            <ion-button (click)="onDisplayLang()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="primary">
+            <ion-button (click)="onGotoCart()" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [ngClass]="{'digital-card-grid': !isDigitalCardDowload}" class='ion-content' dir="ltr">
+    <ion-grid [ngClass]="{'digital-card' : isDigitalCardDowload ,'digital-card-download': !isDigitalCardDowload}">
+        <ion-row class="main-row full-width">
+            <ion-col size="12" class="ps-card" *ngIf="patrons">
+                <div class="container" *ngIf="isDigitalCardDowload">
+                    <div class="scroll" scrollX="true" #widgetsContent>
+                        <div class="ion-text-center custom-margin" *ngFor="let patron of patrons;let i=index;" tappable (click)="onSelectedStudent(patron,i)">
+                            <ion-avatar [ngClass]="{'patron-active' : IntPatronId == patron.IntPatronId }" class="patron-icon">
+                                <img *ngIf="patron.PictureData != 'allStudentPicture' && patron.PictureData != null && patron.PictureData != ''" src="data:image/png;base64,{{patron.PictureData}}">
+                            </ion-avatar>
+                            <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }" style="margin-top: 2px; display: block; color: #3CBFAE;">{{patron.FirstName}}</ion-label>
+                            <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }" style="margin-top: 2px; color: #3CBFAE;">{{patron.LastName}}</ion-label>
+                        </div>
+                    </div>
+                </div>
+                <ion-grid *ngIf="patrons?.length==0">
+                    <ion-text color="dark" class="ion-text-center">
+                        <p>{{ 'mp_nopatrons' | translate }}</p>
+                    </ion-text>
+                </ion-grid>
+
+                <ion-grid class="patron-border ion-margin-top" *ngIf="patrons?.length>0 && selectedPatronData && selectedPatronData?.type=='individual'">
+                    <ion-row class="ion-align-items-center">
+                        <ion-col size="1" *ngIf="isDigitalCardDowload" dir="ltr">
+                            <span dir="ltr" class="slider-nav arrow-prev" (click)="slidePrev(sliderOne,slideWithNav)">
+                <div dir="ltr" class="prev-icon-custom custon-nav" [class.disabled]="sliderOne.isBeginning">
+                  <!-- <ion-icon color='secondary' name="arrow-dropleft"> </ion-icon> -->
+                  <img dir="ltr" class="wd120p" src="../../assets/icon/leftt-arrow.svg" alt="">
+                </div>
+              </span>
+                        </ion-col>
+                        <ion-col size="10" class="custom-margin">
+                            <swiper-container [options]="slideOptsOne" #slideWithNav (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+                                <swiper-slide *ngFor="let patron of patrons;let i=index;">
+                                    <ion-list class="custom-element ion-no-margin full-width">
+                                        <ion-item lines="none" >
+                                            <ion-row class="full-width" dir="{{languageService.langDir}}">
+                                                <ion-text color="secondary" class="custom-name">
+                                                    <h4 class="custom-head">
+                                                        {{patron.FirstName}} {{patron.LastName}}
+                                                    </h4>
+                                                </ion-text>
+                                                <ion-col size="12" class="ion-text-center">
+                                                    <img *ngIf="patron.PictureData != 'allStudentPicture' && patron.PictureData != null && patron.PictureData != ''" src="data:image/png;base64,{{patron.PictureData}}">
+                                                </ion-col>
+                                            </ion-row>
+                                        </ion-item>
+                                       
+                                            <ion-row class="full-width custom-text-size" class='textClass' dir="{{languageService.langDir}}">
+                                                <ion-col size="4">
+                                                    <ion-text class="ion-text-right" >
+                                                        <p>{{ 'ID#' | translate }}</p>
+                                                        <p>{{ 'GR' | translate }}</p>
+                                                        <!-- <p>{{ 'HR' | translate }}</p> -->
+                                                    </ion-text>
+                                                </ion-col>
+                                                <ion-col size="1">
+                                                    <p><span>:</span></p>
+                                                    <p><span>:</span></p>
+                                                    <!-- <p><span>:</span></p> -->
+                                                </ion-col>
+                                                <ion-col size="7">
+                                                    <ion-text class="ion-text-center">
+                                                        <p>{{patron.PatronId}}</p>
+                                                        <p>{{patron.Grade}}</p>
+                                                        <!-- <p>{{patron.Homeroom.HomeroomName}}</p> -->
+                                                    </ion-text>
+                                                </ion-col>
+                                            </ion-row>
+                                       
+                                        <ion-item lines="none">
+                                            <ion-row class="full-width" class='textClass'>
+                                                <ion-col size="12" class="ion-text-center custom-margin-top">
+                                                    <ion-text class="custom-text-alignment">
+                                                        <p class="custom-header ion-no-margin">
+                                                            {{patron.DistrictName}} {{patron.SchoolName}}
+                                                        </p>
+                                                    </ion-text>
+                                                </ion-col>
+                                                <ion-col size="12" class="ion-text-center ion-no-padding">
+                                                    <ngx-barcode6
+                                                    *ngFor="let bcValue of values" 
+                                                    [bc-value]="bcValue"
+                                                    [bc-height]="height"
+                                                    [bc-width]="width"
+                                                    >
+                                                    </ngx-barcode6>
+                                                </ion-col>
+                                            </ion-row>
+                                        </ion-item>
+                                    </ion-list>
+                                </swiper-slide>
+                            </swiper-container>
+                        </ion-col>
+                        <ion-col size="1" *ngIf="isDigitalCardDowload" dir="ltr">
+                            <span dir="ltr" class="slider-nav arrow-next" (click)="slideNext(sliderOne,slideWithNav)">
+                <div dir="ltr" class="next-icon-custom custon-nav" [class.disabled]="sliderOne.isEndSlide">
+                  <!-- <ion-icon color='secondary' name="arrow-dropright"></ion-icon> -->
+                  <img dir="ltr" class="wd120p" src="../../assets/icon/right-arrow.svg" alt="">
+                </div>
+              </span>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+                <ion-row class="ion-margin-top" *ngIf="patrons?.length>0 && selectedPatronData && selectedPatronData?.type=='individual' && isDigitalCardDowload">
+                    <ion-button color='secondary' expand="block" class="full-width" (click)="onDigitalIdDowload()">
+                        {{'download' | translate}}
+                    </ion-button>
+                </ion-row>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

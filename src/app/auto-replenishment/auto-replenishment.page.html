@@ -1,0 +1,102 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'auto_replenishment' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <!-- <ion-button color="light" (click)="onBack()">
+                <ion-icon slot="icon-only" name="arrow-round-back"></ion-icon>
+            </ion-button> -->
+            <ion-button [routerLink]="redirectToDashboard" routerDirection="back">
+                <img class="cart-icn-img" src="../../assets/icon/home-icn.svg">
+            </ion-button>
+            <ion-button (click)="onLangChange()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button (click)="onGotoCart()" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover">
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card">
+                <div class="container">
+                    <div class="scroll" scrollX="true" #widgetsContent>
+                        <div *ngFor="let patron of patrons;let i=index;" class="patrons-list" tappable (click)="onSelectedStudent(patron, i)">
+                            <ion-avatar [ngClass]="{'patron-active' : IntPatronId == patron.IntPatronId }" class="avatar">
+
+                                <img src="../../assets/icon/all_stud.svg"  class="all-student-icon" *ngIf="patron.PictureData == 'allStudentPicture'">
+                                <img *ngIf="patron.PictureData != 'allStudentPicture' && patron.PictureData != null && patron.PictureData != ''" src="data:image/png;base64,{{patron.PictureData}}">
+                            
+                            </ion-avatar>
+                            <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }" class="patron-fname">{{patron.FirstName}}</ion-label>
+                            <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }" class="patron-lname">{{patron.LastName}}</ion-label>
+                        </div>
+                    </div>
+                </div>
+                <ion-list class="ion-margin-top">
+                    <ion-text color='secondary' class="autoreplenishment-sub-header ion-margin-bottom">
+                        <h3 class="ion-margin" >{{'auto_replenishment' | translate}}
+                            <span class="ion-activatable">
+                  <ion-icon color='primary' name="information-circle" (click)="infoAlert()"></ion-icon>
+                  <ion-ripple-effect></ion-ripple-effect>
+                </span>
+                        </h3>
+                    </ion-text>
+                    <!-- <ion-item class="ion-margin-top ion-margin-bottom">
+                        <ion-label position="floating">{{'select' | translate}}</ion-label>
+                        <ion-select>
+                            <ion-select-option value="1" selected>All Students</ion-select-option>
+                            <ion-select-option value="2">Alexis Smith</ion-select-option>
+                        </ion-select>
+                    </ion-item> -->
+                    <ion-item class="ion-margin-top ion-margin-bottom">
+                        <!-- <ion-label position="floating">{{'select' | translate}}</ion-label> -->
+                        <ion-select label="{{'select' | translate}}" label-placement="floating" class="ar-down" toggleIcon="caret-down-sharp" [(ngModel)]="selected" (ionChange)="onARSelection($event)" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate">
+                            <ion-select-option *ngIf="this.districtFeature.Lunch == true" value="Meal" selected>{{'Meal_Account'| translate}}</ion-select-option>
+                            <ion-select-option *ngIf="this.districtFeature.SourceAccount == true" value="FundAccount">{{'Fund_Account'| translate}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <!--  -->
+                    <ion-row class="ion-margin-top patron-border">
+                        <!-- <ion-col size="1">
+                            <span class="slider-nav arrow-prev" (click)="slidePrev(sliderOne,slideWithNav)">
+              <div class="prev-icon-custom custon-nav" [class.disabled]="sliderOne.isBeginningSlide">
+                <ion-icon name="arrow-dropleft"></ion-icon>
+              </div>
+            </span>
+                        </ion-col> -->
+
+                        <app-auto-replenishment-meal class="full-width" *ngIf="selected == 'Meal'"> </app-auto-replenishment-meal>
+                        <app-auto-replenishment-fund class="full-width" *ngIf="selected == 'FundAccount'"></app-auto-replenishment-fund>
+
+                        <!-- <ion-col size="1">
+                            <span class="slider-nav arrow-next" (click)="slideNext(sliderOne,slideWithNav)">
+              <div class="next-icon-custom custon-nav" [class.disabled]="sliderOne.isEndSlide">
+                <ion-icon name="arrow-dropright"></ion-icon>
+              </div>
+            </span>
+                        </ion-col> -->
+                    </ion-row>
+                </ion-list>
+                <!-- <ion-row class="ion-margin-top">
+                    <ion-button expand="block" class="full-width">{{'view_all_history' | translate}}</ion-button>
+                </ion-row>
+                <ion-row class="ion-margin-top">
+                    <ion-button expand="block" class="full-width">{{'turn_off' | translate}}</ion-button>
+                </ion-row> -->
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

@@ -1,0 +1,177 @@
+<ion-header>
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'meal_restrictions' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <!-- <ion-back-button [text]="'Back'" (click)="onBack()"></ion-back-button> -->
+            <!-- <ion-button color="light" (click)="onBack()">
+                <ion-icon slot="icon-only" name="arrow-round-back"></ion-icon>
+            </ion-button> -->
+            <ion-button (click)="onGotoDashboard()">
+                <img class="cart-icn-img" src="../../assets/icon/home-icn.svg">
+            </ion-button>
+            <ion-button (click)="onDisplayLang()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="primary">
+            <ion-button (click)="onGotoCart()" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" (click)="onMenuClick()">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover">
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card">
+                <div class="container">
+                    <ion-text class="notification-sub-header">
+                        <h5>
+                            {{ 'meal_header' | translate }}
+                        </h5>
+                    </ion-text>
+                    <div class="scroll ion-margin-top" scrollX="true" #widgetsContent>
+
+                        <div *ngFor="let patron of patrons;let i=index;" class="patron-image" tappable (click)="onSelectedStudent(patron)">
+                            <ion-avatar [ngClass]="{'patron-active' : IntPatronId == patron.IntPatronId }" class="patron-icon">
+                                <img src="../../assets/icon/all_stud.svg" class="all-student-icon" *ngIf="patron.PictureData == 'allStudentPicture'">
+                                <img *ngIf="patron.PictureData != 'allStudentPicture' && patron.PictureData != null && patron.PictureData != ''" src="data:image/png;base64,{{patron.PictureData}}">
+                            </ion-avatar>
+                            <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }" class="patron-fname">{{patron.FirstName}}</ion-label>
+                            <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }" class="patron-lname">{{patron.LastName}}</ion-label>
+                        </div>
+                        <!-- <div *ngFor="let patron of patrons" style="width: 30%;" style="text-align: center;margin:auto;"
+                            tappable (click)="onSelectedStudent(patron)">
+
+                            <ng-container *ngIf="patron.Active">
+
+                                <ion-avatar [ngClass]="{'patron-active' : IntPatronId == patron.IntPatronId }"
+                                    style="padding: 2px;height: 60px;width: 60px;margin: auto;margin-bottom: 8px;margin-left: 20px;margin-right: 20px;border: 1px solid #ccc;">
+                                    <img src="assets/images/individual-1.jpg"
+                                        *ngIf="patron.PictureData == 'allStudentPicture'">
+                                    <img src="data:image/png;base64,{{patron.PictureData}}"
+                                        *ngIf="patron.PictureData != 'allStudentPicture'">
+                                </ion-avatar>
+                                <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }"
+                                    style="margin-top: 2px;display: block;color: #757575;">{{patron.FirstName}}
+                                </ion-label>
+                                <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }"
+                                    style="margin-top: 2px;color:#757575">{{patron.LastName}}</ion-label>
+                            </ng-container>
+                        </div> -->
+
+                    </div>
+                </div>
+                <div>
+                    <ion-text color="dark">
+                        <h3 class="ion-no-margin">
+                            <ion-button class="ion-no-margin" expand="block" color="primary" fill="clear" (click)="infoAlert()">
+                                {{ 'Ins' | translate }}
+                                <ion-icon slot="end" name="information-circle"></ion-icon>
+                            </ion-button>
+                        </h3>
+                    </ion-text>
+
+
+                </div>
+
+                <div *ngIf="selectedPatronData == 'individual'">
+
+
+                    <ion-text class="ion-margin-top">
+                        <h3>{{'limits' | translate}}</h3>
+                    </ion-text>
+                    <ng-container *ngFor="let quikLunchRestrictionDefinition of lunchRestrictionsDefinitionsitems;let i=index; ">
+                        <ng-container *ngIf="quikLunchRestrictionDefinition.DataType == 'DECIMAL'">
+                            <!-- <h6 class="ion-padding-start" color="primary">{{'spending_limit' | translate}}</h6> -->
+                            <h6 class="ion-padding-start" color="primary">{{quikLunchRestrictionDefinition.Displayname}}
+                            </h6>
+                            <ion-item>
+                                <!-- <ion-label position="floating">{{quikLunchRestrictionDefinition.Displayname}}
+                                </ion-label> -->
+                                <ion-label position="floating" class="amount">
+                                    {{'Enter Amount to Add' | translate}}
+                                </ion-label>
+                                <ion-input aria-label="Value" class="dollar" type="text" name="Value" required inputmode="decimal" (keyup)="onKeyUp($event)" (input)="QuikLunchRestrictionDefinitionsChange(quikLunchRestrictionDefinition, $event)" [(ngModel)]="quikLunchRestrictionDefinition.Value"></ion-input>
+                                <ion-icon color="primary" (click)="quikLunchRestrictionDefinition.Value=''" (click)="DailySpendingLimitRemove(quikLunchRestrictionDefinition,'')" name="close-circle" slot="end" class="close-icon">
+                                </ion-icon>
+
+                            </ion-item>
+                            <ion-text color="danger" class="error-message" *ngIf="displayDailyLimitError">
+                                <p class="error-text-message">{{ 'enter_vld_amt1' | translate }}.</p>
+                            </ion-text>
+                        </ng-container>
+
+                    </ng-container>
+
+                    <ng-container *ngFor="let quikLunchRestrictionDefinition of lunchRestrictionsDefinitionsitems">
+
+                        <ng-container *ngIf="quikLunchRestrictionDefinition.DataType == 'BOOL'">
+                            <ion-item lines="none" class="ion-margin-top">
+                                <ion-label>{{quikLunchRestrictionDefinition.Displayname}}</ion-label>
+                                <ion-toggle color="secondary" slot="end" [(ngModel)]="quikLunchRestrictionDefinition.Value" (ionChange)="QuikLunchRestrictionDefinitionsChange(quikLunchRestrictionDefinition,$event)" [checked]="quikLunchRestrictionDefinition.Value"></ion-toggle>
+                            </ion-item>
+                        </ng-container>
+                    </ng-container>
+
+                    <ion-text *ngIf="selectedPatronData == 'individual'">
+                        <h3>{{'restrictions' | translate}}</h3>
+                    </ion-text>
+                    <ion-text color="dark" *ngIf="selectedPatronData == 'individual'">
+                        <p class="ion-padding-start">{{'restriction_msg' | translate}}</p>
+                        <p class="ion-padding-start">{{'reminder' | translate}}</p>
+                    </ion-text>
+
+                    <ion-text *ngIf="lunchGroups">
+                        <h3>{{'groups' | translate}}</h3>
+                    </ion-text>
+                    <ion-list>
+                        <ion-item lines="none" *ngFor="let quikLunchItemGroup of lunchGroups" (ionChange)="QuikLunchItemGroupsChange(quikLunchItemGroup,$event)">
+                            <ion-label>{{quikLunchItemGroup.Name}}</ion-label>
+                            <ion-checkbox aria-label="quikLunchItemGroup" color="primary" slot="start" [checked]="quikLunchItemGroup.Value">
+                            </ion-checkbox>
+                        </ion-item>
+                    </ion-list>
+
+                    <ion-text *ngIf="quikLunchItems">
+                        <h3>{{'items' | translate}}</h3>
+                    </ion-text>
+
+
+                    <ion-searchbar mode="ios" *ngIf="quikLunchItems" animated inputmode="Search For An Item" [(ngModel)]="searchText" (ngModelChange)="filterUserMessages(searchText)" placeholder="{{'Search' | translate}}">
+                    </ion-searchbar>
+                    <ion-text *ngIf="quikLunchItems.length===0" class="ion-text-center">
+                        <h5 class="no-result">{{'No_Results'|translate}}</h5>
+                    </ion-text>
+
+
+                    <ion-grid class="ion-margin-top ion-no-padding custom-scroll">
+
+                        <ion-item lines="none" *ngFor="let quikLunchItem of quikLunchItems" (ionChange)="QuikLunchItemsChange(quikLunchItem,$event)">
+                            <ion-label>{{quikLunchItem.ItemDescription}}</ion-label>
+                            <ion-checkbox aria-label="quikLunchItem" color="primary" slot="start" [checked]="quikLunchItem.Value"></ion-checkbox>
+                        </ion-item>
+
+
+                    </ion-grid>
+
+                    <!-- {{showWarningPopup}} -->
+                    <ion-row class="ion-padding-top">
+                        <ion-button color='secondary' expand="block" fill="solid" class="full-width" (click)="submit()" [disabled]="(showWarningPopup===false)">
+                            {{'save' | translate}}</ion-button>
+                    </ion-row>
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>

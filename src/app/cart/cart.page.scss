@@ -1,0 +1,205 @@
+         :host(app-cart) {
+            width: 100%;
+        }
+        
+        ion-checkbox {
+            position: relative;
+            margin-bottom: auto;
+        }
+
+        .mt4p{
+            margin-top: -4%;
+            margin-bottom: -4%;
+        }
+
+        .custom-element{
+            font-weight: 500;
+            background-color: #ffffff;
+        }
+
+
+        .labelDiv{
+            width: 100%;
+        }
+        
+        .popover-arrow.sc-ion-popover-ios:after {
+            display: contents;
+            left: 3px;
+            top: 3px;
+            border-radius: 3px;
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+            background: var(--background);
+            content: "";
+            z-index: 10;
+        }
+        
+        .custom-name {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        
+        .sub-heading {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .custom-content {
+            font-size: 1.1rem;
+            font-weight: 300;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .custom-total {
+            border-top: 1px solid #b0b0b0;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        
+        .cart-amount-font {
+            font-size: 0.9rem;
+        }
+        
+        .discount-amount {
+            text-decoration: line-through;
+        }
+        
+        .cart-detail {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 30px;
+        }
+        /* Custom Skeleton Line Height and Margin */
+        
+        .custom-skeleton ion-skeleton-text {
+            line-height: 13px;
+        }
+        
+        .custom-skeleton ion-skeleton-text:last-child {
+            margin-bottom: 5px;
+        }
+        
+        .cart-amount {
+            color: #3CBFAE;
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+        .cart-amount-input{
+            border: 2px solid #3CBFAE;
+            border-radius: 7px;
+            margin-left: 5px;
+            width: 100px;
+            height: 33px;
+            font-size: 13px;
+            padding: 5px !important;
+            margin-top: -5px;
+        }
+        input:focus, textarea:focus, select:focus{
+            outline: none;
+        }
+        .input-Field{
+            display: flex;
+            margin-left: -3px;
+        }
+        .editIcon{
+            color: #3CBFAE;
+            font-size: 30px;
+            position: relative;
+            left: -8px;
+        }
+        .cancelIcon{
+            font-size: 25px;
+            position: relative;
+            left: -4px;
+            color: #91a1ae;
+        }
+        .disabledEditIcon {
+            color: currentColor;
+            opacity: 0.5;
+            text-decoration: none;
+          }
+        .cartEdit-icn-list-img{
+            width: 15px;
+            margin-right: 10PX;
+        }
+        
+        .checkout-label {
+            font-weight: 500;
+            color: #3CBFAE;
+        }
+        
+        .custom-card {
+            border: 0.5px solid #3CBFAE;
+            box-shadow: none;
+            margin-top: 32px;
+        }
+        
+        .custom-font {
+            font-weight: 500px;
+        }
+        
+        .custom-padding {
+            padding: 20px 0px;
+        }
+        
+        .mandatory-text {
+            color: var(--ion-color-danger);
+            position: absolute;
+            top: 0px;
+        }
+        
+        .item-color {
+            color: #7d7d7d;
+        }
+        
+        .custom-margin {
+            margin-top: 5px;
+        }
+        
+        .description {
+            color: #7d7d7d;
+            white-space: normal;
+            word-break: break-all;
+        }
+        
+        .payment-margin {
+            margin-top: 22px;
+        }
+        
+        .amount {
+            margin-bottom: 2px;
+        }
+        
+        .custom-button {
+            padding: 0;
+            margin-bottom: 16px;
+        }
+        
+
+.information_circle{
+    font-size: 18px;
+    color: #0873ba;
+    vertical-align: bottom;
+    margin-left: 2px;
+}
+
+
+    .cancelIcon2{
+        font-size: 33px;
+        position: relative;
+        left: 5px;
+        color: #91a1ae;
+    }
+
+    .editIcon2{
+        color: #3CBFAE;
+        font-size: 37px;
+        position: relative;
+         left: 15px;
+    }
+    
+    

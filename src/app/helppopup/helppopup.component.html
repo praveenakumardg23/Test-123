@@ -1,0 +1,9 @@
+<ion-list class="ion-no-margin">
+    <!-- <ion-list-header>Ionic</ion-list-header> -->
+    <ion-item  (click)="DismissClick()">
+        {{'help' | translate}}
+    </ion-item>
+    <ion-item *ngIf="showLogout"  (click)="logout()" >
+        {{'login_tab' | translate}}
+    </ion-item>
+</ion-list>

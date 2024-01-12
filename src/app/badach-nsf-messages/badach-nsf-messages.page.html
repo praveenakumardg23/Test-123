@@ -1,0 +1,22 @@
+<ion-content class='ion-content'>
+  <ion-grid class="img-cover">
+    <ion-row class="custom-height">
+      <app-register-login-tab class="full-width"></app-register-login-tab>
+    </ion-row>
+  </ion-grid>
+  <ion-grid class="message-wrapper">
+    <ion-row class="ps-card">
+      <ion-col size="12">
+        <ion-text *ngIf="type == 'nsf'"> {{'NSF_Account_Locked' | translate}} </ion-text>
+        <ion-text *ngIf="type == 'uaur'"> {{'UA_UR_Account_Message1' | translate}} {{cardNum}} {{'UA_UR_Account_Message2' | translate}} </ion-text>
+        <ion-text *ngIf="type == 'cb'"> {{'CB_Account_Message1' | translate}} {{cardNum}} {{'CB_Account_Message2' | translate}} </ion-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-button expand="block" class="full-width custom-orange-btn" (click)="onBack()">
+          {{ 'Back' | translate }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

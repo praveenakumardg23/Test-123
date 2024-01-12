@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color="primary">
+      <ion-title>{{'Terms_and_Conditions' |translate}}</ion-title>
+      <ion-buttons slot="primary">
+          <ion-button color="light" (click)="onDismiss()">
+              <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-grid class="ion-padding custom-scroll">
+  <ion-text color="primary">
+      <ion-row scrollbar-y-auto>
+        <p style="margin-top:0">
+          {{'AR_Terms_and_condition_p1'|translate}}
+      </p>
+      <p>
+          {{'AR_Terms_and_condition_p2'|translate}}
+      </p>
+      <p>
+          {{'AR_Terms_and_condition_p3'|translate}}
+      </p>
+
+        <ion-col size="12">
+          <ion-item class="custom-item" lines="none">
+            <ion-checkbox aria-label="updateall" class="custom-color custom-checkboxs ion-margin-end" color="secondary" name="updateall" (ionChange)="arTerms($event)"></ion-checkbox>
+            <ion-label class="ion-text-wrap terms-agree">{{'AR_Terms_and_condition_p4'|translate}}</ion-label>
+          </ion-item>
+       </ion-col>
+        <ion-button expand="block" type="submit" class="full-width custom-orange-btn" (click)="isAgree()" [disabled]="!arTermsChecked">{{'save'|translate}}</ion-button>
+      </ion-row>
+  </ion-text>
+</ion-grid>

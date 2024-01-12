@@ -1,0 +1,289 @@
+<ion-grid *ngIf="reportType === Report_Type.Meal_Activity_Report"  [ngClass]="{'main-grid' : languageService.langDir === 'ltr', 'main-grid2' : languageService.langDir === 'rtl'}">
+  <ion-row class="header-row">
+    <ion-col size="7" class="payment-report">{{'MEAL_ACTIVITY_REPORT'|translate}}</ion-col>
+    <ion-col size="5" class="collapse-button-all">
+      <ion-button class="button-size" color="primary" *ngIf=collapse (click)="manageAllRows(true)">
+        {{'Expand_All' | translate}}
+      </ion-button>
+      <ion-button class="button-size" color="primary"*ngIf=!collapse (click)="manageAllRows(false)">
+        {{'Collapse_All' | translate}}
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col class="grid-col">
+        <p>
+          {{'TRANSACTION_ID'|translate}}
+          <ion-icon *ngIf=transaction_idBoolean name="arrow-down"  class="sorting-ico-size" (click)="sort('IntTransactionId' , transaction_idBoolean)" ></ion-icon>
+          <ion-icon *ngIf=!transaction_idBoolean name="arrow-up"  class="sorting-ico-size" (click)="sort('IntTransactionId', transaction_idBoolean)" ></ion-icon>
+        </p>
+    </ion-col>
+    <ion-col class="grid-col">
+      <p>{{'SALE_DATE'|translate}}
+        <ion-icon *ngIf=saleDate_Boolean name="arrow-down"  class="sorting-ico-size" (click)="sort('SaleDate' , saleDate_Boolean)" ></ion-icon>
+      <ion-icon *ngIf=!saleDate_Boolean name="arrow-up"  class="sorting-ico-size" (click)="sort('SaleDate', saleDate_Boolean)" ></ion-icon>
+      </p>
+    </ion-col>
+    <ion-col class="grid-col">
+      <p>{{'MEAL_PERIOD'|translate}}
+        <ion-icon *ngIf=mealPeriod_Boolean name="arrow-down"  class="sorting-ico-size" (click)="sort('MealPeriod' , mealPeriod_Boolean)" ></ion-icon>
+      <ion-icon *ngIf=!mealPeriod_Boolean name="arrow-up"  class="sorting-ico-size" (click)="sort('MealPeriod', mealPeriod_Boolean)" ></ion-icon>
+      </p>
+    </ion-col>
+    <ion-col class="grid-col">
+      <p>{{'TOTAL_SALE'|translate}}
+        <ion-icon *ngIf=totalSale_Boolean name="arrow-down"  class="sorting-ico-size" (click)="sort('Amount' , totalSale_Boolean)" ></ion-icon>
+      <ion-icon *ngIf=!totalSale_Boolean name="arrow-up"  class="sorting-ico-size" (click)="sort('Amount', totalSale_Boolean)" ></ion-icon>
+      </p>
+    </ion-col>
+  </ion-row>
+  <hr class="hr1">
+
+  <ion-row *ngIf="isRecordFound" class="custom-scroll" id="bar-style">
+    <ion-col size="12"
+      *ngFor="let data of reportData| paginate : { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: count}">
+      <ion-row class="patron-intro">
+        <ion-col size="12" class="fixed-col">
+          <p>
+            <ion-row>
+              <!-- <ion-col size="5"> -->
+                <span class="fixed-label">{{'rp_patron_name' | translate}}:</span>
+              <!-- </ion-col> -->
+              <!-- <ion-col size="7"> -->
+                <span class="fixed-label  name-val" [ngClass]="{'value' : languageService.langDir === 'ltr', 'value2' : languageService.langDir === 'rtl'}">{{data.PatronName}}</span>
+              <!-- </ion-col> -->
+            </ion-row>
+          </p>
+        </ion-col>
+        <ion-col size="12" class="fixed-col sd-row">
+          <p class="sub-heading">
+            <ion-row>
+              <!-- <ion-col size="5"> -->
+                <span class="fixed-label">{{'rp_patron_id' | translate}}:</span>
+              <!-- </ion-col> -->
+              <!-- <ion-col size="7"> -->
+                <span class="fixed-label name-val" [ngClass]="{'value' : languageService.langDir === 'ltr', 'value2' : languageService.langDir === 'rtl'}">{{data.childitems[0].PatronId}}</span>
+              <!-- </ion-col> -->
+            </ion-row>
+          </p>
+        </ion-col>
+      </ion-row>
+
+      <ion-list>
+        <ion-row class="second-row">
+          <span class="scroll-span">
+            <div class="each-collapse-div" *ngFor="let childData of data.childitems | orderBy: key; let i=index;">
+              <!-- <div class="each-collapse-div" *ngFor="let childData of data.childitems; let i=index;"> -->
+              <ion-row (click)="toggleRow(childData,currentPage)" [ngClass]="{'bg-grey' : i%2 === 0}" class="single-collapse">
+                {{data.expanded}}
+                <ion-icon *ngIf=!childData.expanded class="arrow-style"name="caret-up-sharp"></ion-icon>
+                <ion-icon *ngIf=childData.expanded class="arrow-style" name="caret-down-sharp"></ion-icon>
+                <ion-col class="grid-col-values2 mt28">
+                  <p>{{childData.IntTransactionId}}</p>
+                </ion-col>
+                <ion-col class="grid-col-values2 sale-date" dir="ltr">
+                  <p>{{childData.SaleDate| date: 'MM/dd/yy, hh:mm:ss a'}}</p>
+                </ion-col>
+                <ion-col class="grid-col-values2 mt28 meal-period">
+                  <p>{{childData.MealPeriod}}</p>
+                </ion-col>
+                <ion-col class="grid-col-values2 mt28" style="text-align: right;margin-right: 3px;">
+                  <p>${{childData.Amount| number:'.2'}}</p>
+                </ion-col>
+              </ion-row>
+              <div *ngIf="childData.expanded" class="div-background">
+
+                <fieldset style="border:1px solid #3CBFAE;">
+                  <legend>{{'Item'|translate}} </legend>
+
+                  <ion-row class="item-row">
+                    <ion-col class="grid-col">
+                      <p>{{'Item'|translate}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col">
+                      <p>{{'Meal'|translate}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col">
+                      <p>{{'QUANTITY'|translate}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col">
+                      <p>{{'Cost'|translate}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col">
+                      <p>{{'Total' | translate}}</p>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="item-row-value" [ngClass]="{'bg-grey' : l%2 !== 0}" *ngFor="let item of childData.ItemDataList;let l=index">
+                    <ion-col class="grid-col-value">
+                      <p>{{item.ItemDescription}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col-value">
+                      <p class="time-mr7">{{item.IsMeal}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col-value">
+                      <p>{{item.Quantity}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col-value ">
+                      <p>${{item.PriceEach| number:'.2'}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col-value ">
+                      <p>${{item.PriceEach*item.Quantity| number:'.2'}}</p>
+                    </ion-col>
+                  </ion-row>
+                  
+                  <ion-row class="ion-padding" *ngIf="childData.ItemDataList.length == 0">
+                    <ion-col class="ion-text-center">
+                      <ion-text>{{ 'no_records_found' | translate }}</ion-text>
+                    </ion-col>
+                  </ion-row>
+
+                </fieldset>
+
+                <fieldset style="border:1px solid #3CBFAE;">
+                  <legend>{{'payment'|translate}}</legend>
+                  <ion-row class="item-row">
+                    <ion-col class="grid-col">
+                      <p>{{'payment'|translate}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col">
+                    </ion-col>
+                    <ion-col class="grid-col">
+                      <p>{{'amount'|translate}}</p>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row class="item-row-value" [ngClass]="{'bg-grey' : k%2 !== 0}" *ngFor="let payment of childData.PaymentDataList;let k=index">
+                    <ion-col class="grid-col-value">
+                      <p>{{payment.Payment[0]}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col-value">
+                      <p>{{payment.Payment[1]}}</p>
+                    </ion-col>
+                    <ion-col class="grid-col-value ">
+                      <p>${{payment.Amount | number:'.2'}}</p>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row class="ion-padding" *ngIf="childData.PaymentDataList.length == 0">
+                    <ion-col class="ion-text-center">
+                      <ion-text>{{ 'no_records_found' | translate }}</ion-text>
+                    </ion-col>
+                  </ion-row>
+
+                </fieldset>
+
+                
+              </div>
+            </div>
+          </span>
+        </ion-row>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+  <pagination-controls *ngIf="isRecordFound" class="paginator" [directionLinks]="true" previousLabel="" nextLabel=""
+    (pageChange)="onChange($event)"></pagination-controls>
+    
+    <ion-row class="ion-padding" *ngIf="!isRecordFound">
+      <ion-col class="ion-text-center">
+        <ion-text>{{ 'no_records_found' | translate }}</ion-text>
+      </ion-col>
+    </ion-row>
+
+</ion-grid>
+
+<ion-grid *ngIf="reportType === Report_Type.Meal_Account_Report" class="main-grid">
+  <ion-row>
+    <ion-col class="grid-col">
+      <p>{{'DESCRIPTION' | translate}}</p>
+    </ion-col>
+    <ion-col class="grid-col">
+      <p class="time-mr7">{{'TRANSACTION DATE' | translate}}</p>
+    </ion-col>
+    <ion-col class="grid-col">
+      <p>{{'QUANTITY' | translate}}</p>
+    </ion-col>
+    <ion-col class="grid-col">
+      <p>{{'AMOUNT' | translate}}</p>
+    </ion-col>
+  </ion-row>
+  <hr class="hr1">
+
+  <ion-row class="custom-scroll" *ngIf="isRecordFound" id="bar-style">
+    <ion-col size="12"
+      *ngFor="let data of reportData | paginate : { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: count}">
+      <ion-row class="patron-intro">
+        <ion-col size="12" class="fixed-col">
+          <p>
+            <ion-row>
+              <!-- <ion-col size="5"> -->
+                <span class="fixed-label">{{'rp_patron_name' | translate}}:</span>
+              <!-- </ion-col> -->
+              <!-- <ion-col size="7"> -->
+                <span class="fixed-label value name-val">{{data.PatronName}}</span>
+              <!-- </ion-col> -->
+            </ion-row>
+          </p>
+        </ion-col>
+        <ion-col size="12" class="fixed-col sd-row">
+          <p class="sub-heading">
+            <ion-row>
+              <ion-col size="5">
+                <span class="fixed-label">{{'rp_patron_id' | translate}}:</span>
+              </ion-col>
+              <ion-col size="7">
+                <span class="fixed-label value name-val">{{data.childitems[0].PatronId}}</span>
+              </ion-col>
+            </ion-row>
+          </p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row [ngClass]="{'bg-grey' : i%2 === 0}" *ngFor="let childData of data.childitems; let i=index;">
+        <ion-col size="12">
+          <ion-row *ngIf="!childData.DescriptionArray;else else_content">
+            <ion-col class="grid-col-values">
+              <p>{{childData.Description}}</p>
+            </ion-col>
+            <ion-col class="grid-col-values">
+              <p class="time-mr7">{{childData.TransactionDate| date: 'MM/dd/yy, hh:mm:ss a'}}</p>
+            </ion-col>
+            <ion-col class="grid-col-values qty">
+              <p>{{childData.Quantity}}</p>
+            </ion-col>
+            <ion-col class="grid-col-values num">
+              <p>${{childData.Price}}</p>
+            </ion-col>
+          </ion-row>
+
+          <ng-template #else_content>
+            <ion-row [ngClass]="{'mt-minus8' : j !== 0}"
+              *ngFor="let grandChildData of childData.DescriptionArray[0]; let j=index;">
+              <!--*ngFor="let grandChildData of childData.DescriptionArray[0]; let j=index;"-->
+              <ion-col class="grid-col-values">
+                <p>{{grandChildData}}</p>
+              </ion-col>
+              <ion-col class="grid-col-values">
+                <p *ngIf="j === 0" class="time-mr7">{{childData.TransactionDate| date: 'MM/dd/yy, hh:mm:ss a'}}</p>
+              </ion-col>
+              <ion-col class="grid-col-values qty">
+                <p *ngIf="j === 0">{{childData.Quantity}}</p>
+              </ion-col>
+              <ion-col class="grid-col-values num">
+                <p>${{childData.PriceArray[0][j]}}</p>
+              </ion-col>
+            </ion-row>
+          </ng-template>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <pagination-controls *ngIf="isRecordFound" class="paginator" [directionLinks]="true" previousLabel="" nextLabel=""
+    (pageChange)="onChange($event)"></pagination-controls>
+
+  <ion-row class="ion-padding" *ngIf="!isRecordFound">
+    <ion-col class="ion-text-center">
+      <ion-text>{{ 'no_records_found' | translate }}</ion-text>
+    </ion-col>
+  </ion-row>
+</ion-grid>

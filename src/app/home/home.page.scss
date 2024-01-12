@@ -1,0 +1,41 @@
+ion-tab-bar {
+    overflow-x: scroll;
+    justify-content: left;
+}
+
+.no-patrons {
+    position: absolute;
+    top: 25px;
+    right: 0;
+    left: 0;
+    margin: auto;
+}
+
+.custom-text-font {
+    font-weight: 500;
+}
+
+.custom-color {
+    color: #3CBFAE;
+    font-weight: 500;
+}
+
+
+
+.custom-main {
+    font-weight: 500;
+}
+
+.free_reduced.alert-message.sc-ion-alert-ios.paper-app-msg{
+    text-align: left !important;
+}
+
+::ng-deep .alert-checkbox-label.sc-ion-alert-ios{
+    margin-left: -6% !important;
+}
+
+.all-student-icon{
+    margin-top: 25%;
+    border-radius: 0px;
+    height: 54%;
+}

@@ -1,0 +1,37 @@
+.custom-scroll{
+   // background-color:#0873ba;
+    height: 100%;
+    overflow: scroll;
+}
+
+.full-width {
+    max-width: 100% !important;
+}
+
+.checkbox-info {
+    font-size: 16px;
+    margin-top: 25px;
+    margin-bottom: 2px;
+}
+
+.checkbox-margin {
+    margin-top: 5px;
+    text-align: left;
+}
+
+.terms-agree {
+    margin-left: 5px;
+}
+
+.custom-item{
+    --background: transparent;
+    --background-focused: transparent;
+   // --color: #fff;
+    --background-activated: transparent;
+}
+
+.custom-color{
+    --ion-color-base: var(--ion-color-secondary) !important;
+    --ion-color-contrast: var(--ion-color-primary-contrast) !important;
+}
+

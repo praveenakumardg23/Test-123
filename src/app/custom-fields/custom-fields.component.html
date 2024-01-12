@@ -1,0 +1,135 @@
+
+<ion-header style="padding: 24px 8px; width: auto" dir="{{languageService.langDir}}">
+<ion-title color='secondary'>{{selectedFees.name}}</ion-title>
+<ion-icon name = "close" class = "close-icon" (click) = "close()"></ion-icon>
+</ion-header>
+<ion-content class="custom" style="--background: #f3f3f3" dir="{{languageService.langDir}}">
+  <form *ngIf = "CustomFieldList && CustomFieldList.length > 0" [formGroup]="customFieldsForm" #ngForm="ngForm" (ngSubmit)="AddSchedule(customFieldsForm)"
+    class = "custom-form"
+    style="padding: 0px 8px;">
+    <div style="padding-bottom: 50px;">
+      <div *ngFor="let Field of CustomFieldList">
+          <!-- Text Field -->
+          <div *ngIf="Field.Type == 'Text Field'" class="text-left">
+              <ion-item style="width: 98%; --background: #f3f3f3;" lines = "none" class = "custom-text">
+                <ion-label style="font-size: 14px;">
+                  {{Field.LabelName}}
+                  <span *ngIf="Field.IsMandatory">*</span>
+              </ion-label>
+                  <ion-input aria-label="InputValue"
+                  class = "form-fields text-fields"
+                  formControlName="{{Field.IntFeeCustomFieldId}}"
+                  (keyup)="setFieldValue(Field, $event)"
+                  [required]="Field.IsMandatory && !FieldInputValue"
+                  maxlength={{Field.FieldLength}}
+                  autocomplete="off"> </ion-input>
+              </ion-item>
+              <ion-text color="danger" *ngIf="(ngForm.submitted || customFieldsForm.get('' + Field.IntFeeCustomFieldId).touched) 
+                && customFieldsForm.get('' + Field.IntFeeCustomFieldId).errors?.required">
+            * {{'Please_enter_value' |translate}} </ion-text>
+          </div>
+
+          <!-- TextArea -->
+          <div *ngIf="Field.Type == 'Text Area'" class="mt-2 text-left select-field">
+              <ion-item class="text-area" style="--background: #f3f3f3;" lines = "none">
+                <ion-label style="font-size: 14px;">
+                  {{Field.LabelName}}
+                  <span *ngIf="Field.IsMandatory">*</span>
+              </ion-label>
+                  <ion-textarea 
+                      class = "form-fields text-fields"
+                      formControlName="{{Field.IntFeeCustomFieldId}}"
+                      [required]="Field.IsMandatory && !FieldTextarea"
+                      (keyup)="setFieldValue(Field, $event)"
+                      autocomplete="off" pattern="\d*" maxlength={{Field.FieldLength}}>
+                  </ion-textarea>
+              </ion-item>
+              <ion-text color="danger" *ngIf="(ngForm.submitted || customFieldsForm.get('' + Field.IntFeeCustomFieldId).touched) 
+              && customFieldsForm.get('' + Field.IntFeeCustomFieldId).errors?.required">
+           * {{'Please_enter_value' |translate}}</ion-text>
+          </div>
+          
+          <!-- Radio Button -->
+          <div *ngIf="Field.Type == 'Radio Button'" class="mt-2 text-left custom-radio">
+            <ion-radio-group  (ionChange)="setFieldValue(Field, $event)" formControlName="{{Field.IntFeeCustomFieldId}}">
+              <ion-list-header>
+                <ion-label class = "field-label">
+                  {{Field.LabelName}}
+                  <span *ngIf="Field.IsMandatory">*</span>
+                </ion-label>
+              </ion-list-header>
+              <ion-row style="padding: 0px 8px;">
+                <ion-col col-auto text-left  *ngFor="let item of Field.Options" class="ion-no-margin ion-no-padding">
+                     <ion-item lines="none" style='--ion-background-color: none; --padding-start: 0px;--inner-padding-end: 5px;font-size: 15px;' class='radioButtonBg'>
+                     
+                        <ion-radio color="secondary" (ionSelect)="setFieldValue(Field, item)" style='margin:7px;width: 17px;height: 17px;'   mode="md" slot="start" [value]="item"></ion-radio>
+                        {{item.OptionValue}} </ion-item>
+                 </ion-col>
+            </ion-row>
+        </ion-radio-group>
+        <ion-text color="danger" *ngIf="(ngForm.submitted || customFieldsForm.get('' + Field.IntFeeCustomFieldId).touched) 
+        && customFieldsForm.get('' + Field.IntFeeCustomFieldId).errors?.required">
+        * {{'Please_select_value' |translate}} </ion-text>
+          </div>
+
+          <!-- Checkbox -->
+          <div *ngIf="Field.Type == 'Checkbox'" style="padding: 8px 10px;" class="mt-2 text-left select-field" formArrayName="{{Field.IntFeeCustomFieldId}}">
+            <ion-label style="font-size: 14px;" class = "field-label">
+              {{Field.LabelName}}
+              <span *ngIf="Field.IsMandatory">*</span>
+          </ion-label>
+            <ion-row style="padding: 0px 8px;">
+              <ion-col col-auto text-left  *ngFor="let item of Field.Options;let i = index" class="ion-no-margin ion-no-padding">
+                   <ion-item  lines="none" style='--ion-background-color: none; --padding-start: 0px;--inner-padding-end: 5px;font-size: 15px;' class='radioButtonBg'>
+                   
+                      <ion-checkbox aria-label="IsSelected" color="secondary" (ionChange) = "setFieldValue(Field, $event)"  style='margin:7px;width: 17px;height: 17px;'   mode="md" slot="start" [value]="item" [formControlName] ="i" [checked] = "item.IsSelected"></ion-checkbox>
+                      {{item.OptionValue}} </ion-item>
+               </ion-col>
+          </ion-row>
+          <ion-text color="danger"  *ngIf="(customFieldsForm.get('' + Field.IntFeeCustomFieldId).touched || ngForm.submitted)
+          && isNoCheckboxSelected(customFieldsForm.get('' + Field.IntFeeCustomFieldId).value, Field.IsMandatory)">
+          * {{'Please_select_value' |translate}} </ion-text>
+          </div>
+
+          <!-- Dropdown -->
+          <div *ngIf="Field.Type == 'Dropdown'" class="div-dropdown1 text-left">
+              <ion-item appearance="fill" style="width: 98%; --background: #f3f3f3;" class = "custom-text">
+                  <ion-label style=" font-size: 14px;">
+                      {{Field.LabelName}}
+                      <span *ngIf="Field.IsMandatory">*</span>
+                  </ion-label>
+                  <ion-select class="arrow-down" toggleIcon="caret-down-sharp" (ionChange) = "setFieldValue(Field, $event)" [formControlName]="Field.IntFeeCustomFieldId">
+                      <ion-select-option color="secondary" *ngFor = "let item of Field.Options" [value]="item">{{item.OptionValue}} </ion-select-option>
+                  </ion-select>
+
+              </ion-item>
+              <ion-text color="danger" *ngIf="(ngForm.submitted || customFieldsForm.get('' + Field.IntFeeCustomFieldId).touched) 
+              && customFieldsForm.get('' + Field.IntFeeCustomFieldId).errors?.required">
+              * {{'Please_select_value' |translate}} </ion-text>
+          </div>
+
+          <!-- List -->
+          <div *ngIf="Field.Type == 'List'" class="text-left">   
+              <ion-item appearance="fill" style="width: 98%; --background: #f3f3f3;" class = "custom-text">
+                <ion-label style="font-size: 14px;">
+                    {{Field.LabelName}}
+                    <span *ngIf="Field.IsMandatory">*</span>
+                </ion-label>
+                <ion-select class="arrow-down" toggleIcon="caret-down-sharp" multiple = "true" (ionChange) = "setFieldValue(Field, $event)" [formControlName]="Field.IntFeeCustomFieldId">
+                    <ion-select-option *ngFor = "let item of Field.Options" [value]="item">{{item.OptionValue}} </ion-select-option>
+                </ion-select>
+            </ion-item> 
+            <ion-text color="danger" *ngIf="(ngForm.submitted || customFieldsForm.get('' + Field.IntFeeCustomFieldId).touched) 
+            && customFieldsForm.get('' + Field.IntFeeCustomFieldId).errors?.required">
+            * {{'Please_select_value' |translate}} </ion-text> 
+          </div>
+      </div>
+    </div>
+      <ion-footer style="text-align: center;" class = "button">
+        <ion-button fill = "clear" type="submit" color='secondary' style = "font-weight: bold; margin: 0;
+        font-size: 18px;"> {{editMode ? ('UPDATE'|translate) : ('ok'|translate)}} </ion-button>
+      </ion-footer>
+    </form>
+</ion-content>
+
+

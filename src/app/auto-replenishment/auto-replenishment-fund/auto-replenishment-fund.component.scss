@@ -1,0 +1,140 @@
+.list-header {
+    border-radius: 0px;
+}
+
+:host(app-auto-replenishment) {
+    width: 100%;
+}
+
+.custom-name{
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #3CBFAE;
+}
+.custom-label{
+    margin-right:5px;
+   
+}
+.accountBalance{
+    padding-top: 15px;
+    margin-bottom: 0px;
+    color: #afabab;
+}
+// .custom-grid{
+//     background-color: #f79548;
+//     padding: 3px;
+//     border-radius: 3px;
+// }
+
+.custom-element{
+    font-weight: 500;
+    background-color: #ffffff;
+}
+
+// 
+
+.custon-nav{
+    height: 48px;
+    width: 20px;
+    cursor: pointer;
+ 
+    vertical-align: middle;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.prev-icon-custom.disabled{
+    opacity: 0.4;
+    cursor: default;
+}
+
+.next-icon-custom.disabled{
+    opacity: 0.4;
+    cursor: default;
+}
+.slider-nav{
+    ion-icon{
+        height: 100%;
+    }
+}
+
+.autoreplenishment-sub-header>h3 {
+    display: flex;
+    align-items: center;
+}
+
+.autoreplenishment-sub-header>h3>span {
+    // position: relative;
+    // right: 8px;
+    // margin-left: auto;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.ion-activatable {
+    position: relative;
+    overflow: hidden;
+}
+
+div[scrollx=true] {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    .scroll-item {
+        flex: 0 0 auto;
+    }
+}
+
+.patron-active {
+    border: 2px solid #3CBFAE !important;
+}
+
+.patron-active-color {
+    color: #3CBFAE !important;
+    font-weight: 500;
+}
+
+.patron-inactive {
+    border: 1px solid #757575;
+}
+
+.dollar::before
+{content:"$"}
+
+.custom-auto-button{
+    width: 90%;
+    margin: auto;
+    font-size: 14px;
+}
+
+.custom-color{
+    --ion-color-base: var(--ion-color-secondary) !important;
+    --ion-color-contrast: var(--ion-color-primary-contrast) !important;
+}
+
+@media only screen and (max-width:320px) {
+    .custom-label{
+        margin-right:5px;
+        white-space: normal;
+    }
+}
+ion-select.fund-down::part(icon) {
+    width: .8rem;
+    height: .8rem;
+    color: #b1b1b1;
+}
+
+ion-select.fund-down::part(label):after {
+    content: "*";
+    font-size: 16px;
+    color: red;
+    margin-left: 8px;
+}
+ion-select.fund-down::part(icon) {
+    margin-top: 25px;
+}

@@ -1,0 +1,126 @@
+.file-bg{
+  padding: 9px;
+  background: #33333329;
+}
+
+.ps-card{
+  height: 37rem;
+  margin-top: 1%;
+}
+
+h1{
+  margin-top: -6%;
+  margin-left: -6%;
+  color: #51606D !important;
+  font-weight: 700;
+}
+
+.sub-heading > span{
+  color: #4D4F5C;
+  font-size: 90%;
+  font-weight: 600;
+}
+
+.value{
+  margin-left: 2%;
+}
+
+ion-col{
+  margin-top: -5%;
+}
+
+
+.fixed-col{
+  margin-bottom: -8%;
+}
+
+ion-item.fixed-total-col{
+  top: 25%;
+}
+
+h2{
+  color: #51606D !important;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: -4%;
+}
+.main-row{
+  margin-bottom: -10%;
+}
+
+.full-width{
+  color: #ffffff;
+  background-color:#3CBFAE !important ;
+}
+
+.below-button{
+  bottom: 0;
+  position: absolute;
+  width: 86% !important;
+}
+
+hr{
+  height: 1px;
+  background: black;
+  width: 79%;
+  margin-left: 3%;
+  bottom: 32%;
+  position: absolute;
+  box-sizing: content-box;
+}
+
+.hr1{
+  bottom: 32%;
+}
+
+.hr2{
+  bottom: 22%;
+}
+
+.fixed-total-col{
+  position: absolute;
+}
+
+
+.fixed-total-col > p{
+  margin-top: -15%;
+}
+
+.custom-scroll{
+  top:22%; 
+  width: 90%;
+  height: 41%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 42%;
+}
+
+div[scrollx=true] {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+      display: none;
+  }
+  .scroll-item {
+      flex: 0 0 auto;
+  }
+}
+
+.receipt-button{
+  background-color: #3CBFAE!important;
+  color: #ffffff;
+  width: 100%;
+}
+
+.mr25 > span{
+  margin-right: 25px !important;
+}
+
+.mr10 > span{
+  margin-right: 10px !important;
+}
+
+.align-right{
+  text-align: right !important;
+}

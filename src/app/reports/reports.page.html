@@ -1,0 +1,294 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'reports' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <ion-button [routerLink]="redirectToDashboard" routerDirection="back">
+                <img class="cart-icn-img" src="../../assets/icon/home-icn.svg">
+            </ion-button>
+            <ion-button (click)="onLangChange()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="primary">
+            <ion-button (click)="onGotoCart()" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover">
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card">
+                <ion-segment value="meal" (ionChange)="segmentChanged($event)" >
+                    <ion-segment-button value="meal" [attr.checked]="category == 'meal' ? '' : null">
+                        <ion-label>{{'meal_report' | translate}}</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="fund" [attr.checked]="category == 'fund' ? '' : null">
+                        <ion-label>{{'fund_report' | translate}}</ion-label>
+                    </ion-segment-button>
+                </ion-segment>
+                <ion-text color="dark" class="ion-text-center" *ngIf="category == 'meal' && (!districtFeatureList.Lunch)">
+                    <p style="margin-bottom:0;">{{ 'district_msg' | translate }}</p>
+                </ion-text>
+                <ion-grid *ngIf="category == 'meal' && (districtFeatureList.Lunch)">
+                    <form #f="ngForm" autocomplete="off">
+                        <ion-row>
+                            <ion-col size="12">
+                                <ion-item class="ion-no-padding">
+                                    <!-- <ion-label position="floating">{{'report_type' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label> -->
+                                    <ion-select label="{{'report_type' | translate}}" label-placement="floating" class="report-down" toggleIcon="caret-down-sharp" required [(ngModel)]="reporttype" name="type" #type="ngModel" ngModel [okText]="'Continue' | translate" [cancelText]="'cancel' | translate">
+                                        <ion-select-option value="1">{{'MEAL_ACTIVITY_REPORT' | translate}}</ion-select-option>
+                                        <ion-select-option value="2" *ngIf="districtFeatureList.LunchActivity">{{'meal_Account_Report' | translate}}</ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="!type.valid && type.touched">
+                                    <p class="error-text-message2">{{'report_type_required' | translate}}.</p>
+                                </ion-text>
+
+                                <ion-item class="ion-no-padding">
+                                    <!-- <ion-label position="floating">{{'slct_stu' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label> -->
+                                    <ion-select label="{{'slct_stu' | translate}}" label-placement="floating" class="report-down" toggleIcon="caret-down-sharp" multiple="true" required [(ngModel)]="mealActivityReportObj.selectedPatrons" name="selectedPatrons" #selectedPatrons="ngModel" ngModel [okText]="'Continue' | translate" [cancelText]="'cancel' | translate">
+                                        <!-- <ion-select-option>                                            
+                                            All
+                                        </ion-select-option> -->
+                                        <ion-select-option *ngFor="let patron of patrons" [value]="patron.IntPatronId">
+                                            {{patron.FirstName}} {{patron.LastName}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="!selectedPatrons.valid && selectedPatrons.touched">
+                                    <p class="error-text-message2">{{'student_required' | translate}}.</p>
+                                </ion-text>
+
+                                <ion-item class="ion-no-padding">
+                                    <!-- <ion-label position="floating">{{'date' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label> -->
+                                    <ion-select label="{{'date' | translate}}" label-placement="floating" class="report-down" toggleIcon="caret-down-sharp" required (ionChange)="onSelectedDateChange(mealActivityReportObj.selectedDate)" [(ngModel)]="mealActivityReportObj.selectedDate" name="selectedDate" #selectedDate="ngModel" ngModel [okText]="'Continue' | translate" [cancelText]="'cancel' | translate">
+                                        <ion-select-option value="1">{{'7_days' | translate}}</ion-select-option>
+                                        <ion-select-option value="2">{{'30_days' | translate}}</ion-select-option>
+                                        <ion-select-option value="3">{{'90_days' | translate}}</ion-select-option>
+                                        <ion-select-option value="4">{{'Custom_Date' | translate}}</ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="!selectedDate.valid && selectedDate.touched">
+                                    <p class="error-text-message">{{'date_type_required' | translate}}.</p>
+                                </ion-text>
+
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row *ngIf="mealActivityReportObj?.selectedDate == '4'">
+                            <ion-col size="6" class="ion-no-padding">
+                                <ion-item>
+                                    <ion-label class="reportLable" position="floating" (click)="toggleVisibility(0)">{{'start_date' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <div>
+                                        <p *ngIf="mealActivityReportObj.startDate != '' ||mealActivityReportObj.startDate != null " class="selected-date" (click)="toggleVisibility(0)" >{{mealActivityReportObj.startDate | date :  "MM/dd/yyyy" }}</p>
+                                    </div>
+                                </ion-item>
+                               
+                            </ion-col>
+                            
+
+                            <ion-col size="6" class="ion-no-padding">
+                                <ion-item>
+                                    <ion-label class="reportLable" position="floating" (click)="toggleVisibility(1)">{{'end_date' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <div>
+                                        <p *ngIf="mealActivityReportObj.endDate != '' || mealActivityReportObj.endDate != null " class="selected-date" (click)="toggleVisibility(1)" >{{mealActivityReportObj.endDate | date :  "MM/dd/yyyy" }}</p>
+                                    </div>
+                                </ion-item>
+                               
+                            </ion-col>
+                            <span class="report">
+                                <ion-datetime *ngIf="isVisible(0)" displayFormat="MM/DD/YYYY" picker-format="MM/DD/YYYY" [min]="minDate" 
+                                [max]="maxDate" [value]="mealDate" [(ngModel)]="mealActivityReportObj.startDate" name="startDate" #startDate="ngModel" ngModel (ionChange)="mealStartdateChange(mealActivityReportObj.startDate,f, 0)" required [doneText]="'DONE' | translate"
+                                    [cancelText]="'cancel' | translate" [showDefaultButtons]="true" (ionCancel)="toggleVisibility(0)" size="cover"  presentation="date" [preferWheel]="true"></ion-datetime></span>
+                                    <!-- <ion-text color="danger" class="error-message" *ngIf="!startDate.valid && startDate.touched">
+                                        <p class="error-text-message">{{'Valid_startdate'| translate}}.</p>
+                                    </ion-text> -->
+                            <span class="report">
+                                <ion-datetime *ngIf="isVisible(1)" displayFormat="MM/DD/YYYY" picker-format="MM/DD/YYYY" [min]="minDate" 
+                                [max]="maxDate" [value]="endDate" [showDefaultButtons]="true" [(ngModel)]="mealActivityReportObj.endDate" name="endDate" #endDate="ngModel" ngModel (ionChange)="mealEnddateChange(mealActivityReportObj.endDate,f,1)" required [doneText]="'DONE' | translate"
+                                    [cancelText]="'cancel' | translate" size="cover" (ionCancel)="toggleVisibility(1)"  presentation="date" [preferWheel]="true">
+                                </ion-datetime>
+                            </span>
+                            <!-- <ion-text color="danger" class="error-message">
+                                <p class="error-text-message" *ngIf="!endDate.valid && endDate.touched">
+                                    {{'end_date_required' | translate}}.</p>
+                                <p class="error-text-message" *ngIf="!IsMealFormValid">
+                                    {{'Enddate_greaterthan_startdate' | translate}}.</p>
+                            </ion-text> -->
+                        </ion-row>
+
+                        <ion-row class="ion-margin-top textColor">
+                            <ion-button  expand="block" color='secondary' class="full-width" [disabled]="IsMealFormValid===false || !f.valid" (click)="displayReport(f)">{{'generate_report' | translate}}
+                            </ion-button>
+                        </ion-row>
+                    </form>
+                </ion-grid>
+                <ion-grid *ngIf="category == 'fund'">
+                    <ion-row style="padding:0;">
+                        <ion-col size="12" *ngIf="isDistrictSourceAccount == false">
+                            <ion-text color="dark" class="ion-text-center">
+                                <p> {{'rp_district_no_feature' | translate}}</p>
+                            </ion-text>
+
+                        </ion-col>
+                        <ion-col size="12" *ngIf="filterdSourceAccounts?.length == 0 && isDistrictSourceAccount">
+                            <ion-text color="dark" class="ion-text-center">
+                                <p> {{'rp_nopatron_fund_acc' | translate}}</p>
+                            </ion-text>
+                        </ion-col>
+                    </ion-row>
+                    <ng-container *ngIf="!(!isDistrictSourceAccount || (filterdSourceAccounts?.length == 0 && isDistrictSourceAccount))">
+                        <form #f1="ngForm" autocomplete="off">
+                            <ion-row>
+                                <ion-col size="12">
+                                    <ng-container *ngIf="allPatronSourceAccounts">
+                                        <ion-item>
+                                            <!-- <ion-label position="floating">{{'selct_fund_type' | translate}}
+                                                <ion-text color="danger">*</ion-text>
+                                            </ion-label> -->
+                                            <ion-select label="{{'selct_fund_type' | translate}}" label-placement="floating" class="report-down" toggleIcon="caret-down-sharp" required [(ngModel)]="fundAccountReportObj.selectedAccountName" name="selectedAccountName" #selectedAccountName="ngModel" (ionChange)="onFundAccountSelection($event)" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate">
+                                                <ion-select-option *ngFor="let allPatronSourceAccount of filterdSourceAccounts" [value]="allPatronSourceAccount">
+                                                    {{allPatronSourceAccount.AccountName}}
+                                                </ion-select-option>
+                                            </ion-select>
+                                        </ion-item>
+                                        <ion-text color="danger" class="error-message" *ngIf="!selectedAccountName.valid && selectedAccountName.touched">
+                                            <p class="error-text-message3">{{'fund_acc_req' | translate}}.</p>
+                                        </ion-text>
+                                    </ng-container>
+                                    <ion-item>
+                                        <!-- <ion-label position="floating">{{'slct_stu' | translate}}
+                                            <ion-text color="danger">*</ion-text>
+                                        </ion-label> -->
+                                        <ion-select label="{{'slct_stu' | translate}}" label-placement="floating" class="report-down" toggleIcon="caret-down-sharp" multiple="true" required [(ngModel)]="fundAccountReportObj.selectedPatrons" name="selectedPatrons" #selectedPatrons="ngModel" [disabled]="!filterdPatronsList" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate">
+                                            <!-- <ion-select-option>
+                                            All
+                                        </ion-select-option> -->
+                                            <ion-select-option *ngFor="let patron of filterdPatronsList" [value]="patron.IntPatronId">
+                                                {{patron.FirstName}} {{patron.LastName}}
+                                            </ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                    <ion-text color="danger" class="error-message" *ngIf="!selectedPatrons.valid && selectedPatrons.touched">
+                                        <p class="error-text-message3">{{ 'pat_req'| translate }}</p>
+                                    </ion-text>
+
+                                    <ion-item>
+                                        <!-- <ion-label position="floating">{{'date' | translate}}
+                                            <ion-text color="danger">*</ion-text>
+                                        </ion-label> -->
+                                        <ion-select label="{{'date' | translate}}" label-placement="floating" class="report-down" toggleIcon="caret-down-sharp" required [(ngModel)]="fundAccountReportObj.selectedDate" name="selectedDate" #selectedDate="ngModel" (ionChange)="onFundSelectedDateChange(fundAccountReportObj.selectedDate)" required [okText]="'Continue' | translate" [cancelText]="'cancel' | translate">
+                                            <ion-select-option value="1">{{'7_days' | translate}}</ion-select-option>
+                                            <ion-select-option value="2">{{'30_days' | translate}}</ion-select-option>
+                                            <ion-select-option value="3">{{'90_days' | translate}}</ion-select-option>
+                                            <ion-select-option value="4">{{'Custom_Date' | translate}}</ion-select-option>
+                                        </ion-select>
+                                    </ion-item>
+                                    <ion-text color="danger" class="error-message" *ngIf="!selectedDate.valid && selectedDate.touched">
+                                        <p class="error-text-message3">{{ 'date_type_required' | translate }}.</p>
+                                    </ion-text>
+                                </ion-col>
+                            </ion-row>
+
+                            <ion-row *ngIf="fundAccountReportObj?.selectedDate == '4'">
+                                <ion-col size="6" class="ion-no-padding">
+                                    <ion-item>
+                                        <ion-label class="reportLable" position="floating" (click)="toggleVisibility(2)">{{ 'start_date' | translate }}
+                                            <ion-text color="danger">*</ion-text>
+                                        </ion-label>
+                                        
+                                        <div>
+                                            <p *ngIf="fundAccountReportObj.startDate != '' || fundAccountReportObj.startDate != null " class="selected-date" (click)="toggleVisibility(2)" >{{fundAccountReportObj.startDate | date :  "MM/dd/yyyy" }}</p>
+                                        </div>
+                                            
+                                    </ion-item>
+                                   
+                                    <!-- <ion-text color="danger" class="error-message" *ngIf="!startDate.valid && startDate.touched">
+                                        <p class="error-text-message">{{ 'Valid_startdate'| translate }}.</p>
+                                    </ion-text> -->
+                                </ion-col>
+                                <ion-col size="6" class="ion-no-padding">
+                                    <ion-item>
+                                        <ion-label class="reportLable" position="floating" (click)="toggleVisibility(3)">{{ 'end_date' | translate }}
+                                            <ion-text color="danger">*</ion-text>
+                                        </ion-label>
+                                        <div>
+                                            <p *ngIf="fundAccountReportObj.endDate != '' || fundAccountReportObj.endDate != null " class="selected-date" (click)="toggleVisibility(3)" >{{fundAccountReportObj.endDate | date :  "MM/dd/yyyy" }}</p>
+                                        </div>
+                                        
+                                    </ion-item>
+                                    
+                                    <!-- <ion-text color="danger" class="error-message">
+                                        <p class="error-text-message" *ngIf="!endDate.valid && endDate.touched">
+                                            {{ 'end_date_required'| translate }}.</p>
+                                        <p class="error-text-message" *ngIf="!IsFundFormValid">
+                                            {{ 'Enddate_greaterthan_startdate' | translate }}.</p>
+                                    </ion-text> -->
+                                </ion-col>
+                                <span class="report">
+                                    <ion-datetime *ngIf="isVisible(2)" displayFormat="MM/DD/YYYY" picker-format="MM/DD/YYYY"  [min]="minDate"
+                                    [value]="maxDate" [value]="fundDate"  [max]="fundAccountReportObj.endDate" [(ngModel)]="fundAccountReportObj.startDate" name="startDate" #startDate="ngModel" (ionChange)="fundStartdateChange(fundAccountReportObj.startDate,f1, 2)" required [doneText]="'DONE' | translate"
+                                            [cancelText]="'cancel' | translate" (ionCancel)="toggleVisibility(2)" [showDefaultButtons]="true" size="cover"  presentation="date" [preferWheel]="true"></ion-datetime>
+                                        </span>
+                                <span class="report">
+                                    <ion-datetime *ngIf="isVisible(3)" displayFormat="MM/DD/YYYY" picker-format="MM/DD/YYYY" value="MM/DD/YYYY" [min]="minDate"
+                                             [max]="maxDate" [(ngModel)]="fundAccountReportObj.endDate" name="endDate" #endDate="ngModel" (ionChange)="fundEnddateChange(fundAccountReportObj.endDate,f1, 3)" required [doneText]="'DONE' | translate"
+                                            [cancelText]="'cancel' | translate" (ionCancel)="toggleVisibility(3)" [showDefaultButtons]="true" size="cover"  presentation="date" [preferWheel]="true">
+                                        </ion-datetime></span>
+                            </ion-row>
+                            <ion-row class="ion-margin-top">
+                                <ion-button expand="block" color='secondary' class="full-width" (click)="onCreateFundAccountReport('PDF',f1)" [disabled]="IsFundFormValid===false || !f1.valid">{{ 'create_pdf_report' | translate }}
+                                </ion-button>
+                            </ion-row>
+                            <ion-row>
+                                <ion-button expand="block" color='secondary' class="full-width" (click)="onCreateFundAccountReport('Excel',f1)" [disabled]="IsFundFormValid===false || !f1.valid">
+                                    {{ 'create_excel_report' | translate }}
+                                </ion-button>
+                            </ion-row>
+                        </form>
+                    </ng-container>
+                </ion-grid>
+            </ion-col>
+            <ion-col size="12" *ngIf="showMealReport || showFundReport" class="ps-card display-grid">
+                <app-meal-reports [view_report_payload]="view_report_payload"  (checkDataPresence)="updateDataPresence()" [reportType]="viewReportType" *ngIf="showMealReport"></app-meal-reports>
+                <app-fund-reports *ngIf="showFundReport"></app-fund-reports>
+
+                <ion-row class="ion-margin-top textColor btn-row">
+                    <ion-col size="6">
+                        <ion-button expand="block" color='secondary'[disabled]="dataNotFound" class="full-width ft15" (click)="onCreateMealAcivityReport('PDF')">{{'create_pdf_report' | translate}}
+                        </ion-button>
+                        
+                    </ion-col>
+                    <ion-col size="6">
+                        <ion-button expand="block" color='secondary' [disabled]="dataNotFound" class="full-width ft15" (click)="onCreateMealAcivityReport('Excel')">
+                            {{ 'create_excel_report' | translate }}
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

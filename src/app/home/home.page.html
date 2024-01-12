@@ -1,0 +1,67 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'dashboard' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <ion-button (click)="onLangChange()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="primary">
+            <ion-button (click)="onGotoCart()" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" >
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+    
+</ion-header>
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover">
+        <ion-row class="ps-card no-patrons" *ngIf="!havePatrons">
+            <ion-text color="primary">
+                <h5>
+                    {{'add_family_memebers' | translate}}
+                </h5>
+                <ion-button expand="block" color="primary" fill="outline" class="full-width" (click)="redirectTo()">
+                    {{'please_click_here' | translate}}
+                    <!-- <ion-icon slot="icon-only" name="return-left" class="custom-space"></ion-icon> -->
+                </ion-button>
+            </ion-text>
+        </ion-row>
+        <ion-row>
+            <ion-card style="margin: 8px 8px;width:100% !important;box-shadow: 0px 0px 0px 0px black;border-radius: 0px;" *ngIf="viewPatrons?.length>1">
+                <ion-item   (click)="selectedStudentType('all' ,'')">
+                    <ion-avatar class="ion-margin">
+                        <!-- <img src="assets/images/individual-1.jpg"> -->
+                        <img class="all-student-icon" src="../../assets/icon/all_stud.svg">
+                    </ion-avatar>
+                    <ion-label>
+                        <ion-text>
+                            <h2 class="custom-color">{{'all_students' | translate}}</h2>
+                        </ion-text>
+                    </ion-label>
+                </ion-item>
+            </ion-card>
+            <ion-card style="margin: 8px 8px;width:100% !important;box-shadow: 0px 0px 0px 0px black;border-radius: 0px;" *ngFor="let patron of viewPatrons">
+                <ion-item  routerDirection="forward" (click)="selectedStudentType('individual' ,patron)">
+                    <ion-avatar class="ion-margin">
+                        <img *ngIf="patron.PictureData != null && patron.PictureData != ''" src="data:image/png;base64,{{patron.PictureData}}">
+                    </ion-avatar>
+                    <ion-label>
+                        <ion-text>
+                            <h2 class="custom-color">{{patron.FirstName}} {{patron.LastName}}</h2>
+                            <h4 class="custom-text-font">{{patron.PatronId}}</h4>
+                        </ion-text>
+                    </ion-label>
+                </ion-item>
+            </ion-card>
+        </ion-row>
+    </ion-grid>
+</ion-content>

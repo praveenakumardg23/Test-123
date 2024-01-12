@@ -1,0 +1,32 @@
+<!-- <ion-header dir="ltr">
+  <ion-toolbar color="primary" style="color: #fff;">
+      <ion-title>{{'Payment_Success'|translate}}</ion-title>
+      <ion-buttons slot="start">
+          <ion-button color="light" (click)="onDismiss('/fundraiserfee/fundraiser-fees')">
+              <ion-icon slot="icon-only" name="arrow-round-back"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header> -->
+<ion-content class='ion-content' dir="{{languageService.langDir}}">
+  <div class="mainDiv">
+    <div>
+      <p class="headerAlert">{{'warning_cart_msg1'|translate}}</p>
+    </div>
+    <div class="itemDiv">
+      <p>{{'ATTRIBUTE_NOT_AVAILABLE2'|translate}}</p>
+      <span *ngFor="let item of CartItems"  >
+        <p class="itemMargin">{{item.FeeName}} $ {{item.AmountDue}}</p>
+      </span>
+      
+      <p>{{'close_popUp' |translate}}</p>
+    </div>
+    <div class="buttonCenter">
+      <ion-button color="secondary" (click)="closePopup()" >
+        <ion-text color="light">{{'btn_continue'|translate}}</ion-text>
+    </ion-button>
+    </div>
+    
+  </div>
+  
+</ion-content>

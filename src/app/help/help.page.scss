@@ -1,0 +1,42 @@
+.custom-background {
+    background: #fff;
+    min-height: auto;
+}
+
+.ps-card {
+    color: black !important;
+    max-width: 98%;
+    padding: 20px 5px;
+}
+
+::ng-deep .custom-mat-option .mat-option-text {
+    overflow: auto;
+    text-overflow: unset;
+}
+.button-height{
+    min-height: 2.7em;
+    padding-left:8px;
+}
+
+::ng-deep .action-sheet-group {
+    max-height: 400px;
+    overflow: scroll !important;
+}
+
+.no-results{
+    margin-bottom: 45px;
+}
+
+.custom-grid{
+    padding: 20px;
+}
+
+.continue-button{
+margin-left: 5px;
+margin-right:5px;
+}
+
+.custom-continue{
+    width: 100%;
+    margin-top: 20px;
+}

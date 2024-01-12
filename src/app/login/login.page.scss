@@ -1,0 +1,157 @@
+.ps-card>ion-img {
+    right: 0;
+    left: 0;
+    background-color: white;
+    padding: 5px;
+    width: 180px;
+    padding: 5px;
+    position: relative;
+    margin: auto;
+}
+
+hr{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+}
+
+.ors{
+    color: #212529 !important;
+    padding: 0!important;
+    padding-top: .25rem!important;
+    text-align: center;
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+    margin-top: 0.5%;
+}
+
+.gcmdiv{
+    margin-top: 2%;
+    margin-right: 1%;
+}
+
+.guestimg{
+    margin-right: 3% !important;
+    height: 70% !important;
+}
+
+.gcmdiv ion-text{
+    color: #51606D;
+    font-size: small;
+}
+
+// Common Css Start
+.col-5{
+    flex: 0 0 41.666667%;
+    max-width: 41.666667%;
+}
+
+.col-2{
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+}
+
+// Common Css End
+
+.eye-icon {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    margin-top:30px
+}
+
+.eye-icn{
+    margin: auto;
+    margin-top: 15%;
+    height: 20%;
+}
+
+.hidden-eye{
+    margin: auto;
+    margin-top: 15%;
+    height: 26%;
+}
+
+.finger-print {
+    margin-right: 5px;
+}
+
+:host(app-login) {
+    width: 100%;
+}
+
+.tab-bar {
+    border-bottom: 5px solid var(--ion-color-primary) !important;
+    padding-bottom: 5px;
+    border-radius: 5px;
+}
+
+.fingerPrint-button{
+    margin-left: 23%;
+    margin-right: 23%;
+    width: 55%;
+}
+
+.forgotPass-button{
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+}
+
+
+.login-header{
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.footer-color{
+    color: #51606D;
+}
+
+.paper-app-msg{
+    color:#51606D;
+    font-size: small;
+    margin-left: 15px;
+}
+.paper-app-msg{
+    color:#51606D;
+    margin-left: 15px;
+}
+.socialIcons
+{
+    margin-right: 2%;
+    color: #697B8A
+}
+.backimg
+{
+    background-image: url("/assets/images/backimg.png");
+    background-size: 100% 100%;                     /* <------ */
+    background-repeat:   no-repeat;
+}
+.card-overlay {
+    background: rgba(0, 0, 0, 0.58);
+    width: 100%;
+    height: 100%;
+  }
+  .imgCard
+  {
+    margin: 0px;
+    border-radius: 0px;
+  }
+  .custom-color{
+    --ion-color-base: var(--ion-color-secondary) !important;
+    --ion-color-contrast: var(--ion-color-primary-contrast) !important;
+}
+.custom-item{
+    --background: transparent;
+    --background-focused: transparent;
+    --background-activated: transparent;
+}
+
+.fb{
+    height: 46%;
+    width: 6%;
+    margin-bottom: 1%;
+}

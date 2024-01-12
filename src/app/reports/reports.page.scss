@@ -1,0 +1,87 @@
+.custom-space {
+    margin-right: 5px;
+}
+
+
+:host(app-reset-password) {
+    width: 100%;
+}
+.textColor
+{
+    color: white;
+}
+::ng-deep .alert-radio-label.sc-ion-alert-ios{
+    margin-right: -2% !important;
+}
+.ft15{
+    font-size: 13px !important;
+}
+
+.display-grid{
+    margin-top: 3%;
+    max-height: 43rem;
+}
+
+.btn-row{
+    margin-top: -8%;
+}
+
+::ng-deep .select-icon {
+    // margin-inline: 204px 0px !important;
+    // margin-top: 0px;
+    // margin-bottom: 0px;
+    // position: relative;
+}
+ion-segment {
+    --background: #3CBFAE;
+    color: #000;
+  }
+  ion-select.report-down{
+    position: relative;
+}
+ion-select.report-down::part(icon) {
+ 
+   width: .8rem;
+    height: .8rem;
+    color: #b1b1b1;
+    position: absolute;
+    right: 0%;
+}
+.reportLable{
+    margin: -8% 0%;
+}
+ion-segment {
+    border: 0.5px solid #08a391;
+    border-radius: 3px;
+    background: transparent;
+
+  }
+ion-segment-button::part(indicator-background) {
+    background: #08a391;
+    color: #fff;
+    border-radius: 0px;
+    margin: 0px;
+  }
+  .segment-button-indicator {
+    padding-inline: 0px !important; 
+}
+.segment-button-checked::part(native) {
+    color: #fff;
+    padding-inline: 0px !important; 
+  }
+ion-segment-button{
+    margin: 0px;
+}
+ion-segment-button.ios::part(indicator) {
+    padding-inline: 0px !important; 
+  }
+
+ion-select.report-down::part(label):after {
+    content: "*";
+    font-size: 16px;
+    color: red;
+    margin-left: 8px;
+}
+ion-select.report-down::part(icon) {
+    margin-top: 25px;
+}

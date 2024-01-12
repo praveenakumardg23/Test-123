@@ -1,0 +1,45 @@
+// .sub-header {
+//     // margin: 0;
+//     // padding: 2px;
+//     // text-align: center;
+//     // color: #fff;
+//     // font-size: small;
+//     // background-color: #f79548;
+//     margin: 0;
+//     padding: 5px;
+//     /* padding-bottom: 0px; */
+//     /* padding-top: 15px; */
+//     /* text-align: center; */
+//     color: #0873ba;
+//     font-size: small;
+//     background-color: #e8e8e8;
+// }
+// .version {
+//     margin: 0;
+//     text-align: center;
+//     background-color: #f79548;
+//     font-size: small;
+//     padding: 2px;
+//     color: #fff;
+// }
+ion-spinner {
+    transform: scale(2);
+}
+
+.app-load{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 5;
+}
+
+.custom-spinner{
+    color: #3cbfae;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+}

@@ -1,0 +1,163 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'manage_profile' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <ion-button (click)="onGotoDashboard(f)">
+                <img class="cart-icn-img" src="../../assets/icon/home-icn.svg">
+            </ion-button>
+            <ion-button (click)="onDisplayLang()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="primary">
+            <ion-button (click)="onGotoCart(f)" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end" (click)="onMenuClick(f,'profile')">
+            <ion-menu-button autoHide="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover">
+        <form #f="ngForm" autocomplete="off" (ngSubmit)="onProfileSubmit(f)">
+            <ion-row class="main-row">
+                <ion-col size="12" class="ps-card" [ngStyle]="!(languages && states && countries && userData) && {'height' : '100vh'}">
+                    <ng-container *ngIf="languages && states && countries && userData">
+                        <ion-item>
+                            <ion-label position="floating">{{'language_preference' | translate}}
+                                <ion-text color="danger">*</ion-text>
+                            </ion-label>
+                            <ion-select class="always-flip" toggleIcon="caret-down-sharp" placeholder="Select language" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required name="IntLanguageId" #IntLanguageId="ngModel" ngModel [(ngModel)]="userData.IntLanguageId" (ngModelChange)="langChange(userData.IntLanguageId)">
+                                <ion-select-option *ngFor="let language of languages" [value]="language?.IntLanguageId">{{language.DisplayName}}</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label position="floating">{{'email' | translate}}
+                                <ion-text color="danger"> *</ion-text>
+                            </ion-label>
+                            <ion-input aria-label="UserName" type="text" name="UserName" #UserName="ngModel" [(ngModel)]="userData.UserName" (ionBlur)="processemail(userData.UserName)" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,8}$" required></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" class="error-message" *ngIf="UserName.touched">
+                            <p class="error-text-message" *ngIf="!userData.UserName && !UserName.valid">{{'email_required' | translate}}.</p>
+                            <p class="error-text-message" *ngIf="userData.UserName && !UserName.valid">{{'invalid_email' | translate}}.</p>
+                        </ion-text>
+                        <!-- <ion-text color="danger" class="error-message" *ngIf="emailChangeHint">
+                    <p class="error-text-message">
+                        A confirmation email has been sent to this new address. Your Profile update is not complete until you verify these changes through the confirmation email.
+                    </p>
+                </ion-text> -->
+                        <ion-item>
+                            <ion-label position="floating">{{'first_name' | translate}}
+                                <ion-text color="danger"> *</ion-text>
+                            </ion-label>
+                            <ion-input aria-label="FirstName" name="FirstName" #FirstName="ngModel" ngModel [(ngModel)]="userData.FirstName" required maxlength="50" pattern="[a-zA-Z-'. ]*" appCustomTextWithSymbol="50"></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" class="error-message" *ngIf="FirstName.touched">
+                            <p class="error-text-message" *ngIf="!userData.FirstName && !FirstName.valid">{{'first_name_required' | translate}}.</p>
+                            <p class="error-text-message" *ngIf="userData.FirstName && !FirstName.valid">{{'ch_allowed_msg' | translate}}.</p>
+                        </ion-text>
+                        <ion-item>
+                            <ion-label position="floating">{{'last_name' | translate}}
+                                <ion-text color="danger"> *</ion-text>
+                            </ion-label>
+                            <ion-input aria-label="LastName" name="LastName" #LastName="ngModel" ngModel [(ngModel)]="userData.LastName" maxlength="50" required pattern="[a-zA-Z-'. ]*" appCustomTextWithSymbol="50"></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" class="error-message" *ngIf="LastName.touched">
+                            <p class="error-text-message" *ngIf="!userData.LastName && !LastName.valid">{{'last_name_required' | translate}}.</p>
+                            <p class="error-text-message" *ngIf="userData.LastName && !LastName.valid">{{'ch_allowed_msg' | translate}}.</p>
+                        </ion-text>
+                        <ion-item>
+                            <ion-label position="floating">{{'address_line1' | translate}}
+                                <ion-text color="danger"> *</ion-text>
+                            </ion-label>
+                            <ion-input aria-label="Address1" name="Address1" #Address1="ngModel" ngModel [(ngModel)]="userData.Address1" required maxlength="75" appCustomTextWithSymbol="75"></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" class="error-message" *ngIf="!Address1.valid && Address1.touched">
+                            <p class="error-text-message">{{'address_line1_required' | translate}}.</p>
+                        </ion-text>
+                        <ion-item>
+                            <ion-label position="floating">{{'address_line2' | translate}}
+                            </ion-label>
+                            <ion-input aria-label="Address2" name="Address2" #Address2="ngModel" ngModel [(ngModel)]="userData.Address2" maxlength="75" appCustomTextWithSymbol="75"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label position="floating">{{'postal_code' | translate}}
+                                <ion-text color="danger"> *</ion-text>
+                            </ion-label>
+                            <ion-input aria-label="PostalCode" name="PostalCode" #PostalCode="ngModel" ngModel [(ngModel)]="userData.PostalCode" required minlength="5" maxlength="5" appCustomTextWithSymbol="3"></ion-input>
+                            <ion-icon name="help-circle-outline" class="help-icon" color='primary' (click)="onInfo()" fill="clear" slot="end">
+                            </ion-icon>
+                        </ion-item>
+                        <ion-text color="danger" class="error-message" *ngIf="!PostalCode.valid && PostalCode.touched">
+                            <p class="error-text-message">{{'postal_code_required' | translate}}.</p>
+                        </ion-text>
+                        <ion-item>
+                            <ion-label position="floating">{{'city' | translate}}
+                                <ion-text color="danger"> *</ion-text>
+                            </ion-label>
+                            <ion-input aria-label="City" name="City" #City="ngModel" ngModel [(ngModel)]="userData.City" required maxlength="25" appCustomTextWithSymbol="25"></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" class="error-message" *ngIf="!City.valid && City.touched">
+                            <p class="error-text-message">{{'city_required' | translate}}</p>
+                        </ion-text>
+                        <ion-item class="ion-margin-top">
+                            <ion-label position="floating">{{'state' | translate}}
+                                <ion-text color="danger"> *</ion-text>
+                            </ion-label>
+                            <ion-select class="always-flip" toggleIcon="caret-down-sharp" placeholder="Select State" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required name="State" #State="ngModel" ngModel [(ngModel)]="userData.State">
+                                <ion-select-option *ngFor="let state of states" [value]="state.StateAbbreviation">{{state.StateName}}</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                        <ion-item class="ion-margin-top" [disabled]="true">
+                            <ion-label position="floating">{{'country' | translate}}
+                                <ion-text color="danger"> *</ion-text>
+                            </ion-label>
+                            <ion-select class="always-flip" toggleIcon="caret-down-sharp" placeholder="Select Country" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required name="CountryCode" #CountryCode="ngModel" ngModel [(ngModel)]="userData.CountryCode">
+                                <ion-select-option *ngFor="let country of countries" [value]="country.CountryCode">{{country.CountryName}}</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                        <ion-text color="danger" class="error-message" *ngIf="!CountryCode.valid && CountryCode.touched">
+                            <p class="error-text-message">{{'country_required' | translate}}</p>
+                        </ion-text>
+                        <ion-item>
+                            <ion-label position="floating">{{'phone_number' | translate}}
+                            </ion-label>
+                            <ion-input  [maskito]="phoneMask" [maskitoElement]="maskPredicate" type="tel" name="PhoneNumber" #PhoneNumber="ngModel" ngModel [(ngModel)]="userData.PhoneNumber" mask="(000) 000-0000" [maxlength]="14"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label position="floating">{{'mobile_number' | translate}}
+                            </ion-label>
+                            <ion-input [maskito]="phoneMask" [maskitoElement]="maskPredicate" type="tel" name="SMSNumber" #SMSNumber="ngModel" ngModel [(ngModel)]="userData.SMSNumber" mask="(000) 000-0000" [maxlength]="14"></ion-input>
+                        </ion-item>
+                        <ion-list class="ion-no-margin">
+                            <ion-radio-group name="PreferredComm" #PreferredComm="ngModel" ngModel [(ngModel)]="userData.PreferredComm" value="E" (ionChange)="commChanged(f)">
+                                <ion-list-header class="list-header">
+                                    {{'contact_preference' | translate}}
+                                </ion-list-header>
+                                <ion-item lines="none">
+                                    <ion-label>{{'email' | translate}}</ion-label>
+                                    <ion-radio color="secondary" mode="md" slot="start" value="E"></ion-radio>
+                                </ion-item>
+                                <!-- <ion-item lines="none">
+                                    <ion-label>{{'text' | translate}}</ion-label>
+                                    <ion-radio mode="md" slot="start" value="S" ></ion-radio>
+                                </ion-item> -->
+                            </ion-radio-group>
+                        </ion-list>
+
+                        <ion-row class="ion-margin-top">
+                            <ion-button color='secondary' expand="block" class="full-width" type="button" (click)="onProfileSubmit(f)" [disabled]="!f.valid || !updateButton">{{'update' | translate}}</ion-button>
+                        </ion-row>
+                    </ng-container>
+                </ion-col>
+            </ion-row>
+        </form>
+    </ion-grid>
+</ion-content>

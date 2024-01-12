@@ -1,0 +1,65 @@
+<ion-content class="cafeteria" >
+  <ion-header class='header'>
+    {{'cafeteria_transfer' | translate}}
+  </ion-header>
+  <form #f="ngForm" autocomplete="off">
+    <ion-row>
+      <ion-col size='1'></ion-col>
+      <ion-col size="10">
+        <ion-grid>
+
+          <ion-item class="ion-margin-top">
+            <ion-label position="floating">Patron 1
+              <ion-text color="danger"> *</ion-text>
+            </ion-label>
+            <ion-select class="cafe-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" name="patron1" (ionChange)="onPatronSelection($event,1)"
+              [cancelText]="'cancel' | translate" placeholder="Select Patron" #patron1="ngModel" required ngModel>
+              <ion-select-option *ngFor="let patron of patron1BalanceList"
+                [disabled]="patron.IntPatronId == patron1.value || patron.IntPatronId == patron2.value"
+                [value]="patron.IntPatronId">{{patron.FirstName}} {{patron.LastName}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-text color="danger" class="error-message" *ngIf="!patron1.valid && patron1.touched">
+            <p class="error-text-message">{{'IS_Select_Valid_Patron' | translate}}</p>
+          </ion-text>
+
+
+          <ion-item class="ion-margin-top">
+            <ion-label position="floating">Patron 2
+              <ion-text color="danger"> *</ion-text>
+            </ion-label>
+            <ion-select class="cafe-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" name="patron2" (ionChange)="onPatronSelection($event,2)"
+              [cancelText]="'cancel' | translate" placeholder="Select Patron" required #patron2="ngModel" ngModel>
+              <ion-select-option *ngFor="let patron of patron2BalanceList"
+                [disabled]="patron.IntPatronId == patron1.value || patron.IntPatronId == patron2.value"
+                [value]="patron.IntPatronId">{{patron.FirstName}} {{patron.LastName}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-text color="danger" class="error-message" *ngIf="!patron2.valid && patron2.touched">
+            <p class="error-text-message">{{'IS_Select_Valid_Patron' | translate}}</p>
+          </ion-text>
+
+        </ion-grid>
+      </ion-col>
+      <ion-col size='1'></ion-col>
+    </ion-row>
+
+
+    <ion-footer style="text-align: center;" class="button footer">
+      <ion-row class="ion-margin-top">
+        <ion-col size='3'>
+          <!-- <ion-button style="float: left;" type="button" expand="block" class="full-width ion-color-primary"
+            (click)="close()">{{'cancel' | translate}}</ion-button> -->
+        </ion-col>
+        <ion-col size='6'>
+          <ion-button type="button" color='secondary' expand="block" class="full-width" (click)="onProceed(f)"
+            [disabled]="!(f.valid)">{{'PROCEED' | translate}}</ion-button>
+        </ion-col>
+        <ion-col size='2'>
+        </ion-col>
+
+      </ion-row>
+    </ion-footer>
+  </form>
+</ion-content>
+

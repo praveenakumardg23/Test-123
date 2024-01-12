@@ -1,0 +1,255 @@
+<div dir="{{languageService.langDir}}">
+  <ion-header class='header'>
+    {{fee.name}}
+  </ion-header>
+
+  <ion-content class="addToCart" [scrollEvents]="true" scroll-x="true" style="margin-bottom: 25px;">
+    <ion-grid style="padding-left:16px;">
+      <ion-item  style='--ion-background-color: none;' *ngIf="userDropDown.length > 0"  class="ion-no-margin ion-no-padding" >
+        <ion-label position="floating">{{'Select_User'| translate}}
+        </ion-label>
+        <ion-select class="arrow-down" toggleIcon="caret-down-sharp" *ngIf="userDropDown.length > 1" [value]='SelectedpatronID'   [okText]="'SELECT' | translate" [cancelText]="'cancel' | translate" name="UserType"    (ionChange)="selectUserDropDown($event)">
+          <ion-select-option  *ngFor = "let option of userDropDown" [value] = "option.patronID" >{{ option.name }}</ion-select-option>
+      </ion-select>
+      <ion-select class="arrow-down" toggleIcon="caret-down-sharp"  *ngIf="userDropDown.length <= 1" disabled='true' [value]='SelectedpatronID'   [okText]="'select' | translate" [cancelText]="'cancel' | translate" name="UserType"    (ionChange)="selectUserDropDown($event)">
+        <ion-select-option  *ngFor = "let option of userDropDown" [value] = "option.patronID" >{{ option.name }}</ion-select-option>
+    </ion-select>
+    </ion-item>
+      <ion-row>
+        <ion-col size="6">
+          <h6> {{ 'fee_name' | translate }}: </h6> 
+        </ion-col>
+        <ion-col size="6" class='content'>{{ fee.FeeName }}</ion-col>
+      </ion-row>
+      <ion-row *ngIf="funsraiserService.schoolId === 0 && isForGuest">
+        <ion-col  size="6">
+          <h6> {{ 'School_name' | translate }} </h6> 
+        </ion-col>
+        <ion-col size="6" class='content'>{{ fee.SchoolName }}</ion-col>
+      </ion-row>
+      <ion-row *ngIf="fee.FeeDescription">
+        <ion-col size="6">
+          <h6>{{ 'fee_description' | translate }} </h6> 
+        </ion-col>
+        <ion-col size='6' class='content' [innerHTML]="fee.FeeDescription"></ion-col>
+      </ion-row>
+
+
+      <div *ngIf="fee.Session && !isForGuest">
+        <ion-row *ngIf='fee.Session.SessionName'>
+          <ion-col size="6">
+            <h6> {{ 'session_name' | translate }} </h6> 
+          </ion-col>
+          <ion-col size='6' class='content'>{{fee.Session.SessionName}} </ion-col>
+        </ion-row>
+        <ion-row *ngIf='fee.Session.SessionCode'>
+          <ion-col size="6">
+            <h6> {{ 'session_code' | translate }} </h6> 
+          </ion-col>
+          <ion-col size='6' class='content'> {{fee.Session.SessionCode}}</ion-col>
+
+        </ion-row>
+        <ion-row *ngIf='fee.Session.CategoryName'>
+          <ion-col size="6">
+            <h6> {{ 'session_category' | translate }} </h6> 
+          </ion-col>
+          <ion-col size='6' class='content'>{{fee.Session.CategoryName}} </ion-col>
+
+        </ion-row>
+        <ion-row *ngIf='fee.Session.Location'>
+          <ion-col size="6">
+            <h6> {{ 'location' | translate }} </h6> 
+          </ion-col>
+          <ion-col size='6' class='content'> {{fee.Session.Location}}</ion-col>
+
+        </ion-row>
+        <ion-row *ngIf='start_date'>
+          <ion-col size="6">
+            <h6> {{ 'start_date' | translate }}: </h6> 
+
+          </ion-col>
+          <ion-col size='6' class='content'>{{ start_date }} </ion-col>
+
+        </ion-row>
+        <ion-row  *ngIf='end_date'>
+          <ion-col size="6">
+            <h6> {{ 'end_date' | translate }}: </h6> 
+
+          </ion-col>
+          <ion-col size='6' class='content'>{{ end_date }} </ion-col>
+
+        </ion-row>
+        <ion-row *ngIf='days'>
+          <ion-col size="6">
+            <h6> {{ 'class_days' | translate }} </h6>
+          </ion-col>
+          <ion-col size='6' class='content'> {{days}} </ion-col>
+
+        </ion-row>
+        <ion-row *ngIf='class_time'>
+          <ion-col size="6">
+            <h6> {{ 'class_timings' | translate }} </h6>
+          </ion-col>
+          <ion-col size='6' class='content'>{{class_time }}
+          </ion-col>
+
+        </ion-row>
+      </div>
+      <ion-row class="amount-wrapper" *ngIf="!isForGuest">
+        <ion-col size="6">
+          <h6 class="text-left">{{ 'paid' | translate }}:</h6>
+        </ion-col>
+        <ion-col size="6">
+          <div class="amount text-right" class='content'><span *ngIf="languageService.langDir === 'ltr'">$</span> {{ amountPaid | number : '.2'}} <span *ngIf="languageService.langDir === 'rtl'">$</span></div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <h6 class="text-left">{{ 'amount_due' | translate }}: </h6>
+        </ion-col>
+        <ion-col size="6">
+          <ion-col class="ion-no-padding" size="6" *ngIf="fee.modifiedFeeType == 'Assigned Fee'">
+            <div class="amount text-right" class='content'><span *ngIf="languageService.langDir === 'ltr'">$</span>{{fee.NetAmount - fee.ScheduledAmount| number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span></div>
+            
+        </ion-col>
+        <ion-col class="ion-no-padding" size="6" *ngIf="fee.modifiedFeeType == 'Optional Fee'">
+          <div class="amount text-right" class='content'>${{ fee.AmountDue| number : '.2' }}</div></ion-col>
+          
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="fee.modifiedFeeType == 'Assigned Fee' && fee.CartAmount && !isForGuest">
+        <ion-col size="6" >
+          <h6 class="text-left">{{ 'in_cart' | translate }}: </h6>
+        </ion-col>
+        <ion-col size="6">
+          <ion-col class="ion-no-padding" size="6" *ngIf="fee.modifiedFeeType == 'Assigned Fee' && fee.CartAmount">
+            <div class="amount text-right" class='content'><span *ngIf="languageService.langDir === 'ltr'">$</span>{{fee.CartAmount| number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span></div></ion-col>
+            
+        </ion-col>
+      </ion-row>
+
+
+      <ion-item *ngIf="fee.Attribute && fee.Attribute?.Type=='Dropdown'" style='--ion-background-color: none;margin:-15px;
+      margin-bottom: 10px; margin-right: 0px; margin-top: 10px'>
+        <ion-label style="font-weight: 500;">
+          <h6>{{fee.Attribute.Name}}* </h6>
+        </ion-label>
+        <!-- <ion-select *ngIf="fee.CartAmount || fee.modifiedFeeType == 'Assigned Fee'" [value]='fee.selectedAttributeValue' [okText]="'select' | translate" [cancelText]="'cancel' | translate" name="attributesSelect" >
+          <ion-select-option  *ngFor = "let option of fee.Attribute.Options" [value] = "option.IntFeeAttributeId" >{{ option.AttributeValue }}</ion-select-option>
+      </ion-select> -->
+        <ion-select toggleIcon="caret-down-sharp" class="right_Padding_dropdown arrow-down" [disabled]='fee.Scheduled || ((fee.CartAmount || fee.IntFeeAttributeId) && fee.AmountPaid > 0)'  [okText]="'select' | translate" [cancelText]="'cancel' | translate" name="attributesSelect"
+          [(ngModel)]="selectedAttribute" (ionChange)="selectOption(selectedAttribute, fee)">
+          <ion-select-option *ngFor="let option of fee.Attribute.Options" [value]="option">{{ option.AttributeValue }}
+          </ion-select-option>
+        </ion-select>
+
+      </ion-item>
+
+      <div *ngIf="fee.Attribute && !fee.attributeSelected && clikedOnCard && fee.Attribute?.Type=='Dropdown'" class='dropdown-error'>{{'select' | translate}} {{fee.Attribute.Name}}</div>
+
+      <ion-list *ngIf="fee.Attribute && fee.Attribute?.Type=='Radio Button'" class="ion-no-margin"
+        style='background: none;'>
+        <ion-radio-group *ngIf="fee.Scheduled ||((fee.CartAmount || fee.IntFeeAttributeId) && fee.AmountPaid > 0)"  name="selectedAttributesOptions" [value]='fee.selectedAttributeValue' (ionChange)='selectRadioOption($event,fee)'>
+          <ion-list-header style='padding: 5px;margin-bottom: -13px;'>
+           <h6> {{fee.Attribute.Name}}*</h6>
+          </ion-list-header>
+          <ion-row>
+            <ion-col col-auto text-left *ngFor="let option of fee.Attribute.Options;let i=index; "
+              class="ion-no-margin ion-no-padding">
+              <ion-item lines="none" [style.color]="fee.CartAmount? 'black' : 'black'"
+                style='--ion-background-color: none; --padding-start: 0px;--inner-padding-end: 5px;font-size: 15px;'
+                class='radioButtonBg'>
+
+                <ion-radio id="disabled-{{i}}" color="secondary" [disabled]='fee.Scheduled ||((fee.CartAmount || fee.IntFeeAttributeId) && fee.AmountPaid > 0)'  style='margin:7px;width: 17px;height: 17px;' mode="md"
+                  slot="start" [value]="option.IntFeeAttributeId" >
+                </ion-radio>
+                {{option.AttributeValue}}
+
+              </ion-item>
+            </ion-col>
+
+          </ion-row>
+        </ion-radio-group>
+        <ion-radio-group *ngIf="!(fee.Scheduled ||((fee.CartAmount || fee.IntFeeAttributeId) && fee.AmountPaid > 0))"  name="selectedAttributesOptions" [value]='fee.selectedAttributeValue' (ionChange)='selectRadioOption($event,fee)'>
+          <ion-list-header style='padding: 5px;margin-bottom: -13px;'>
+           <h6> {{fee.Attribute.Name}}*</h6>
+          </ion-list-header>
+          <ion-row>
+            <ion-col col-auto text-left *ngFor="let option of fee.Attribute.Options;let i=index; "
+              class="ion-no-margin ion-no-padding">
+              <ion-item lines="none" [style.color]="fee.CartAmount? 'black' : 'black'"
+                style='--ion-background-color: none; --padding-start: 0px;--inner-padding-end: 5px;font-size: 15px;'
+                class='radioButtonBg'>
+
+                <ion-radio id="notdisabled-{{i}}" color="secondary" style='margin:7px;width: 17px;height: 17px;' mode="md"
+                  slot="start" [value]="option.IntFeeAttributeId" >
+                </ion-radio>
+                {{option.AttributeValue}}
+
+              </ion-item>
+            </ion-col>
+
+          </ion-row>
+        </ion-radio-group>
+      </ion-list>
+      <div *ngIf="fee.Attribute && !fee.attributeSelected && clikedOnCard && fee.Attribute?.Type=='Radio Button' " class="Radio-error">{{'select' | translate}} {{fee.Attribute.Name}}</div>
+    </ion-grid>
+    <form class="bottom_padding" [formGroup]="userDetailsForm" *ngIf="userDetailsForm">
+    <ion-row >
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">{{'first_name' |translate}}*</ion-label>
+          <ion-input aria-label="firstName" required="true" formControlName="firstName" (keyup)="onKeyPressEvent($event)" maxlength=30 autocomplete="off" [(ngModel)]="guest.firstname"></ion-input>
+        </ion-item>
+        <p style="font-size: 75%; color: red;padding-left: 16px;" *ngIf="userDetailsForm.controls['firstName'].hasError('required') && (userDetailsForm.controls['firstName'].touched || isSubmitted)">
+                {{'First_name_msg'| translate}}
+      </p>
+      </ion-col>
+     
+    </ion-row>
+    <ion-row >
+      <ion-col >
+        <ion-item>
+          <ion-label position="stacked">{{'last_name' | translate}}*</ion-label>
+          <ion-input aria-label="lastName" required="true" formControlName="lastName" maxlength=30 autocomplete="off" (keyup)="onKeyPressEvent($event)"  [(ngModel)]="guest.lastname"></ion-input>
+        </ion-item>
+        <p style="font-size: 75%; color: red;padding-left: 16px;" *ngIf="userDetailsForm.controls['lastName'].hasError('required') && (userDetailsForm.controls['lastName'].touched || isSubmitted)">
+          {{'Last_name_msg' |translate}}
+        </p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col style="color: white;">..</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col style="color: white;">..</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col style="color: white;">..</ion-col>
+    </ion-row>
+  </form>
+    <ion-row>
+      <ion-col style="color: white;">..</ion-col>
+    </ion-row>
+  </ion-content>
+  <ion-footer style="text-align: center;" class="button footer">
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col size='8'>
+        <ion-item class="ion-text-center" lines="none"><span *ngIf="languageService.langDir === 'ltr'">$</span> 
+          <ion-input aria-label="number"  type="number" (keyup)='keyup($event)' (focusin)="focusinFunction(amount,fee?.AllowPartial)" (focusout)="focusOutFunction($event, amount)" 
+          style="border: 2px solid #3CBFAE;border-radius: 7px;margin-left: 5px;" placeholder="{{'amount' | translate}}"
+          [(ngModel)]="amount" [disabled] ="!fee?.AllowPartial && fee?.VariablePricedSw==false"></ion-input><span *ngIf="languageService.langDir === 'rtl'">$</span>
+        </ion-item>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col size='5'  style="color:white" >
+      <ion-button type="button" style="margin: 0;font-size: large;" (click)="close()"> {{'cancel'|translate}} </ion-button></ion-col>
+      <ion-col  size='7' style="color:white">
+      <ion-button [disabled]='amount < 0 || (userDetailsForm && userDetailsForm.invalid)' type="submit"  class=" custom-orange-btn " style="color:white; font-weight: bold; margin: 0;font-size: large;" (click)="addToCart()"> {{'IS_Add_to_Cart'|translate}} </ion-button></ion-col>
+    </ion-row>
+  </ion-footer>
+</div>

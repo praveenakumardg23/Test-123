@@ -1,0 +1,59 @@
+
+ion-footer{
+    max-height:15em;
+    position: fixed;
+    bottom: 0;
+}
+
+.footer-button{
+    border-top: 1px solid rgb(104, 103, 103); 
+}
+.custom-text-wrap{
+    font-size: 0.9rem;
+  }
+
+  .right_Padding_dropdown{
+    padding-right: 22px;
+  }
+  .bottom_padding{
+    padding-bottom: 100px;
+  }
+h6 {
+    color: var(--ion-color-primary) !important;
+    margin: 0px;
+    text-align: left;
+    font-weight: 700;
+}
+.content {
+    color: var(--ion-color-primary) !important;
+    margin: 0px;
+    text-align: left;
+    font-weight: 500;
+    
+}
+
+.content p{
+    margin: 0px;
+}
+.footer {
+    z-index: 4;
+    background: white;
+    //background: #f3f3ff;
+}
+.header
+{
+    font-weight: bold;
+    padding: 24px 8px;
+    width: auto;
+    color: #3CBFAE;
+    text-align: center;
+}
+
+.dropdown-error{
+    margin-top: 10px;
+    color:red
+}
+
+.Radio-error{
+    color:red
+}

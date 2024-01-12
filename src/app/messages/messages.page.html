@@ -1,0 +1,135 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'messages' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <!-- <ion-back-button icon="home" text="" [routerLink]="redirectToDashboard" routerDirection="back"></ion-back-button> -->
+            <ion-button [routerLink]="redirectToDashboard" routerDirection="back">
+                <img class="cart-icn-img" src="../../assets/icon/home-icn.svg">
+            </ion-button>
+            <ion-button (click)="onDisplayLang()" [disabled]="(criticalMsgArray.length > 0)">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="primary">
+            <ion-button (click)="onGotoCart()" [disabled]="(criticalMsgArray.length > 0) || cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" *ngIf="(criticalMsgArray.length > 0)" disabled="true" swipeGesture="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+            <ion-menu-button autoHide="false" *ngIf="!(criticalMsgArray.length > 0)">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class='ion-content'>
+    <ion-grid class="custom-padding custom-cover">
+        <ion-list class="main-row ps-card">
+            <!-- header row -->
+            <ion-row class="ion-margin-top">
+                <ion-col class="ion-text-left">
+                    <ion-chip color="primary" class="chip" [ngClass]="{'unread-chip' : selectedType == 'unread' }" (click)="presentPopover($event)">
+                        <ion-label color="primary" *ngIf="selectedType == 'all'">{{'inbox' | translate}}</ion-label>
+                        <ion-icon color="primary" name="mail" *ngIf="selectedType == 'all'"></ion-icon>
+                        <ion-label color="primary" *ngIf="selectedType == 'read'">{{'read' | translate}}</ion-label>
+                        <ion-icon color="primary" name="mail-open" *ngIf="selectedType == 'read'"></ion-icon>
+                        <ion-label color="primary" *ngIf="selectedType == 'unread'">{{'unread' | translate}}</ion-label>
+                        <ion-icon color="primary" name="mail-unread" *ngIf="selectedType == 'unread'"></ion-icon>
+                        <ion-label color="primary" *ngIf="selectedType == 'trash'">{{'trash' | translate}}</ion-label>
+                        <!-- <ion-icon color="primary" name="trash" *ngIf="selectedType == 'trash'"></ion-icon> -->
+                        <span class="cart-icn-trash" *ngIf="selectedType == 'trash'">
+                            <img slot="icon-only" src="../../assets/icon/bin.svg">
+                        </span>
+                    </ion-chip>
+                </ion-col>
+                <!-- <ion-col *ngIf="allMessages?.length > 0">
+                    <ion-chip color="primary" outline="false" (click)="filterMessage('read')" *ngIf="selectedType != 'read'">
+                        <ion-icon name="mail-open" class="ion-no-margin"></ion-icon>
+                    </ion-chip>
+                    <ion-chip color="primary" outline="true" (click)="filterMessage('read')" *ngIf="selectedType == 'read'">
+                        <ion-label>{{'read' | translate}}</ion-label>
+                        <ion-icon name="mail-open"></ion-icon>
+                    </ion-chip>
+                </ion-col>
+                <ion-col *ngIf="allMessages?.length > 0">
+                    <ion-chip color="primary" outline="false" (click)="filterMessage('unread')" *ngIf="selectedType != 'unread'">
+                        <ion-icon name="mail-unread" class="ion-no-margin"></ion-icon>
+                    </ion-chip>
+                    <ion-chip color="primary" outline="true" (click)="filterMessage('unread')" *ngIf="selectedType == 'unread'">
+                        <ion-label>{{'unread' | translate}}</ion-label>
+                        <ion-icon name="mail-unread"></ion-icon>
+                    </ion-chip>
+                </ion-col>
+                <ion-col *ngIf="allMessages?.length > 0">
+                    <ion-chip color="danger" outline="false" (click)="filterMessage('trash')" *ngIf="selectedType != 'trash'">
+                        <ion-icon name="trash" class="ion-no-margin"></ion-icon>
+                    </ion-chip>
+                    <ion-chip color="danger" outline="true" (click)="filterMessage('trash')" *ngIf="selectedType == 'trash'">
+                        <ion-label>{{'trash' | translate}}</ion-label>
+                        <ion-icon name="trash"></ion-icon>
+                    </ion-chip>
+                </ion-col> -->
+            </ion-row>
+
+            <ion-row>
+                <ion-col size="2" class="ion-padding" *ngIf="userMessages?.length > 0">
+                    <ion-checkbox class="ion-margin-end custom-checkboxs" aria-label="masterCheck" color="secondary" [(ngModel)]="masterCheck" [indeterminate]="isIndeterminate" (click)="checkMaster()" style="margin-left: 10px;"></ion-checkbox>
+                </ion-col>
+                <ion-col size="6">
+                </ion-col>
+                <ion-col class="place-text" size="2" *ngIf="userMessages?.length > 0">
+                    <ion-button fill="clear" (click)="deleteConfirm('deleteselected',userMessages)" *ngIf="selectedType != 'trash'" [disabled]="!(masterCheck || isIndeterminate)">
+                        <!-- <ion-icon name="trash"></ion-icon> -->
+                        <span class="cart-icn-trash">
+                            <img slot="icon-only" src="../../../assets/icon/bin.svg">
+                        </span>
+                    </ion-button>
+                </ion-col>
+                <ion-col class="place-text" size="2" *ngIf="userMessages?.length > 0">
+                    <ion-button fill="clear" (click)="displaySearchBar = !displaySearchBar">
+                        <ion-icon name="search"></ion-icon>
+                    </ion-button>
+                </ion-col>
+            </ion-row>
+            <ion-searchbar mode="ios" *ngIf="displaySearchBar" animated inputmode="search" [(ngModel)]="searchText" (ngModelChange)="filterUserMessages(searchText)" placeholder="{{'Search' | translate}}"></ion-searchbar>
+            <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+                <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+                </ion-refresher-content>
+            </ion-refresher>
+            <ng-container *ngIf="userMessages?.length > 0">
+                <ion-item-sliding *ngFor="let userMessage of userMessages">
+                    <ion-item>
+                        <span *ngIf="userMessage.ReadDate == null" style="height: 6px;width: 6px;background-color: #3CBFAE;border-radius: 50%;display: inline-block;margin-right: 5px;"></span>
+                        <ion-checkbox aria-label="userMessage" color="secondary" class="ion-margin-end custom-checkboxs" [(ngModel)]="userMessage.isChecked" (ionChange)="checkEvent()" [class.custom-margin]="userMessage.ReadDate != null">
+                        </ion-checkbox>
+
+                        <ion-label (click)="showMessagePopup(userMessage)">
+                            <p class="heading-msg">{{userMessage.CategoryName}}</p>
+                            <p class="msg">{{userMessage.MessageSubject}}</p>
+                        </ion-label>
+                        <!-- <span class="msg-detail" style="width:64px;" *ngIf="userMessage.ReadDate">{{userMessage.ReadDate | date:'dd/mm/yyyy'}}</span> -->
+                    </ion-item>
+                    <ion-item-options side="start" *ngIf="userMessage.Priority == 2 ? (userMessage.ReadDate && userMessage.ActiveSw) : userMessage.ActiveSw">
+                        <ion-item-option color="danger" (click)="deleteConfirm('deleteonemessage',userMessage)">
+                            <!-- <ion-icon slot="icon-only" name="trash"></ion-icon> -->
+                            <span class="cart-icn-trash">
+                                <img slot="icon-only" src="../../assets/icon/red-trash.svg">
+                            </span>
+                        </ion-item-option>
+                    </ion-item-options>
+                </ion-item-sliding>
+            </ng-container>
+            <ng-container *ngIf="userMessages?.length == 0">
+                <ion-text class="ion-text-center">
+                    <p class="text-color">{{'no_messages_found' | translate}}</p>
+                </ion-text>
+            </ng-container>
+        </ion-list>
+    </ion-grid>
+</ion-content>

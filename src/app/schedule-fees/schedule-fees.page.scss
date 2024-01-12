@@ -1,0 +1,161 @@
+:host(app-schedule-fees) {
+    width: 100%;
+}
+
+.custom-label {
+    color: #424242;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.custom-label2{
+    font-size: 13px;
+}
+
+.help_circle {
+    font-size: 24px;
+    color: #0873ba;
+    vertical-align: bottom;
+    margin-left: 2px;
+}
+
+.close-icon {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.list-header {
+    border-radius: 0px;
+}
+
+:host(app-schedule-fees) {
+    width: 100%;
+}
+
+.unlimited-label{
+    font-size: 13px;
+}
+
+.custom-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.custom-element {
+    font-weight: 500;
+    background-color: #ffffff;
+}
+
+.custon-nav {
+    height: 48px;
+    width: 20px;
+    cursor: pointer;
+    vertical-align: middle;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.prev-icon-custom.disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.next-icon-custom.disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.slider-nav {
+    ion-icon {
+        height: 100%;
+    }
+}
+
+.autoreplenishment-sub-header>h3 {
+    display: flex;
+    align-items: center;
+}
+
+.autoreplenishment-sub-header>h3>span {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.ion-activatable {
+    position: relative;
+    overflow: hidden;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.information_circle {
+    font-size: 24px;
+    color: #0873ba;
+    vertical-align: bottom;
+    margin-left: 2px;
+}
+
+.disable:hover {
+    cursor: not-allowed;
+}
+
+.disable:active {
+    pointer-events: none;
+}
+
+.dollar::before
+{content:"$"}
+
+@media only screen and (max-width:320px) {
+    ion-button {
+        font-size: 0.9rem;
+    }
+
+    .custom-text-wrap{
+        white-space: normal !important;
+    }
+
+    .full-width {
+        width: 100%;
+        white-space: break-spaces;
+    }
+    
+}
+ion-select.schedule-down{
+    position: relative;
+}
+ion-select.schedule-down::part(icon) {
+    width: .8rem;
+    height: .8rem;
+    color: #b1b1b1;
+    position: absolute;
+    right: 1%;
+}
+
+.dollar{
+    display: inline-flex;
+    align-items: center;
+}
+.installment-font{
+    font-size: 14px;
+    margin-bottom: 23px;
+}
+.addButton-font{
+    font-size: 14px;
+}
+
+ion-select.schedule-down::part(label):after {
+    content: "*";
+    font-size: 16px;
+    color: red;
+    margin-left: 8px;
+}
+ion-select.schedule-down::part(icon) {
+    margin-top: 25px;
+}

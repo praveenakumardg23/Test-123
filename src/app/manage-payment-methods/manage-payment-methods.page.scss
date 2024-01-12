@@ -1,0 +1,196 @@
+ion-img.custom-img {
+    width: 175px;
+}
+
+.terms-agree {
+    margin-left: 5px;
+}
+
+.custom-information {
+    font-size: 1rem;
+}
+
+.custom-circle,
+.custom-trash {
+    font-size: 1.8rem;
+}
+
+.card-custom-background {
+    margin-top: 20px;
+    border-radius: 5px;
+    padding: 5px;
+    background-image: url("/assets/images/worldmap.png"), linear-gradient(to right bottom, #006dbb, #0061a7, #9c5d3a, #b9641f, #b86113);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+
+
+.custom-visa {
+    float: left;
+    width: 50px;
+}
+
+.custom-discover {
+    float: left;
+    width: 50px;
+}
+
+.custom-amex {
+    float: left;
+    width: 50px;
+}
+
+.custom-master {
+    width: 50px;
+    float: left;
+}
+
+.custom-card-number {
+    margin: 3px;
+    word-spacing: 4px;
+    letter-spacing: 2px;
+}
+
+.custom-space {
+    margin: 8px 0px;
+}
+
+.card-custom-field {
+    margin: 3px;
+    font-size: .7rem;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.card-field {
+    margin: 3px;
+    font-size: .8rem;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.custom-card-place {
+    position: relative;
+    bottom: 0;
+    right: 5px;
+}
+
+.default-card-header {
+    position: relative;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    top: 23px;
+    font-size: 0.8rem;
+    color: #fff;
+    padding: 5px;
+    background-color: var(--ion-color-secondary-shade);
+}
+
+ion-checkbox {
+    position: relative;
+}
+
+.achterms a,
+.terms-agree a {
+    text-decoration: underline;
+}
+
+.cctermsalert .custom-img {
+    width: 40%;
+}
+
+ion-img.custom-img.ios.hydrated {
+    width: 70%;
+}
+
+:host(app-manage-payment-methods) {
+    width: 100%;
+}
+
+.camera-icon {
+    position: relative;
+    margin-top: auto;
+    margin-bottom: auto;
+    bottom: 0;
+}
+
+.inactive {
+    height: 15px;
+    width: 15px;
+    background-color: #f04141;
+    border-radius: 50%;
+    margin: 0px 0px 0px 5px;
+}
+
+.active {
+    height: 15px;
+    width: 15px;
+    background-color: #10dc60;
+    border-radius: 50%;
+    margin: 0px 0px 0px 5px;
+}
+
+.tab-header-color {
+    color: #989aa2;
+}
+.text-Color{
+    color: #91A1AE;
+}
+.payment-tab-color {
+    color: #3CBFAE;
+}
+
+.summary-message {
+    margin-bottom: 0;
+}
+
+.mp-summary {
+    margin-top: 0;
+}
+
+.default-header {
+    margin-left: 10px;
+}
+
+.custom-text-wrap {
+    font-size: 0.8rem;
+}
+
+::ng-deep .custom-text-wrap>.mat-radio-label {
+    white-space: pre-line !important;
+    word-break: break-all;
+}
+
+ion-segment {
+    border: 0.5px solid #08a391;
+    border-radius: 3px;
+    background: transparent;
+
+  }
+ion-segment-button::part(indicator-background) {
+    background: #08a391;
+    color: #fff;
+    border-radius: 0px;
+    margin: 0px;
+  }
+  .segment-button-indicator {
+    padding-inline: 0px !important; 
+}
+.segment-button-checked::part(native) {
+    color: #fff;
+    padding-inline: 0px !important; 
+  }
+ion-segment-button{
+    margin: 0px;
+}
+ion-segment-button.ios::part(indicator) {
+    padding-inline: 0px !important; 
+  }
+
+//   @media only screen and (max-width:375px) {
+//     .custom-text-wrap{
+//         font-size: 0.6rem;
+//     }
+// }

@@ -1,0 +1,141 @@
+<ion-header  dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{ 'Meal' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <!-- <ion-back-button icon="home" text="" defaultHref="/dashboard/home"></ion-back-button> -->
+            <ion-button (click)="onDisplayLang()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons class="mr2p" slot="primary">
+            <ion-button (click)="onGotoCart()" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons class="mr2p" slot="end">
+            <ion-menu-button autoHide="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover">
+
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card" *ngIf="mealData">
+                <div class="container">
+                    <div class="scroll" scrollX="true" #widgetsContent>
+                        <div *ngFor="let patron of patrons" style="text-align: center;margin: auto;" tappable (click)="onSelectedStudent(patron)">
+                            <ion-avatar [ngClass]="{'patron-active' : IntPatronId == patron.IntPatronId }" style="padding: 2px;height: 60px;width: 60px;margin: auto;margin-bottom: 8px;margin-left: 20px;margin-right: 20px;border: 1px solid #ccc;">
+                                <!-- <img src="assets/images/individual-1.jpg" *ngIf="patron.PictureData == 'allStudentPicture'"> -->
+                                <img src="../../../assets/icon/all_stud.svg" class="all-student-icon" *ngIf="patron.PictureData == 'allStudentPicture'">
+                                <img *ngIf="patron.PictureData != 'allStudentPicture' && patron.PictureData != null && patron.PictureData != ''" src="data:image/png;base64,{{patron.PictureData}}">
+                            </ion-avatar>
+                            <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }" style="margin-top: 2px;display: block;color: #757575;">{{patron.FirstName}}</ion-label>
+                            <ion-label [ngClass]="{'patron-active-color' : IntPatronId == patron.IntPatronId }" style="margin-top: 2px;color:#757575">{{patron.LastName}}</ion-label>
+                        </div>
+                    </div>
+                </div>
+                <ion-row style="background-color: #f4f5f8;" class="ion-margin-top">
+                    <ion-col class="ion-text-center" [size]="iconColSize" *ngIf="districtFeaturelist !== null">
+                        <ion-button fill="clear" (click)="onGotoMealAccountReport()" [routerLink]="['/dashboard/reports']" routerDirection="forward" [queryParams]="{type:'viewMealHistory'}" [disabled]="!districtFeaturelist.LunchActivity">
+                            <!-- <ion-icon name="md-speedometer" slot="icon-only"></ion-icon> -->
+                            <img src="../../../assets/icon/M_Restriction.svg">
+                        </ion-button>
+                        <!-- <p class="ion-no-margin custom-text" color="primary" [ngStyle]="!districtFeaturelist.LunchActivity ? {'opacity': '0.5','pointer-events':'none'} : false">{{ 'Meal History' | translate }}</p> -->
+                        <p class="ion-no-margin custom-text" color="primary" [ngStyle]="!districtFeaturelist.LunchActivity ? {'opacity': '0.5','pointer-events':'none'} : {}">{{ 'Meal History' | translate }}</p>
+                    </ion-col>
+
+                    <ion-col class="ion-text-center" [size]="iconColSize" *ngIf="districtFeaturelist !== null">
+                        <ion-button fill="clear" [routerLink]="['/dashboard/meal-restrictions']" routerDirection="forward" [disabled]="(selectedPatronData.type == 'individual' ? !Active : disableFlag) || !districtFeaturelist.QuikLunchRestriction">
+                            <!-- <ion-icon name="ios-restaurant" slot="icon-only"></ion-icon> -->
+                            <img src="../../../assets/icon/M_History.svg">
+                        </ion-button>
+                        <!-- <p [ngStyle]="(selectedPatronData.type == 'individual' ? !Active : disableFlag) || !districtFeaturelist.QuikLunchRestriction ? {'opacity': '0.5','pointer-events':'none'} : false" class="ion-no-margin custom-text" color="primary">{{ 'meal_restrictions' | translate }}</p> -->
+                        <p [ngStyle]="(selectedPatronData.type == 'individual' ? !Active : disableFlag) || !districtFeaturelist.QuikLunchRestriction ? {'opacity': '0.5','pointer-events':'none'} : {}" class="ion-no-margin custom-text" color="primary">{{ 'meal_restrictions' | translate }}</p>
+                    </ion-col>
+
+                    <ion-col class="ion-text-center" *ngIf="showTransferIcon" size="3">
+                        <ion-button fill="clear" (click)="openCafeteriaTransferPopup()"  routerDirection="forward">
+                            <!-- <ion-icon name="swap" slot="icon-only"></ion-icon> -->
+                            <ion-icon name="swap-horizontal-sharp"></ion-icon>
+                        </ion-button>
+                        <p class="ion-no-margin custom-text" color="primary">{{ 'cafeteria_transfer' | translate }}</p>
+                    </ion-col>
+
+                    <ion-col class="ion-text-center" [size]="iconColSize">
+                        <!-- Google -->
+                        <ion-button fill="clear" [routerLink]="['/dashboard/auto-replenishment']" routerDirection="forward" [queryParams]="{type:'meal'}" [disabled]="(selectedPatronData.type == 'individual' ? !Active : disableFlag) || paymentMethods === 0 || !districtFeaturelist.Lunch && !districtFeaturelist.SourceAccount">
+                            <!-- <ion-icon slot="icon-only" name="md-sync"></ion-icon> -->
+                            <img src="../../../assets/icon/Auto_Replish.svg">
+                        </ion-button>
+                        <!-- <p [ngStyle]="(selectedPatronData.type == 'individual' ? !Active : disableFlag ) || paymentMethods === 0 || !districtFeaturelist.Lunch && !districtFeaturelist.SourceAccount ? {'opacity': '0.5','pointer-events':'none'} : false" color="primary" class="ion-no-margin custom-text">{{ 'auto_replenishment' | translate }}</p> -->
+                        <p [ngStyle]="(selectedPatronData.type == 'individual' ? !Active : disableFlag ) || paymentMethods === 0 || !districtFeaturelist.Lunch && !districtFeaturelist.SourceAccount ? {'opacity': '0.5','pointer-events':'none'} : {}" color="primary" class="ion-no-margin custom-text">{{ 'auto_replenishment' | translate }}</p>
+                    </ion-col>
+                </ion-row>
+                <ion-card class="custom-card ion-margin-top ion-margin-bottom" *ngFor="let meal of mealData" style="box-shadow: none !important;margin-top: 20px;">
+                    <ion-card-content>
+                        <ion-row class="ion-no-padding" style="display: flex;align-items: center;">
+                            <ion-col class="ion-no-padding custom-label" size="9">
+                                <ion-text color="secondary">
+                                    {{meal.FirstName}} {{meal.LastName}}
+                                </ion-text>
+                            </ion-col>
+                            <ion-col size="3" class="ion-no-padding">
+                                <ion-button shape="round" fill="clear" color="secondary" size="default" *ngIf="!meal.CartAmount" (click)="presentAlertConfirm('add',meal)" [disabled]="!meal.isPatronActive">
+                                    <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                                    <span class="cart-icn-list-img">
+                                        <img slot="icon-only" src="../../../assets/icon/teal-cart.svg">
+                                    </span>
+                                </ion-button>
+                                <ion-button shape="round" class="edit-button" fill="clear" color="primary" size="default" *ngIf="meal.CartAmount" (click)="presentAlertConfirm('edit',meal)" [disabled]="!meal.isPatronActive">
+                                    <!-- <ion-icon slot="icon-only" name="create"></ion-icon> -->
+                                    <span class="edit-icn-list-img">
+                                        <img slot="icon-only" src="../../../assets/icon/icn_edit.svg">
+                                    </span>
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-no-padding ion-margin-top">
+                            <ion-col class="ion-no-padding custom-label" size="8">{{ 'Meal_balance' | translate }}</ion-col>
+                            <ion-col class="ion-no-padding ion-text-right custom-label" size="4">${{meal.PatronAccountBalance | number:'.2'}}
+                            </ion-col>
+                        </ion-row>
+                        <span *ngIf="districtFeaturelist !== null">
+                            <ion-row class="ion-no-padding" *ngIf="districtFeaturelist.UsePreOrderBalance === true">
+                                <ion-col class="ion-no-padding custom-label" size="8">{{ 'Pre_Order_Balance' | translate }}</ion-col>
+                                <ion-col class="ion-no-padding ion-text-right custom-label" size="4">
+                                    ${{(meal.Pre_OrderAccountBalance ? meal.Pre_OrderAccountBalance : 0) | number:'.2'}}</ion-col>
+                            </ion-row>
+                        </span>
+                        
+                        <span *ngIf="districtFeaturelist !== null">
+                            <ion-row class="ion-no-padding" *ngIf="districtFeaturelist.BonusAccount">
+                                <ion-col class="ion-no-padding custom-label" size="8">{{ 'IS_Bonus_Balance' | translate }}</ion-col>
+                                <ion-col class="ion-no-padding ion-text-right custom-label" size="4">
+                                    ${{(meal.BonusAccountBalance ? meal.BonusAccountBalance : 0) | number:'.2'}}</ion-col>
+                            </ion-row>
+                        </span>
+                        
+                        <ion-row class="ion-no-padding" *ngIf="meal.CartAmount">
+                            <ion-col class="ion-no-padding custom-label" size="8">{{ 'in_cart' | translate }}</ion-col>
+                            <ion-col class="ion-no-padding ion-text-right custom-label" size="4">
+                                ${{meal.CartAmount ? meal.CartAmount.toFixed(2) : 0 | number:'.2'}}
+                            </ion-col>
+                        </ion-row>
+                    </ion-card-content>
+                </ion-card>
+                <ion-text *ngIf="mealData.length == 0" class="ion-text-center">
+                    <p>
+                        {{'no_items' | translate}}
+                    </p>
+                </ion-text>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

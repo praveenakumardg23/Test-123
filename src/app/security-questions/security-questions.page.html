@@ -1,0 +1,163 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'security_questions_title' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <ion-button [routerLink]="redirectToDashboard" routerDirection="back">
+                <img class="cart-icn-img" src="../../assets/icon/home-icn.svg">
+            </ion-button>
+            <ion-button (click)="onLangChange()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button (click)="onLogout()" *ngIf="phase== 'registrationPhase'">
+                <!-- <ion-icon slot="icon-only" name="log-out"></ion-icon> -->
+                <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+            </ion-button>
+            <ion-button (click)="onGotoCart()" *ngIf="phase== 'dashboard'" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end" *ngIf="phase == 'dashboard'">
+            <ion-menu-button autoHide="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class='ion-content' dir="{{languageService.langDir}}">
+    <ion-grid class="custom-cover">
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card" >
+                <ion-row dir="{{languageService.langDir}}" class="ion-justify-content-center ion-text-center" *ngIf="phase == 'registrationPhase'">
+                    <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(1)">
+                        <ion-icon name="create" class="tab-icon" color="secondary"></ion-icon>
+                        <p class="tab-header-name" style="color:#3CBFAE;">{{'register' | translate}}</p>
+                        <ion-ripple-effect type="unbounded" color="secondary"></ion-ripple-effect>
+                    </ion-col>
+                    <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(4)">
+                        <ion-icon name="person-add" class="tab-icon" color="medium"></ion-icon>
+                        <p class="tab-header-name" style="color:#989aa2;">{{'student' | translate}}</p>
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-col>
+                    <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(5)">
+                        <ion-icon name="card" class="tab-icon" color="medium"></ion-icon>
+                        <p class="tab-header-name" style="color:#989aa2;">{{'payment' | translate}}</p>
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-col>
+                    <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(6)">
+                        <ion-icon name="notifications" class="tab-icon" color="medium"></ion-icon>
+                        <p class="tab-header-name" style="color:#989aa2;">{{'notification' | translate}}</p>
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-col>
+                </ion-row>
+                <ion-row dir="{{languageService.langDir}}" class="ion-margin-vertical" *ngIf="phase == 'registrationPhase'" >
+                    <ion-progress-bar dir="{{languageService.langDir}}" value="0.25" color="secondary"></ion-progress-bar>
+                </ion-row>
+                <form (ngSubmit)="onSubmitSecurityQuestions()" [formGroup]="form" dir="{{languageService.langDir}}">
+                    <ion-row class="ion-margin-top">
+                        <ion-text color="dark">
+                            <h5>{{'page_content_heading' | translate}}.</h5>
+                            <p class="ion-text-justify">
+                                {{'page_content1' | translate}}.
+                            </p>
+                            <p class="ion-text-justify">
+                                {{'page_content2' | translate}}.
+                            </p>
+                        </ion-text>
+                    </ion-row>
+                    <ion-row>
+                        <ion-text color="primary">
+                            <p class="ion-text-justify">{{'security_question1' | translate}}</p>
+                        </ion-text>
+                    </ion-row>
+
+                    <ion-item>
+                        <ion-label position="floating">{{'question' | translate}}* </ion-label>
+                        <ion-select class="security-down" toggleIcon="caret-down-sharp" [interfaceOptions]="securityActionSheetOptions" interface="action-sheet" [formControl]="form.controls['questionId1']" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required>
+                            <ion-select-option *ngFor="let question of questions1;let i =index" [value]="question.QuestionId">{{question.QuestionText}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-text color="danger" class="error-message" *ngIf="form.controls['questionId1'].hasError('required') && form.controls['questionId1'].touched">
+                        <p class="error-text-message">{{'question_required' | translate}}.</p>
+                    </ion-text>
+                    <ion-item>
+                        <ion-label position="floating">{{'answer' | translate}}*</ion-label>
+                        <ion-input aria-label="questionAnswer1" required type="text" [minlength]="2" [maxlength]="225" [(ngModel)]="questionAnswer1" [formControl]="form.controls['questionAnswer1']" (ngModelChange)="compareAnswers()" appCustomTextWithSymbol="225"></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" class="error-message" *ngIf="form.controls['questionAnswer1'].hasError('required') && form.controls['questionAnswer1'].touched">
+                        <p class="error-text-message">{{'answer_required' | translate}}.</p>
+                    </ion-text>
+                    <ion-text color="danger" class="error-message" *ngIf="form.controls['questionAnswer1'].hasError('minlength') && form.controls['questionAnswer2'].touched">
+                        <p class="error-text-message">{{'answer_length' | translate}}.</p>
+                    </ion-text>
+                    <ion-row class="ion-margin-top">
+                        <ion-text color="primary">
+                            <p class="ion-text-justify">{{'security_question2' | translate}}</p>
+                        </ion-text>
+                    </ion-row>
+                    <ion-item>
+                        <ion-label position="floating">{{'question' | translate}}*</ion-label>
+                        <ion-select class="question1-action-sheet security-down" toggleIcon="caret-down-sharp" [interfaceOptions]="securityActionSheetOptions" interface="action-sheet" [formControl]="form.controls['questionId2']" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required>
+                            <ion-select-option *ngFor="let question of questions2;let i =index" [value]="question.QuestionId">{{question.QuestionText}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-text color="danger" class="error-message" *ngIf="form.controls['questionId2'].hasError('required') && form.controls['questionId2'].touched">
+                        <p class="error-text-message">{{'question_required' | translate}}.</p>
+                    </ion-text>
+                    <ion-item>
+                        <ion-label position="floating">{{'answer' | translate}}*</ion-label>
+                        <ion-input aria-label="questionAnswer2" required type="text" [minlength]="2" [maxlength]="225" [(ngModel)]="questionAnswer2" [formControl]="form.controls['questionAnswer2']" (ngModelChange)="compareAnswers()" appCustomTextWithSymbol="225"></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" class="error-message" *ngIf="form.controls['questionAnswer2'].hasError('required') && form.controls['questionAnswer2'].touched">
+                        <p class="error-text-message">{{'answer_required' | translate}}.</p>
+                    </ion-text>
+                    <ion-text color="danger" class="error-message" *ngIf="form.controls['questionAnswer2'].hasError('minlength') && form.controls['questionAnswer2'].touched">
+                        <p class="error-text-message">{{'answer_length' | translate}}.</p>
+                    </ion-text>
+                    <ion-row class="ion-margin-top">
+                        <ion-text color="primary">
+                            <p class="ion-text-justify">{{'security_question3' | translate}}</p>
+                        </ion-text>
+                    </ion-row>
+                    <ion-item>
+                        <ion-label position="floating">{{'question' | translate}}*</ion-label>
+                        <ion-select class="security-down" toggleIcon="caret-down-sharp" [interfaceOptions]="securityActionSheetOptions" interface="action-sheet" [formControl]="form.controls['questionId3']" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required>
+                            <ion-select-option *ngFor="let question of questions3;let i =index" [value]="question.QuestionId">{{question.QuestionText}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-text color="danger" class="error-message" *ngIf="form.controls['questionId3'].hasError('required') && form.controls['questionId3'].touched">
+                        <p class="error-text-message">{{'question_required' | translate}}.</p>
+                    </ion-text>
+                    <ion-item>
+                        <ion-label position="floating">{{'answer' | translate}}*</ion-label>
+                        <ion-input aria-label="questionAnswer3" type="text" required [minlength]="2" [maxlength]="225" [(ngModel)]="questionAnswer3" [formControl]="form.controls['questionAnswer3']" (ngModelChange)="compareAnswers()" appCustomTextWithSymbol="225"></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" class="error-message" *ngIf="form.controls['questionAnswer3'].hasError('required') && form.controls['questionAnswer3'].touched">
+                        <p class="error-text-message">{{'answer_required' | translate}}.</p>
+                    </ion-text>
+                    <ion-text color="danger" class="error-message" *ngIf="form.controls['questionAnswer3'].hasError('minlength') && form.controls['questionAnswer2'].touched">
+                        <p class="error-text-message">{{'answer_length' | translate}}.</p>
+                    </ion-text>
+                    <ion-row class="ion-margin-top">
+                        <ion-button color='secondary' expand="block" class="full-width" type="submit" [disabled]="!form.valid || !updateButton || validate">{{(phase == 'registrationPhase' ? 'security_button1' : 'security_button2') | translate}}</ion-button>
+                    </ion-row>
+                    <ion-row *ngIf="phase == 'registrationPhase'">
+                        <ion-col size="4">
+                            <ion-button expand="block" class="full-width custom-orange-btn" (click)="onLogout()">
+                                <ion-icon class="logoutIcon" name="arrow-back"></ion-icon>
+                                <!-- <ion-icon slot="icon-only" style="transform: rotate(180deg)" name="log-in" class="custom-space"></ion-icon> -->
+                            </ion-button>
+                        </ion-col>
+                        <ion-col size="8">
+
+                        </ion-col>
+                    </ion-row>
+                </form>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

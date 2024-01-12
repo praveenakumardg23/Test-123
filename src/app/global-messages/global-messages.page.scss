@@ -1,0 +1,19 @@
+ion-grid {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+ion-grid>ion-text>p {
+    overflow: scroll;
+    height: 145px;
+}
+
+ion-footer>ion-button {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 16px;
+}
+
+.global-message{
+    color: var(--ion-color-primary);
+}

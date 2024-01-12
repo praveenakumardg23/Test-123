@@ -1,0 +1,325 @@
+<ion-header>
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'schedule_fee' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <ion-button color="light" (click)="onDismiss('refresh')">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <!-- <ion-buttons slot="primary">
+            <ion-button color="light" (click)="onDismiss()">
+                <ion-icon slot="icon-only" name="ios-close-circle"></ion-icon>
+            </ion-button>
+        </ion-buttons> -->
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover">
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card">
+                <ion-card style="border-top: 1px solid var(--ion-color-secondary);
+                border-radius: 0px;
+                margin: 0px;
+                box-shadow: 0 0px 2px rgba(0,0,0,.12);
+                border-left: 1px solid var(--ion-color-secondary);
+                border-right: 1px solid var(--ion-color-secondary);">
+                    <ion-card-content style="margin: 4px 4px 0px 4px;
+                    background-color: #f3f3f3;">
+
+                        <ion-row class="ion-no-padding">
+                            <ion-col class="ion-no-padding custom-label" size="6">{{ 'Name' | translate}}</ion-col>
+                            <ion-col class="ion-no-padding custom-label2"  size="6"> {{feeData.name}}</ion-col>
+                        </ion-row>
+
+                        <ion-row class="ion-no-padding">
+                            <ion-col class="ion-no-padding custom-label" size="6">{{'paid_amount' | translate}}
+                            </ion-col>
+                            <ion-col class="ion-no-padding custom-label2" size="6">
+                                ${{(feeData.AmountPaid? feeData.AmountPaid : 0)| number : '.2'}}</ion-col>
+                        </ion-row>
+
+                        <ion-row class="ion-no-padding">
+                            <ion-col class="ion-no-padding custom-label" size="6">{{'amount_due' | translate}}</ion-col>
+                            <ion-col class="ion-no-padding custom-label2" size="6" *ngIf="feeData.modifiedFeeType == 'Assigned Fee'">
+                                ${{AmountLeftToSehedule | number : '.2'}}
+                                <!-- ${{feeData.NetAmount - feeData.ScheduledAmount - (feeData.CartAmount ? feeData.CartAmount : 0)| number : '.2'}} -->
+                            </ion-col>
+                            <ion-col class="ion-no-padding custom-label2" size="6" *ngIf="feeData.modifiedFeeType == 'Optional Fee'">
+                                ${{AmountLeftToSehedule | number : '.2'}}
+                                <!-- ${{feeData.AmountDue - (feeData.CartAmount ? feeData.CartAmount : 0) | number : '.2'}} -->
+                            </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-no-padding">
+                            <ion-col class="ion-no-padding custom-label" size="6">{{'fee_type' | translate}}</ion-col>
+                            <ion-col class="ion-no-padding custom-label2" size="6">
+                                <!-- <ion-label> {{feeData.FeeOrigin ? feeData.FeeOrigin : feeData.modifiedFeeType}}</ion-label> -->
+                                {{feeData.modifiedFeeType}}
+                            </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-no-padding">
+                            <ion-col class="ion-no-padding custom-label" size="6">{{'fee_name' | translate}}<span>
+                                    <!-- <ion-icon name="help-circle" class="help_circle"></ion-icon> -->
+                                    <ion-icon name="information-circle" color='primary' class="information_circle"
+                                        (click)="onInfo(feeData)">
+                                    </ion-icon>
+                                </span></ion-col>
+                            <ion-col class="ion-no-padding custom-label2" size="6">{{feeData.FeeName}}</ion-col>
+                        </ion-row>
+
+                        <ion-item  style='--ion-background-color: none;'   class="ion-no-margin ion-no-padding"
+                         *ngIf="(feeData.modifiedFeeType == 'Optional Fee' || feeData.modifiedFeeType == 'Assigned Fee') && 
+                         feeData.Attribute?.Type=='Dropdown'">
+                            <!-- <ion-label position="floating">{{feeData.Attribute.Name}}* </ion-label> -->
+
+                            
+                            <ion-select label="{{feeData.Attribute.Name}}" label-placement="floating" class="schedule-down" toggleIcon="caret-down-sharp"  [okText]="'select' | translate" [(ngModel)]="selectedAttribute" #DropdownAttribute = "ngModel" [disabled]="disableAttribute"
+                            [cancelText]="'cancel' | translate" name="DropdownAttribute" (ionChange)="selectAttribute(selectedAttribute, feeData)">
+                                <ion-select-option  *ngFor = "let option of feeData.Attribute.Options" [value] = "option" >{{ option.AttributeValue }}</ion-select-option>
+                            </ion-select>
+                           
+                        </ion-item>
+                        <ion-list  class="ion-no-margin ion-no-padding" style='background: none;' *ngIf='(feeData.modifiedFeeType == "Optional Fee" || feeData.modifiedFeeType == "Assigned Fee") && feeData.Attribute?.Type=="Radio Button"'>
+                            <ion-radio-group  name="selectedAttributesOptions"  [value]='feeData.selectedAttributeValue' (ionChange)='selectRadioAttribute($event,feeData)'>
+                                <ion-list-header style='padding: 0px;margin-bottom: -13px;font-size: 15px;'>
+                                    {{feeData.Attribute.Name}}*
+                                </ion-list-header>
+                                <ion-row >
+                                    <ion-col col-auto text-left *ngFor="let option of feeData.Attribute.Options" class="ion-no-margin ion-no-padding">
+                                         <ion-item lines="none" [style.color]="feeData.CartAmount? 'lightgray' : 'black'" style='--ion-background-color: none; --padding-start: 0px;--inner-padding-end: 5px;font-size: 15px;' class='radioButtonBg'>
+                                         
+                                            <ion-radio color="secondary"   [disabled]="disableAttribute" style='margin:7px;width: 17px;height: 17px;'   mode="md" slot="start" 
+                                            [value]="option.IntFeeAttributeId" ></ion-radio>
+                                            {{option.AttributeValue}}
+
+                                       </ion-item>
+                                     </ion-col>
+                               
+                                </ion-row>
+                            </ion-radio-group>
+                        </ion-list>
+                        <ion-row class="ion-no-padding" *ngIf="showCustomLink">
+                            <ion-col class="ion-no-padding custom-label" style="color: #0073ba;" ><u (click)="showCustomFieldsModal('CustomFiledLink')">{{'Custom_Fields' | translate}}</u> </ion-col >   
+                        </ion-row>
+                    </ion-card-content>
+                </ion-card>
+
+                <!--  -->
+                <ion-row class="ion-margin-top" style="margin-top: 0px;
+                box-shadow: 0 0px 2px rgba(0,0,0,.12);
+                border-radius: 0px;
+                border-left: 1px solid var(--ion-color-secondary);
+                border-bottom: 1px solid var(--ion-color-secondary);
+                border-left: 1px solid var(--ion-color-secondary);
+                border-right: 1px solid var(--ion-color-secondary);">
+                    <ion-col size="1">
+                        <span class="slider-nav arrow-prev" (click)="slidePrev(sliderOne,slideWithNav)">
+                            <div class="prev-icon-custom custon-nav" [class.disabled]="sliderOne.isBeginningSlide">
+                                <ion-icon name="chevron-back-circle-outline"></ion-icon>
+                            </div>
+                        </span>
+                    </ion-col>
+                    <ion-col size="10">
+                        <swiper-container [options]="slideOptsOne" #slideWithNav (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+                            <swiper-slide *ngFor="let FeesForScheduledPayment  of ScheduledPaymentslist;let i=index;">
+                                <ion-grid class="custom-grid" style="width:100%;">
+                                    <ion-list class="custom-element ion-no-margin full-width">
+                                        <ion-row style="display: flex;align-items: center;">
+                                            <ion-col class="ion-no-padding" size="8">
+                                                <ion-text>
+                                                    <h3 class="ion-no-padding ion-text-start">
+                                                        {{'installment' | translate}} {{i+1}}</h3>
+                                                    <br>
+                                                 </ion-text>
+
+                                            </ion-col>
+                                            <ion-col size="4">
+                                                <ion-button shape="round" fill="clear" color="primary" size="default" [disabled]="FeesForScheduledPayment.ProcessedSw===true" (click)="onDeleteSchedule(FeesForScheduledPayment.IntScheduledPaymentId,FeesForScheduledPayment.IntSiteId,FeesForScheduledPayment.IntPatronId,i)">
+                                                    <ion-icon slot="start" name="md-trash"></ion-icon>
+                                                </ion-button>
+                                            </ion-col>
+                                        </ion-row>
+
+                                        <ion-text color="dark" *ngIf="(FeesForScheduledPayment.InstallmentsLeftToSchedule>0 && FeesForScheduledPayment.Installments>0)">
+                                            <h6 class="ion-text-start">
+                                                {{InstallmentsLeftToSchedule}} {{'installment_remaining' | translate}} &nbsp;{{enddate |date: 'MM/dd/yyyy'}}
+                                            </h6>
+                                        </ion-text>
+                                        <ion-text color="dark" *ngIf="FeesForScheduledPayment.Installments===0">
+                                            <h6 class="ion-text-start">
+                                                {{'Unlimited_installments' | translate}} &nbsp;{{enddate |date: 'MM/dd/yyyy'}}
+                                            </h6>
+                                        </ion-text>
+
+
+                                        <form #f2="ngForm" autocomplete="off">
+                                            <ion-item class="custom-item-wrapper">
+                                                <ion-label position="floating">{{'amount' | translate}}
+                                                    <ion-text color="danger">*</ion-text>
+                                                </ion-label>
+
+                                                <ion-input aria-label="EditAmount" class="dollar" type="text" (change)="validateAmount(ScheduledPaymentslist)" name="EditAmount" class="dollar" [disabled]="FeesForScheduledPayment.InstallmentsLeftToSchedule == 0" 
+                                                ngModel #EditAmount="ngModel" required [(ngModel)]="FeesForScheduledPayment.PaymentAmount" #Amount="ngModel" (keyup)="onKeyUp($event)" inputmode="decimal">
+                                                </ion-input>
+                                            </ion-item>
+                                            <ion-text color="danger" class="error-message" *ngIf="showerror">
+                                            <p class="error-text-message">Invalid Amount</p>
+                                            </ion-text>
+
+                                            <ion-item (click)="toggleVisibility(i)">
+
+                                                <ion-label class="custom-text-wrap ion-no-margin installment-font" position="floating">
+                                                    {{'installment_date' | translate}}
+                                                    <ion-text color="danger">*</ion-text>
+                                                </ion-label>
+                                                <div>
+                                                    <!-- <p *ngIf="stopPaymentDate == '' || stopPaymentDate == null" class="select-date" (click)="toggleVisibility(i)" >Select Date</p> -->
+                                                    <p *ngIf="FeesForScheduledPayment.PaymentDate != '' ||FeesForScheduledPayment.PaymentDate != null " class="selected-date" (click)="toggleVisibility(i)" >{{FeesForScheduledPayment.PaymentDate | date :  "MM/dd/yyyy" }}</p>
+                                                </div>
+                                                <!-- <ion-icon  class="close-icon" slot="end" color="secondary" name="md-calendar" [ngStyle]="{'opacity': districtFeaturelist.DisableScheduleFee ? '0.4' : ''}"></ion-icon> -->
+                                                <ion-icon  class="close-icon" slot="end" color="secondary" name="calendar-outline"></ion-icon>
+
+                                            </ion-item>
+                                            <span class="schedule_Date">
+                                            <ion-datetime class="ion-no-padding" *ngIf="isVisible(i)" presentation="date" [preferWheel]="true" size="cover"
+                                            #datePicker [min]="minDate" [max]="maxDate" [value]="scheduleDate" name="EditDate"
+                                             ngModel #EditDate="ngModel" required (ionCancel)="toggleVisibility(i)" (ionChange)="selectDate($event, i)" [(ngModel)]="FeesForScheduledPayment.PaymentDate" [doneText]="'DONE' | translate" [cancelText]="'cancel' | translate"
+                                            [disabled]="districtFeaturelist.DisableScheduleFee" >
+                                            <ion-buttons slot="buttons" >
+                                                <ion-button color="primary" (click)="toggleVisibility(i)">Cancel</ion-button>
+                                                <ion-button color="primary" (click)="datePicker.confirm()">Done</ion-button>
+                                              </ion-buttons>
+                                        </ion-datetime>
+                                    </span>
+                                            <ion-item>
+                                                <!-- <ion-label position="floating">{{'payment_type' | translate}}
+                                                    <ion-text color="danger">*</ion-text>
+                                                </ion-label> -->
+
+                                                <ion-select label="{{'payment_type' | translate}}" label-placement="floating" class="schedule-down" toggleIcon="caret-down-sharp" name="Type" [(ngModel)]="FeesForScheduledPayment.PaymentMethodId" #Type="ngModel" required (ngModelChange)="onSelectedchange($event)">
+                                                    <ion-select-option *ngFor="let ViewPayment of ViewPayments" [value]="ViewPayment.PaymentMethodId">{{ViewPayment.NickName}}
+                                                    </ion-select-option>
+                                                </ion-select>
+
+                                            </ion-item>
+
+                                            <ion-row class="ion-margin">
+                                                <ion-button color='secondary' expand="block" class="full-width addButton-font" [ngClass]="{'disable': FeesForScheduledPayment.ProcessedSw===true}" [disabled]="!f2.valid || FeesForScheduledPayment.ProcessedSw===true || FeesForScheduledPayment.PaymentAmount===0 || showerror" (click)="showCustomFieldsModal('AssignedFee', FeesForScheduledPayment,i)">
+                                                    {{'add_update'|translate}}</ion-button>
+                                            </ion-row>
+                                            <ion-label>
+
+                                                <p class="meal-note"> <span *ngIf="FeesForScheduledPayment.showPerTransaction">{{'ar_transactionfee_note' | translate}}</span><span *ngIf="!FeesForScheduledPayment.showPerTransaction">{{'ar_transactionfee_note_an' | translate}}</span>&nbsp;{{FeesForScheduledPayment.PaymentTypeMsg
+                                                    | translate}} {{'installment_note1' | translate}} ${{FeesForScheduledPayment.TotalProcessingFee}}&nbsp;
+                                                    <span *ngIf="FeesForScheduledPayment.showPerTransaction">{{'ar_transactionfee_note1' | translate}}</span>
+                                                </p>
+
+                                            </ion-label>
+                                        </form>
+                                    </ion-list>
+                                </ion-grid>
+                            </swiper-slide>
+
+                            <swiper-slide *ngIf="(InstallmentsLeftToSchedule>0 && Installments>0 &&  AmountDue>0) || (Installments===0 &&  AmountDue>0) ">
+
+                                <ion-grid class="custom-grid" style="width:100%;">
+                                    <ion-list class="custom-element full-width ion-no-margin">
+                                        <ion-row>
+                                            <ion-col class="ion-no-padding" size="10">
+                                                <ion-text>
+                                                    <h3 class="ion-no-padding ion-text-start">
+                                                        {{'installment' | translate}}</h3>
+                                                </ion-text>
+                                            </ion-col>
+                                            <ion-col size="2">
+
+                                            </ion-col>
+                                        </ion-row>
+
+                                        <ion-text color="dark" *ngIf="(InstallmentsLeftToSchedule>0 && Installments>0)">
+                                            <h6 class="ion-text-start">{{InstallmentsLeftToSchedule}} {{'installment_remaining' | translate}} &nbsp; {{enddate |date: 'MM/dd/yyyy'}}
+                                            </h6>
+                                        </ion-text>
+
+                                        <ion-text color="dark" *ngIf="Installments===0">
+                                            <h6 class="ion-text-start unlimited-label">
+                                                {{'Unlimited_installments' | translate}}&nbsp;{{enddate |date: 'MM/dd/yyyy'}}
+                                            </h6>
+                                        </ion-text>
+                                        <form #f1="ngForm" autocomplete="off">
+                                            <ion-item>
+                                                <ion-label position="floating">{{'amount' | translate}}
+                                                    <ion-text color="danger">*</ion-text>
+                                                </ion-label>
+                                                <ion-input aria-label="Amount" class="dollar" type="text" name="Amount" inputmode="decimal" (keyup)="onKeyUp($event)" #Amount="ngModel" ngModel [(ngModel)]="ScheduleAmount" required [disabled]="InstallmentsLeftToSchedule===1 && Installments>0">
+                                                </ion-input>
+                                            </ion-item>
+
+                                            <ion-item (click)="toggleVisibility(1)">
+                                                <ion-label position="floating" class="custom-text-wrap ion-no-margin installment-font">
+                                                    {{'installment_date' | translate}}
+                                                    <ion-text color="danger">*</ion-text>
+                                                </ion-label>
+                                                <div>
+                                                    <p *ngIf="myDate != '' && myDate != null " class="selected-date" (click)="toggleVisibility(1)" >{{myDate | date :  "MM/dd/yyyy" }}</p>
+                                                </div>
+                                                
+                                                <!-- <ion-icon (click)="datePicker.open()" class="close-icon" slot="end" color="secondary" name="md-calendar"></ion-icon> -->
+                                                <ion-icon  class="close-icon" slot="end" color="secondary" name="calendar-outline"></ion-icon>
+                                            </ion-item>
+                                            <span class="schedule_Date">
+                                            <ion-datetime class="ion-no-padding" *ngIf="isVisible(1)" presentation="date" [preferWheel]="true" size="cover" #datePicker displayFormat="MM/DD/YYYY" name="Date" ngModel #Date="ngModel" 
+                                            [(ngModel)]="myDate" [value]="scheduleDate" required [min]="minDate" [max]="maxDate"  (ionCancel)="toggleVisibility(1)" [doneText]="'DONE' | translate" [cancelText]="'cancel' | translate"  (ionChange)="selectDate($event, 1)">
+                                            <ion-buttons slot="buttons" >
+                                                <ion-button color="primary" (click)="datePicker.cancel()">Cancel</ion-button>
+                                                <ion-button color="primary" (click)="datePicker.confirm()">Done</ion-button>
+                                              </ion-buttons>
+                                            </ion-datetime>  
+                                        </span>
+                                            <ion-item>
+                                                <!-- <ion-label position="floating">{{'payment_type' | translate}}
+                                                    <ion-text color="danger">*</ion-text>
+                                                </ion-label> -->
+
+
+
+                                                <ion-select label="{{'payment_type' | translate}}" label-placement="floating" class="schedule-down" toggleIcon="caret-down-sharp" name="Type" [(ngModel)]="selectedPayment" #Type="ngModel" ngModel required (ngModelChange)="onSelectedchange($event)" [cancelText]="'cancel' | translate" [okText]="'ok' | translate">
+                                                    <ion-select-option *ngFor="let ViewPayment of ViewPayments" [value]="ViewPayment.PaymentMethodId">{{ViewPayment.NickName}}
+                                                    </ion-select-option>
+                                                </ion-select>
+                                      
+                                            </ion-item>
+
+                                            <ion-row class="ion-margin">
+                                                <ion-button color='secondary' expand="block" [disabled]="!f1.valid || ScheduleAmount===0 
+                                                ||((feeData && feeData.Attribute && feeData.Attribute.Options.length > 0 &&  
+                                                  !isAttributeSelected))" class="full-width addButton-font" 
+                                                (click)="showCustomFieldsModal('onAddSchedule')">
+                                                    {{'add_update'|translate}}</ion-button>
+                                            </ion-row>
+                                        </form>
+                                    </ion-list>
+                                </ion-grid>
+
+                            </swiper-slide>
+
+
+                        </swiper-container>
+                        <ion-button expand="block" color='secondary' class="full-width addButton-font" *ngIf="scheduleditemcount>0" (click)="CancelAll()">
+                            {{'cancel_all'|translate}}
+                        </ion-button>
+                    </ion-col>
+                    <ion-col size="1">
+                        <span class="slider-nav arrow-next" (click)="slideNext(sliderOne,slideWithNav)">
+                            <div class="next-icon-custom custon-nav" [class.disabled]="sliderOne.isEndSlide">
+                                <ion-icon name="chevron-forward-circle-outline"></ion-icon>
+                            </div>
+                        </span>
+                    </ion-col>
+                </ion-row>
+                <!--  -->
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>

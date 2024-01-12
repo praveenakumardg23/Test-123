@@ -1,0 +1,51 @@
+.custom-card {
+    background-color: var(--ion-color-light);
+    margin: 10px 0px 0px 0px;
+}
+
+.custom-label {
+    color: #91A1AE;
+    font-weight: 500;
+}
+
+div[scrollx=true] {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    .scroll-item {
+        flex: 0 0 auto;
+    }
+}
+
+
+
+.patron-active {
+    border: 2px solid #3CBFAE !important;
+}
+
+.patron-active-color {
+    color: #3CBFAE !important;
+    font-weight: 500;
+}
+
+.patron-inactive {
+    border: 1px solid #757575;
+}
+
+.custom-text {
+    position: relative;
+    font-size: 10px;
+    top: 0;
+    color: #91A1AE;
+}
+
+.dropdown-active{
+    color: #ADD8E6;
+}
+
+.dropdown-inactive{
+    color: #3CBFAE;
+}

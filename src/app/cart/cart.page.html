@@ -1,0 +1,205 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{ 'Cart' | translate }}</ion-title>
+        <ion-buttons slot="start">
+            <ion-back-button [text]="'Back' | translate" (click)="onBack()"></ion-back-button>
+            <ion-button (click)="onLangChange()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover" *ngIf="cartData">
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card custom-padding">
+                <!-- header row -->
+                <ion-row class="mt4p">
+                    <ion-col size="3" class="ion-padding">
+                        <ion-checkbox aria-label="masterCheck" color="secondary" [(ngModel)]="masterCheck" [indeterminate]="isIndeterminate"
+                            (click)="checkMaster()"></ion-checkbox>
+                    </ion-col>
+                    <ion-col size="9" class="ion-text-end" *ngIf="(masterCheck || isIndeterminate)">
+                        <ion-button fill="clear" (click)="warningmsg('deleteSelected',cartItems)">
+                            <span class="cart-icn-trash">
+                                <img slot="icon-only" src="../../../assets/icon/bin.svg">
+                            </span>
+                            <ion-label>{{ 'delete_selected'| translate }}</ion-label>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+
+                <ion-item-divider class="custom-name ion-margin-top" color="medium">
+                    <ion-label>
+                        {{ 'cart_items' | translate }}
+                    </ion-label>
+                </ion-item-divider>
+                <ion-grid>
+                    <ion-text color="dark" class="ion-text-center">
+                        <p *ngIf="cartItems?.length == 0">{{ 'no_cart_items' | translate }}
+                        </p>
+                    </ion-text>
+                </ion-grid>
+                <ion-grid>
+                    <ion-row *ngFor="let cartItem of cartItems;let i=index"
+                        [ngStyle]="{'border-top': cartItem.displayName && i > 0? '.5px dotted var(--ion-color-medium-tint)' : ''}">
+                        <ion-text color="secodary" *ngIf="cartItem.displayName" class="ion-margin-horizontal labelDiv">
+                            <h4 *ngIf="cartItem.IntPatronId != 0">
+                                {{cartItem.patronName}} ({{cartItem.PatronId}})
+                            </h4>
+                            <h4 *ngIf="cartItem.IntPatronId == 0">
+                                {{cartItem.patronName}}
+                            </h4>
+                        </ion-text>
+                        <ion-col size="10">
+                            <ion-item class="full-width" lines="none">
+                                <ion-checkbox aria-label="cartItem" color="secondary" class="custom-checkbox ion-margin-end custom-checkboxs"
+                                    [(ngModel)]="cartItem.isChecked" (ionChange)="checkEvent()"></ion-checkbox>
+                                <ion-label>
+                                    <ion-row>
+                                        <ion-text>
+                                            <p class="sub-heading">{{ 'Items_name'|translate}}
+                                                <ion-icon color='primary'
+                                                    *ngIf="cartItem.ItemName != 'Meal' && cartItem.Session"
+                                                    name="information-circle" class="information_circle"
+                                                    (click)="onInfo(cartItem)"></ion-icon>
+                                                <span class="item-color" *ngIf="cartItem.ItemName ==='Meal' && cartItem.IsPreorder">{{'Preorder Meal'| translate }}</span>
+                                                <span class="item-color" *ngIf="cartItem.ItemName ==='Meal' && !cartItem.IsPreorder">{{'Meal'| translate }}</span>
+                                                <span class="item-color" *ngIf="cartItem.ItemName !== 'Meal'">{{cartItem.ItemName | translate }}</span>
+                                                <span *ngIf="cartItem.isInvalidSpot || cartItem.isAttributeNotAvailable"
+                                                    class="mandatory-text" style="position: inherit;">&nbsp;*</span>
+
+                                            </p>
+                                        </ion-text>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-text>
+                                            <p class="sub-heading"
+                                                *ngIf="cartItem.ItemName != 'Meal'">
+                                                <!--  &&(cartItem.FeeDescription || cartItem.SelectedAttribute) -->
+                                                <span style="margin-left: 0%;">{{ 'Cart_description'|translate }}</span>
+                                                <span class="description">{{cartItem.FeeName +
+                                                    (cartItem.SelectedAttribute ? '-' +
+                                                    cartItem.SelectedAttribute.AttributeValue : '')}}</span>
+                                            </p>
+                                            <p class="sub-heading" *ngIf="cartItem.ItemName == 'Meal'">{{
+                                                'Cart_description'|translate }} <span
+                                                    class="description">{{cartItem.AccountName}}</span></p>
+                                        </ion-text>
+                                    </ion-row>
+                                    <ion-row class="ion-no-padding cart-amount-font custom-margin">
+                                        <ion-col size="12" class="ion-no-padding">
+                                            <ion-text *ngIf="i !== enableInput" color="secodary" class="custom-font">{{ 'Amount'|translate }}:
+                                                <span *ngIf="languageService.langDir === 'ltr'">$</span>{{cartItem?.CartAmount | number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span></ion-text>
+                                                <ion-text  *ngIf="i === enableInput" class="input-Field">
+                                                    {{ 'Amount'|translate }}:
+                                                    <span *ngIf="languageService.langDir === 'ltr'">$</span>
+                                                    <input type="number" class="cart-amount-input" (keyup)='keyup($event)' (focusout)="focusOutFunction($event)"
+                                                [(ngModel)]="newAmount"><span *ngIf="languageService.langDir === 'rtl'">$</span>
+                                                </ion-text>
+                                        </ion-col>
+                                        <ion-col size="12" class="ion-no-padding">
+                                            <ion-text  color="primary" *ngIf="cartItem.DiscountAmount">
+                                                {{'Discount'|translate }}:{{cartItem.DiscountAmount ?
+                                                cartItem.DiscountAmount : null | number: '.2'}}10<span *ngIf=" languageService.langDir === 'ltr' || languageService.langDir === 'rtl'">$</span>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="12" class="ion-no-padding"
+                                            *ngIf="cartItem.IsPreorder && districtFeaturelist.UsePreOrderBalance">
+                                            <label>
+                                                <input type="checkbox"
+                                                    (change)="applyMealBalance(cartItem.ApplyMealBalance,cartItem)"
+                                                    [(ngModel)]="cartItem.ApplyMealBalance"
+                                                    [disabled]="(cartItem.DisableApplyMealBalance || cartItem.Balance === 0)">
+                                                <span style="margin-left: 5px;font-size: smaller;"
+                                                    *ngIf="!cartItem.ApplyMealBalance || cartItem.Balance <= 0">
+                                                    <span *ngIf="languageService.langDir === 'ltr'">$</span> {{'Apply_Meal_Balance_Message'|translate}}<span *ngIf="languageService.langDir === 'rtl'">$</span>: <span *ngIf="languageService.langDir === 'ltr'">$</span>{{cartItem?.Balance |
+                                                    number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span></span>
+                                                <span style="margin-left: 5px;font-size: smaller;"
+                                                    *ngIf="cartItem.ApplyMealBalance && (cartItem.Balance >= cartItem.AppliedBalance)">
+                                                    <span *ngIf="languageService.langDir === 'ltr'">$</span> {{cartItem?.AppliedBalance | number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span>
+                                                    {{'Applied_To_PreOrder_Message'|translate}}
+                                                    <span *ngIf="languageService.langDir === 'ltr'">$</span> {{cartItem?.Balance - cartItem?.AppliedBalance | number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span>
+                                                    {{'Remaining_Meal_Balance_Message'|translate}} </span>
+                                                <span style="margin-left: 5px;font-size: smaller;"
+                                                    *ngIf="cartItem.ApplyMealBalance && (cartItem.Balance < cartItem.AppliedBalance) && (cartItem.Balance > 0)">
+                                                    <span *ngIf="languageService.langDir === 'ltr'">$</span>{{cartItem?.Balance | number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span>
+                                                    {{'Applied_To_PreOrder_Message'|translate}}
+                                                    <span *ngIf="languageService.langDir === 'ltr'">$</span>{{0 | number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span>
+                                                    {{'Remaining_Meal_Balance_Message'|translate}} </span>
+                                            </label>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-label>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="2">
+                            <ion-button  class="ion-no-padding" fill="clear" color="dark" >
+                                <span [ngClass]="{'disabledEditIcon': !cartItem.AllowPartial && !cartItem.VariablePriced}" *ngIf="i !== enableInput" class="cartEdit-icn-list-img" (click)="editAmount(i,cartItem)">
+                                    <img slot="icon-only" src="../../../assets/icon/icn_edit.svg">
+                                </span>
+                                <span class="cartEdit-icn-list-img" *ngIf="i === enableInput" (click)="saveAmount('individualSelected',cartItem)">
+                                    <ion-icon class="editIcon" [ngClass]="{'editIcon2' : languageService.langDir === 'rtl'}" name="checkmark" ></ion-icon>
+                                </span>
+                                <span class="cart-icn-list-img" *ngIf="i === enableInput" (click)="closeInputField()" >
+                                    <ion-icon [ngClass]="{'cancelIcon2': languageService.langDir === 'rtl'}" class="cancelIcon"  name="close"></ion-icon>
+                                </span>
+                                
+                                <span class="cart-icn-list-img" *ngIf="i !== enableInput" (click)="warningmsg('individualSelected',cartItem)">
+                                    <img slot="icon-only" src="../../assets/icon/bin.svg">
+                                </span>
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+                <ion-item-divider class="custom-name ion-margin-top" color="medium">
+                    <ion-label>
+                        {{ 'Checkout' | translate}}
+                    </ion-label>
+                </ion-item-divider>
+                <ion-item class="ion-margin-horizontal payment-margin">
+                    <ion-label position="floating">{{ 'Payment_Method' | translate}}
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-select  toggleIcon="caret-down-sharp" class="arrow-down" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate"
+                        [disabled]="cartItems?.length == 0" [(ngModel)]="selectedPaymentMethodID">
+                        <ion-select-option *ngFor="let payment of paymentMethods" [value]="payment.PaymentMethodId">
+                            {{payment.NickName}}
+                        </ion-select-option>
+                        <ion-select-option value="5">{{ 'Use_New_Card' | translate}}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-card class="ion-no-margin custom-card ion-margin-horizontal">
+                    <ion-row class="ion-margin-top">
+                        <ion-col size="12">
+                            <ion-text>
+                                <h4 class="ion-text-center checkout-label amount">{{'Cart_amount' | translate}}:
+                                      <span><span *ngIf="languageService.langDir === 'ltr'">$</span>{{cartData?.TotalAmountDue | number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span></span></h4>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col size="12" style="padding: 0;margin-bottom: 16px;">
+                            <ion-button color='secondary' style="width: 100%;padding: 0px 16px;" expand="block"
+                                class="full-width ion-padding-end"
+                                (click)="onContinue(selectedPaymentMethodID,cartItems)"
+                                [disabled]="(!selectedPaymentMethodID && !cartItems) || (paymentMethods?.length == 0 && !selectedPaymentMethodID) || (!selectedPaymentMethodID && cartData.TotalAmountDue != 0) || disableContinueBtn || cartItems.length==0">
+                                {{'btn_continue' | translate}}
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="isAdjustmentOccurred">
+                        <ion-text color="danger">
+                            <p style="margin: 5px;padding: 0px 8px;"> <sup>*</sup>{{'item_district_discount' |
+                                translate}}</p>
+                        </ion-text>
+                    </ion-row>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

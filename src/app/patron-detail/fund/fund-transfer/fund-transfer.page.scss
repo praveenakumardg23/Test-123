@@ -1,0 +1,33 @@
+.fund-transfer-sub-header>h3 {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-agree {
+    margin-left: 5px;
+}
+.dollar:before
+{content:"$"}
+ion-select.fund-down{
+    position: relative;
+}
+ion-select.fund-down::part(icon) {
+    width: .8rem;
+    height: .8rem;
+    color: #b1b1b1;
+    position: absolute;
+    right: 1%;
+}
+.dollar{
+    display: inline-flex;
+    align-items: center;
+}
+ion-item::part(native){
+    padding-left: 0px;
+}
+.class-b{
+    padding-left: 15px;
+}
+.other-condition{
+    padding-left: 0px;
+}

@@ -1,0 +1,17 @@
+<ion-grid>
+    <ion-text>
+        <h3 class="ion-text-center global-message">
+            {{'Global_Message' | translate}}
+        </h3>
+        <h5 class="ion-text-center">
+            {{globalMessage[0].MessageSubject}}
+        </h5>
+        <p class="ion-text-justify" [innerHTML]="globalMessage[0].MessageText">
+        </p>
+    </ion-text>
+</ion-grid>
+<ion-footer>
+    <ion-button color="primary" expand="block" class="full-width" (click)="onBack()">
+        {{ 'close' | translate }}
+    </ion-button>
+</ion-footer>

@@ -1,0 +1,113 @@
+.custom-scroll {
+    height: 100%;
+    overflow: scroll;
+}
+
+:host(app-messasges) {
+    width: 100%;
+}
+
+::ng-deep .ion-button {
+    --border-radius: 0px 0px 0px 0px !important;
+}
+
+.place-text {
+    text-align: right;
+}
+
+
+
+
+.custom-inbox {
+    // background-color: #0073ba;
+    color: #ffffff;
+}
+
+.heading-msg {
+    font-weight: 500;
+    color: #000000;
+}
+
+.msg-detail {
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: #a9a9a9;
+}
+
+.arrow-space {
+    margin-bottom: 20px;
+}
+
+.ps-card {
+    max-width: 95%;
+    height: auto;
+    background-color: #fff;
+   
+    border: 0px solid #000000;
+    padding: 10px 0px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #0073ba;
+}
+
+ion-checkbox {
+    position: relative;
+}
+
+.msg {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-height: 16px;
+    max-height: 32px;
+    -webkit-box-orient: vertical;
+    white-space: pre-line;
+}
+
+.popover-arrow.sc-ion-popover-ios:after {
+    display: contents;
+    left: 3px;
+    top: 3px;
+    border-radius: 3px;
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    background: var(--background);
+    content: "";
+    z-index: 10;
+}
+
+.custom-padding {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.dot {
+    height: 6px;
+    width: 6px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.custom-margin {
+    margin-left: 10px;
+}
+
+.cart-icn-trash{
+    margin-left: 10% !important;
+}
+
+.chip{
+    width: 41%;
+    padding: 3.5%;
+}
+
+.unread-chip{
+    width: 33% !important;
+}
+.text-color{
+    color: #3CBFAE;
+}

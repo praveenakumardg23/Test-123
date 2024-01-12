@@ -1,0 +1,53 @@
+
+ion-footer{
+    max-height:15em;
+    position: fixed;
+    bottom: 0;
+}
+.highlight{
+    color:var(--ion-color-secondary);
+    font-weight: bold;
+  }
+.footer-button{
+    border-top: 1px solid rgb(104, 103, 103); 
+}
+
+h6 {
+    color: var(--ion-color-primary) !important;
+    margin: 0px;
+    text-align: left;
+    font-weight: 700;
+}
+.content {
+    color: var(--ion-color-primary) !important;
+    margin: 0px;
+    // text-align: left;
+    font-weight: 500;
+}
+.footer {
+    z-index: 4;
+    background: white;
+    //background: #f3f3ff;
+}
+.header
+{
+    font-weight: bold;
+    padding: 24px 8px;
+    width: auto;
+    color: #3CBFAE;
+    text-align: center;
+}
+
+.pd10{
+    padding: 10px !important;
+}
+
+.avatar{
+    border: 1px solid darkgrey;
+}
+
+.default-icon{
+    padding:7px;
+    color: darkgrey;
+}
+

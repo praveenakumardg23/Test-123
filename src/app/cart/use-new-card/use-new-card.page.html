@@ -1,0 +1,136 @@
+<ion-header  dir="{{languageService.langDir}}">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <!-- <ion-title>Checkout</ion-title> -->
+        <ion-buttons slot="start">
+            <ion-button color="light" (click)="onDismiss()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class='ion-content' dir="{{languageService.langDir}}">
+    <ion-grid class="custom-cover">
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card">
+                <form #f="ngForm" autocomplete="off">
+                    <ion-text class="checkout-sub-header-sub-header">
+                        <h4>
+                            {{ 'Enter_Your_Card_Details' | translate}}
+                        </h4>
+                    </ion-text>
+                    <ion-item>
+                        <ion-label position="floating">{{ 'fname' | translate }}
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input aria-label="FirstName" type="text" name="FirstName" [(ngModel)]="card.FirstName" #FirstName="ngModel" required [minlength]="1" [maxlength]="30" pattern="[a-zA-Z-'. ]*" appCustomTextWithSymbol="30"></ion-input>
+                    </ion-item>
+
+                    <ion-text color="danger" class="error-message" *ngIf="FirstName.touched">
+                        <p class="error-text-message" *ngIf="!card.FirstName && !FirstName.valid">{{'fname_req' | translate}}.</p>
+                        <p class="error-text-message" *ngIf="card.FirstName && !FirstName.valid">{{'ch_allowed_msg' | translate}}.</p>
+                    </ion-text>
+
+                    <ion-item>
+                        <ion-label position="floating">{{ 'lname' | translate }}
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input aria-label="LastName" type="text" name="LastName" [(ngModel)]="card.LastName" #LastName="ngModel" required [minlength]="1" [maxlength]="30" pattern="[a-zA-Z-'. ]*" appCustomTextWithSymbol="30"></ion-input>
+                    </ion-item>
+
+                    <ion-text color="danger" class="error-message" *ngIf="LastName.touched">
+                        <p class="error-text-message" *ngIf="!card.LastName && !LastName.valid">{{'lname_req' | translate}}.</p>
+                        <p class="error-text-message" *ngIf="card.LastName && !LastName.valid">{{'ch_allowed_msg' | translate}}.</p>
+                    </ion-text>
+                    <ion-text class="checkout-sub-header-sub-header">
+                        <h4>
+                            {{ 'we_accept' | translate }}
+                        </h4>
+                    </ion-text>
+                    <ion-row class="ion-margin-top">
+                        <ion-col size="3">
+                            <img src="assets/images/AmericanExpress.png">
+                        </ion-col>
+                        <ion-col size="3">
+                            <img src="assets/images/DiscoveryNetwork.png">
+                        </ion-col>
+                        <ion-col size="3">
+                            <img src="assets/images/Mastercard.png">
+                        </ion-col>
+                        <ion-col size="3">
+                            <img src="assets/images/Visa.png">
+                        </ion-col>
+                    </ion-row>
+                    <ion-item>
+                        <ion-label position="floating">{{ 'card_no' | translate }}
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input aria-label="Number"  type="tel" name="Number" [(ngModel)]="card.Number" #Number="ngModel" required appNumbersOnly [maxlength]="maxLength" [minlength]="maxLength" (ngModelChange)="onCardNumberchange($event)"></ion-input>
+                        <!-- <ion-input *ngIf="isGuest" type="tel" name="Number" [(ngModel)]="card.Number" #Number="ngModel" required appNumbersOnly [maxlength]="maxLengthGuest" [minlength]="maxLengthGuest" (ngModelChange)="onCardNumberchange($event)"></ion-input> -->
+                    </ion-item>
+
+                    <ion-text color="danger" class="error-message" *ngIf="!Number.valid && Number.touched">
+                        <p class="error-text-message" *ngIf="card.Number.length == 0">{{ 'card_no_req' | translate }}.</p>
+                        <p class="error-text-message" *ngIf="card.Number && maxLength == 16">
+                            {{ 'Enter_16digit_card_number' | translate }}</p>
+                        <p class="error-text-message" *ngIf="card.Number && maxLength == 15">
+                            {{ 'Enter_15digit_card_number' | translate }}</p>
+                        <!-- <p class="error-text-message" *ngIf="isGuest && card.Number && maxLengthGuest == 15">
+                            {{ 'Enter_15digit_card_number' | translate }}</p> -->
+                    </ion-text>
+
+                    <ion-item>
+                        <ion-label position="floating">{{ 'exp_date' | translate }}
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input aria-label="expdate" type="tel" name="expdate" [(ngModel)]="card.expdate" #expdate="ngModel" required appCustomTextWithSymbol="7" (ngModelChange)="onCardExpdatechange($event)" maxlength="5"></ion-input>
+                    </ion-item>
+
+                    <ion-text color="danger" class="error-message" *ngIf="!expdate.valid && expdate.touched">
+                        <p class="error-text-message">{{ 'exp_req' | translate }}.</p>
+                    </ion-text>
+                    <ion-text color="danger" class="error-message" *ngIf="card.expdate && isExpiredDateInvalid">
+                        <p class="error-text-message">{{ 'exp_req1' | translate }}.</p>
+                    </ion-text>
+
+                    <ion-item>
+                        <ion-label position="floating">{{ 'cvv' | translate }}
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input aria-label="Cvv" type="tel" name="Cvv" [(ngModel)]="card.Cvv" #Cvv="ngModel" required appNumbersOnly [maxlength]="CVV" [minlength]="CVV"></ion-input>
+                    </ion-item>
+
+                    <ion-text color="danger" class="error-message" *ngIf="!Cvv.valid && Cvv.touched">
+                        <p class="error-text-message" *ngIf="!card.Cvv">{{ 'Enter_valid_CVV' | translate }}</p>
+                        <p class="error-text-message" *ngIf="card.Cvv && card.Cvv.length < 3 && maxLength == 16">
+                            {{ 'Enter_valid_3digit_CVV' | translate }}</p>
+                        <p class="error-text-message" *ngIf="card.Cvv && card.Cvv.length < 4 && maxLength == 15">
+                            {{ 'Enter_valid_4digit_CVV' | translate }}</p>
+                    </ion-text>
+                    <ion-item lines="none" class="ion-margin-top" *ngIf="!isGuest">
+                        <ion-checkbox class="custom-checkboxs ion-margin-end" aria-label="SaveCardChecked" color="secondary" name="SaveCardChecked" checked="isSaveCardChecked" [(ngModel)]="isSaveCardChecked">
+                        </ion-checkbox>
+                        <ion-label class="ion-text-wrap terms-agree">{{'save_checkbox' | translate}}
+                        </ion-label>
+                    </ion-item>
+                    <ng-container *ngIf="isSaveCardChecked">
+                        <ion-item class="ion-margin-bottom">
+                            <ion-label position="floating">{{ 'nick_nm' | translate }}
+                                <ion-text color="danger">*</ion-text>
+                            </ion-label>
+                            <ion-input aria-label="NickName" type="text" name="NickName" [(ngModel)]="card.NickName" #NickName="ngModel" required [minlength]="1" [maxlength]="30" appCustomTextWithSymbol="30"></ion-input>
+                        </ion-item>
+                        <ion-text color="danger" class="error-message" *ngIf="!NickName.valid && NickName.touched">
+                            <p class="error-text-message">{{ 'nick_nm_req' | translate }}.</p>
+                        </ion-text>
+                    </ng-container>
+                    <ion-button color='secondary' type="submit" expand="block" class="full-width" [disabled]="!f.valid || isExpiredDateInvalid" (click)="onSubmit(f)">
+                        {{ 'Submit' | translate }}
+                    </ion-button>
+                    <ion-button expand="block" class="full-width ion-margin-top" (click)="onClear(f)">{{ 'Clear_btn' | translate }}
+                    </ion-button>
+                </form>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

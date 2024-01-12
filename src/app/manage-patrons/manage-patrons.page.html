@@ -1,0 +1,286 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{ 'yur_stu' | translate }}</ion-title>
+        <ion-buttons slot="start">
+            <ion-button (click)="onGotoDashboard(f)">
+                <img class="cart-icn-img" src="../../assets/icon/home-icn.svg">
+            </ion-button>
+            <ion-button (click)="onLangChange()">
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button (click)="onLogout(f)" *ngIf="phase== 'registrationPhase'">
+                <!-- <ion-icon slot="icon-only" name="log-out"></ion-icon> -->
+                <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+            </ion-button>
+            <ion-button (click)="onGotoCart(f)" *ngIf="phase== 'dashboard'" [disabled]="cartCount == 0">
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end" *ngIf="phase == 'dashboard'">
+            <ion-menu-button (click)="onMenuClick(f,'patron')">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class='ion-content' dir="{{languageService.langDir}}">
+    <ion-grid class="custom-cover">
+        <form #f="ngForm" autocomplete="off">
+            <ion-row class="main-row">
+                <ion-col size="12" class="ps-card">
+                    <ion-row dir="{{languageService.langDir}}" class="ion-justify-content-center ion-text-center" *ngIf="phase == 'registrationPhase'">
+                        <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(1)">
+                            <ion-icon name="create" class="tab-icon" color="medium"></ion-icon>
+                            <p class="tab-header-name tab-header-color">{{'register' | translate}}</p>
+                            <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                        </ion-col>
+                        <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(4)">
+                            <ion-icon name="person-add" class="tab-icon" color="secondary"></ion-icon>
+                            <p class="tab-header-name student-tab-color">{{'student' | translate}}</p>
+                            <ion-ripple-effect type="unbounded" color="secondary"></ion-ripple-effect>
+                        </ion-col>
+                        <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(5)">
+                            <ion-icon name="card" class="tab-icon" color="medium"></ion-icon>
+                            <p class="tab-header-name tab-header-color">{{'payment' | translate}}</p>
+                            <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                        </ion-col>
+                        <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(6)">
+                            <ion-icon name="notifications" class="tab-icon" color="medium"></ion-icon>
+                            <p class="tab-header-name tab-header-color">{{'notification' | translate}}</p>
+                            <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row dir="{{languageService.langDir}}" class="ion-margin-vertical" *ngIf="phase == 'registrationPhase'">
+                        <ion-progress-bar dir="{{languageService.langDir}}" value="0.5" color="secondary"></ion-progress-bar>
+                    </ion-row>
+                    <ion-segment [value]="category" (ionChange)="segmentChanged($event)" >
+                        <ion-segment-button value="Add" [attr.checked]="phase == 'registrationPhase' ? '' : null || category == 'Add'">
+                            <ion-label>{{ 'Add' | translate }}</ion-label>
+                        </ion-segment-button>
+                        <ion-segment-button id="view-btn" value="View" [attr.checked]="phase == 'dashboard' ? '' : null || category == 'View'">
+                            <ion-label>{{ 'View' | translate }}</ion-label>
+                        </ion-segment-button>
+                    </ion-segment>
+                    <ion-grid class="animated custom-cover1" [ngClass]="{'pulse' : category == 'Add'}" *ngIf="category == 'Add'">
+                        <ion-row>
+                            <ion-col size="12">
+                                <ion-text color="dark">
+                                    <h3 class="ion-no-margin">
+                                        <ion-button class="ion-no-margin" expand="block" color="secondary" fill="clear" (click)="infoAlert()">
+                                            {{ 'Info' | translate }}
+                                            <img style="margin-left: 2%;" src="../../assets/icon/info-new.svg">
+                                        </ion-button>
+                                    </h3>
+                                </ion-text>
+                            </ion-col>
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-label position="floating">{{ 'State' | translate }}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-select class="patron-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" [disabled]="!states || viewPatrons?.length > 0" name="IntStateId" [(ngModel)]="student.IntStateId" #IntStateId="ngModel" (ngModelChange)="getDistrictsByState($event)" required>
+                                        <ion-select-option *ngFor="let state of states" [value]="state.IntStateId">
+                                            {{state.StateName}}</ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="!IntStateId.valid && IntStateId.touched">
+                                    <p class="error-text-message">{{ 'State_req' | translate }}.</p>
+                                </ion-text>
+                                <ion-item class="ion-margin-top">
+                                    <ion-label position="floating">{{ 'District' | translate }}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-select class="patron-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required [disabled]="!districts || viewPatrons?.length > 0 || districtFlag" name="IntDistrictId" #IntDistrictId="ngModel" [(ngModel)]="student.IntDistrictId" (ngModelChange)="selectedDistrict($event)">
+                                        <ion-select-option *ngFor="let district of districts" [value]="district"> {{district.DistrictName}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="!IntDistrictId.valid && IntDistrictId.touched">
+                                    <p class="error-text-message">{{ 'District_req' | translate }}.</p>
+                                </ion-text>
+                                <ion-item>
+                                    <ion-label position="floating">{{ 'stu_id' | translate }}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-input aria-label="PatronId" type="tel" name="PatronId" [(ngModel)]="student.PatronId" #PatronId="ngModel" maxlength="18" appCustomTextWithSymbol="4" required>
+                                    </ion-input>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="!PatronId.valid && PatronId.touched">
+                                    <p class="error-text-message">{{ 'stu_id_req' | translate }}.</p>
+                                </ion-text>
+                                <ion-item>
+                                    <ion-label position="floating">{{ 'fname' | translate }}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-input aria-label="FirstName" name="FirstName" [(ngModel)]="student.FirstName" #FirstName="ngModel" required maxlength="50" pattern="[a-zA-Z-'. ]*"></ion-input>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="FirstName.touched">
+                                    <p class="error-text-message" *ngIf="!student.FirstName && !FirstName.valid">{{'fname_req' | translate}}.</p>
+                                    <p class="error-text-message" *ngIf="student.FirstName && !FirstName.valid">{{'ch_allowed_msg' | translate}}.</p>
+                                </ion-text>
+                                <ion-item>
+                                    <ion-label position="floating">{{ 'lname' | translate }}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-input aria-label="LastName" name="LastName" [(ngModel)]="student.LastName" #LastName="ngModel" required maxlength="50" pattern="[a-zA-Z-'. ]*"></ion-input>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="LastName.touched">
+                                    <p class="error-text-message" *ngIf="!student.LastName && !LastName.valid">{{'lname_req' | translate}}.</p>
+                                    <p class="error-text-message" *ngIf="student.LastName && !LastName.valid">{{'ch_allowed_msg' | translate}}.</p>
+                                </ion-text>
+                                <ion-item class="ion-margin-top">
+                                    <ion-label position="floating">{{ 'Rlships' | translate }}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-select class="patron1-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required [disabled]="!relationship" name="IntPatronRelationshipId" [(ngModel)]="student.IntPatronRelationshipId" #IntPatronRelationshipId="ngModel">
+                                        <ion-select-option *ngFor="let rel of relationship " [value]="rel.IntPatronRelationshipId">
+                                            {{rel.TranslatedName}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-margin-top ion-padding-right ion-padding-left" >
+                            <ion-button color='secondary' [disabled]="!f.valid" expand="block" class="full-width" (click)="onAddStudentSubmit(f)">{{ 'add_stu' | translate }}</ion-button>
+                        </ion-row>
+                        <ion-row>
+                           
+                            <ion-col size="6">
+                                <ion-button expand="block" class="full-width" (click)="clearFormData(f)">
+                                    {{ 'Clear' | translate }}</ion-button>
+                            </ion-col>
+                            <ion-col size="6">
+                                <ion-button expand="block" class="full-width" (click)="onSkipOrContinue(f,'skip')" *ngIf="viewPatrons?.length == 0 && category == 'Add' && phase == 'registrationPhase'">
+                                    {{ 'Skip' | translate }}</ion-button>
+                                <ion-button color='secondary' expand="block" class="full-width" (click)="onSkipOrContinue(f,'continue')" *ngIf="viewPatrons?.length != 0 ">{{ 'Continue' | translate }}</ion-button>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row *ngIf="phase == 'registrationPhase'">
+                          
+                        </ion-row>
+                    </ion-grid>
+                    <ion-grid [hidden]="category != 'View'">
+                        <ion-text color="dark" *ngIf="category != 'Add'" class="ion-text-center">
+                            <p class="mp-thankyou-margin" *ngIf="viewPatrons && viewPatrons?.length != 0 && phase == 'registrationPhase'">{{ 'mp_thankyou' | translate }}.</p>
+                            <p class="custom-changes" *ngIf="viewPatrons && viewPatrons?.length != 0">
+                                {{ 'mp_thankyou_1' | translate }}.</p>
+                            <p *ngIf="viewPatrons?.length == 0">{{ 'mp_nopatrons' | translate }}
+                            </p>
+                        </ion-text>
+                    </ion-grid>
+                    <ng-container *ngIf="category == 'View'">
+                        <ion-grid class="ion-margin-bottom animated view-patrons-wrapper" [ngClass]="{'pulse' : category == 'View'}" *ngFor="let patron of viewPatrons;index as i; even as isEven; odd as isOdd">
+                            <ion-card class="view-card">
+                                <ion-row>
+                                    <ion-col size="4" class="patron-info">
+                                        <p class="inactive information-circle" *ngIf="!patron.Active"></p>
+                                        <p class="active information-circle" *ngIf="patron.Active"></p>
+
+                                    </ion-col>
+                                    <ion-col size="4" class="card-image">
+                                        <ng-container *ngFor="let patronpicturedetail of Patronspicturedetails">
+                                            <ng-container *ngIf="patron.IntPatronId===patronpicturedetail.IntPatronId">
+                                                <img src="data:image/png;base64,{{patronpicturedetail.PictureData}}" class="patron-image">
+                                            </ng-container>
+
+                                        </ng-container>
+
+                                    </ion-col>
+                                    <ion-col size="4" class="patron-delete">
+
+                                        <ion-button fill="clear" size="small" class="ion-no-margin ion-no-padding" (click)="presentAlertConfirm(patron)">
+                                            <span class="cart-icn-trash">
+                                                <img slot="icon-only" src="../../../assets/icon/bin.svg">
+                                            </span>
+                                        </ion-button>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-card-header colr='primary' class="ion-text-center ion-no-padding">
+                                    <ion-card-subtitle class="student-id">
+                                        {{ 'ID' | translate }}:{{patron.PatronId}}</ion-card-subtitle>
+                                    <ion-card-title color='secondary' class="student-name">{{patron.FirstName}} {{patron.LastName}}
+                                    </ion-card-title>
+                                </ion-card-header>
+                                <ion-card-content class="card-content">
+                                    <ion-row>
+                                        <ion-col size="6" class="ion-text-end ">
+                                            <ion-text color="primary">
+                                                <h4 class="custom-header">{{ 'd_name' | translate }}<span class="content-margin">:</span></h4>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="6" class="ion-text-left">
+                                            <ion-text color="primary">
+                                                <h4 class="custom-header "> {{patron.DistrictName}}</h4>
+                                            </ion-text>
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row *ngIf="false">
+                                        <ion-col size="6" class="ion-text-end ">
+                                            <ion-text color="primary">
+                                                <h4 class="custom-header">{{ 'meal_status' | translate }}<span class="content-margin">:</span></h4>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="6" class="ion-text-left ">
+                                            <ion-text color="primary">
+                                                <h4 class="custom-header"> {{patron.MealStatus}}</h4>
+                                            </ion-text>
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col size="6" class="ion-text-end ">
+                                            <ion-text color="primary">
+                                                <h4 class="custom-header">{{ 'schl_name' | translate }}<span class="content-margin">:</span></h4>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="6" class="ion-text-left ">
+                                            <ion-text color="primary">
+                                                <h4 class="custom-header"> {{patron.SchoolName}}
+                                                </h4>
+                                            </ion-text>
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col size="6" class="ion-text-end ">
+                                            <ion-text color="primary">
+                                                <h4 class="custom-header">{{ 'Grade' | translate }}<span class="content-margin">:</span></h4>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="6" class="ion-text-left ">
+                                            <ion-text color="primary">
+                                                <h4 class="custom-header"> {{patron.Grade}}</h4>
+                                            </ion-text>
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col size="6" class="ion-text-end ">
+                                            <ion-text color="primary">
+                                                <h4 class="custom-header">{{ 'Rlship' | translate }}<span class="content-margin">:</span></h4>
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col size="6" class="ion-text-left col-margin">
+                                            <ion-text color="primary">
+                                                <h4 class="custom-header">
+                                                    <ion-select toggleIcon="caret-down-sharp" class="ion-no-padding custom-width patron-down" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" (ionChange)="onChangeRelationship(patron)" name="IntPatronRelationshipId{{patron.IntPatronRelationshipId}}" [(ngModel)]="patron.IntPatronRelationshipId">
+                                                        <ion-select-option class="custom-option" *ngFor="let rel of relationship " [value]="rel.IntPatronRelationshipId">
+                                                            {{rel.TranslatedName}}</ion-select-option>
+                                                    </ion-select>
+                                                </h4>
+                                            </ion-text>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-card-content>
+                            </ion-card>
+                        </ion-grid>
+                    </ng-container>
+                    <ion-grid class="continue-button" *ngIf="phase == 'registrationPhase'">
+                        <ion-button color='secondary'  expand="block" class="full-width" (click)="onContinue()" *ngIf="category != 'Add'">
+                            {{ 'Continue' | translate }}</ion-button>
+                    </ion-grid>
+                </ion-col>
+            </ion-row>
+        </form>
+    </ion-grid>
+</ion-content>

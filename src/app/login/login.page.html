@@ -1,0 +1,145 @@
+<ion-content cacheView="false" class="login-display">
+    <ion-grid class="img-cover" style="padding:0px">
+
+        <ion-card class="custom-height backimg imgCard">
+            <div class="card-overlay">
+                <app-register-login-tab class="full-width"></app-register-login-tab>
+            </div>
+        </ion-card>
+        <p class="ion-text-center paper-app-msg1" style='margin: 0px; margin-top: 15px;'>{{'loginWelcomeMessage' |
+            translate}}</p>
+        <p class="ion-text-center paper-app-msg1" style='margin: 0px;'>{{'loginWelcomeMessage1' | translate}}</p>
+        <form #f="ngForm" autocomplete="off">
+            <ion-row class="main-row">
+                <ion-col size="12" class="ps-card3" style='padding-top: 0px;padding-bottom: 0px;'>
+                    <ion-item>
+                        <ion-label position="floating">{{'email' | translate}}
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input aria-label="Email" type="string" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,8}$" required
+                            name="username" #username="ngModel" [(ngModel)]="Username"
+                            (ionBlur)="processemail(Username)"></ion-input>
+                    </ion-item>
+                    <ion-text color="danger" class="error-message" *ngIf="username.touched && Username?.length == 0 ">
+                        <p class="error-text-message">{{'email_req_message' | translate}}</p>
+                    </ion-text>
+                    <ion-text color="danger" class="error-message" *ngIf="!username.valid && Username?.length > 0">
+                        <p class="error-text-message">{{'email_error_message' | translate}}</p>
+                    </ion-text>
+                    <ion-item>
+                        <ion-label position="floating">{{'password' | translate}}
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input aria-label="password" type="{{type}}" name="password" #password="ngModel" required ngModel [(ngModel)]="userPassword"></ion-input>
+                       
+                        <img class='eye-icn'*ngIf="showPass" slot="end" src="../../assets/icon/show-eye.svg" alt="" (click)="showPassword()"
+                            name="eye">
+                        <img class="hidden-eye" *ngIf="!showPass" slot="end" src="../../assets/icon/hidden-eye.svg" alt="" (click)="showPassword()"
+                            name="eye">
+                    </ion-item>
+                    <ion-text color="danger" class="error-message secondary" *ngIf="!password.valid && password.touched">
+                        <p class="error-text-message secondary">{{'password_error_message' | translate}}</p>
+                    </ion-text>
+                    <ion-item class="custom-item" lines="none">
+                        <ion-checkbox aria-label="saveCredentials" slot="start" class="custom-color" color="secondary" name="saveCredentials" [(ngModel)]="saveUserData" [disabled]="!f.valid"></ion-checkbox>
+                        <ion-label>{{'Remember_Me' | translate}}</ion-label>
+                      </ion-item>
+                    <ion-row class="ion-margin-top paper-app-msg">
+                        <ion-text> {{'paper_application_message' | translate}}</ion-text>
+                    </ion-row>
+
+                    <ion-row style="height: 40px;" *ngIf='isFingerPrintEnabled'>
+                        <ion-button expand="block" fill="clear" color="secondary" class="full-width"
+                            (click)="onLoginWithFingerPrint()">
+                            <ion-icon slot="icon-only" name="finger-print" class="finger-print" tappable></ion-icon>{{
+                            'finger_print_login' | translate }}
+                        </ion-button>
+                    </ion-row>
+                    <ion-row style="height: 40px;">
+
+                        <ion-col>
+                            <p style="text-align: end; color: #51606D;" (click)="onForgotPassowrd()">
+                                <u>{{'forgot_password' | translate}}</u>
+                            </p>
+
+                        </ion-col>
+
+                    </ion-row>
+
+
+                    <ion-row>
+                        <ion-col>
+                            <ion-button expand="block" class="full-width custom-orange-btn" [disabled]="!f.valid"
+                                (click)="onLogin(f)">{{ 'login' | translate }}
+                            </ion-button>
+                        </ion-col>
+                        <ion-col>
+                            <ion-button expand="block" color="medium" fill='outline' class="full-width"
+                                (click)="switchTo('register','1')">{{'register' | translate}}
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
+
+                    <ion-row>
+                        <div class="col-5">
+                            <hr>
+                        </div>
+                        <div class="ors">{{'or'| translate}}</div>
+                        <div class="col-5">
+                            <hr>
+                        </div>
+                    </ion-row>
+
+                    <ion-row>
+                        <ion-col>
+                            <div class="gcmdiv">
+                                <ion-text> {{'Guest_checkout_message' | translate}}</ion-text>
+                            </div>
+                        </ion-col>
+                        <ion-col>
+                            <ion-button  (click)="switchTo('/fundraiserfee')" expand="block" color="medium" fill='outline' class="full-width guestCheckout"><img
+                                 class="guestimg" src="../../assets/images/icn_fundraising.png" alt="">
+                                {{'Guest_Checkout' | translate}}
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+            </ion-row>
+            <div class="footer" style="margin-top: 30px;">
+                <ion-row>
+                    <ion-col size="12 ">
+                        <a class="footer-links footer-color" (click)="openPrivacyModal()">{{'privacy' | translate}}</a>
+                        <span class="footer-color"> | </span>
+                        <a class="footer-links footer-color" (click)="openTermsModal()">{{'terms' | translate}}</a>
+                        <span class="footer-color"> </span>
+                    </ion-col>
+                </ion-row>
+
+
+                <ion-row class="ion-justify-content-center">
+                    <ion-text class="footer-color">
+                        <p>{{'copyright' | translate}} <a (click)="openUrl()" class="footer-color"><u>{{'i3Education' |
+                                    translate}}</u>. </a> - {{'version' | translate}}: {{mobileVersion}}</p>
+                    </ion-text>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-icon size="large" class='socialIcons'
+                            (click)='opensociallinks("https://twitter.com/i3education_")' name="logo-twitter"></ion-icon>
+                        <img class='socialIcons fb' src="../../assets/icon/Facebook.svg" alt="" (click)='opensociallinks("https://www.facebook.com/i3EducationOfficial/")'
+                            name="logo-facebook">
+                        <ion-icon size="large" class='socialIcons'
+                            (click)='opensociallinks("https://www.linkedin.com/company/i3-verticals-education/")'
+                            name="logo-linkedin"></ion-icon>
+                        <img class='socialIcons fb' src="../../assets/icon/web.svg" alt="" (click)='opensociallinks("https://i3education.org")'
+                            name="globe">
+                    </ion-col>
+                </ion-row>
+            </div>
+
+        </form>
+
+    </ion-grid>
+
+    
+</ion-content>

@@ -1,0 +1,23 @@
+<ion-router-outlet></ion-router-outlet>
+<ion-grid>
+    <ion-tabs>
+        <ion-tab-bar slot="bottom" color="tertiary">
+            <ng-container *ngFor="let tab of tabData">
+                <ion-tab-button [tab]="tab.tabValue" (click)="selectTab(tab.tabValue)" *ngIf="tab.showTab" [selected]="tab.tabValue == selectedTab">
+                    <img name="tab-image" *ngIf="tab.tabValue !== selectedTab" class="bottom-icn-img" [src]="tab.tabImg1">
+                    <img name="tab-image" *ngIf="tab.tabValue === selectedTab" class="bottom-icn-img" [src]="tab.tabImg2">
+                    <ion-label class="bottom-icn-label" color="primary">{{tab.tabTitle}}</ion-label>
+                    <!-- <ion-icon [name]="tab.tabIcon" color="primary"></ion-icon> -->
+                </ion-tab-button>
+            </ng-container>
+            <!-- <ion-tab-button tab="fees">
+                <ion-label color="light">Fees</ion-label>
+                <ion-icon name="clipboard" color="light"></ion-icon>
+            </ion-tab-button>
+            <ion-tab-button tab="fund">
+                <ion-label color="light">Fund</ion-label>
+                <ion-icon name="logo-usd" color="light"></ion-icon>
+            </ion-tab-button> -->
+        </ion-tab-bar>
+    </ion-tabs>
+</ion-grid>

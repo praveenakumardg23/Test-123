@@ -1,0 +1,132 @@
+<ion-header *ngIf="isGuestCheckout" dir="ltr">
+  <ion-toolbar color="primary" style="color: #fff;">
+    <ion-title>{{'Payment_Receipt' | translate}}</ion-title>
+    <ion-buttons slot="end" (click)="presentPopover()">
+      <img class="hamburger-icn-img" src="../../../assets/icon/hamburger-menu.png">
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-header *ngIf="!isGuestCheckout" dir="ltr">
+  <ion-toolbar color="primary" style="color: #fff;">
+    <ion-title>{{'Payment_Receipt' | translate}}</ion-title>
+      <ion-buttons slot="end">
+          <ion-menu-button autoHide="false">
+              <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+          </ion-menu-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class='ion-content' dir="{{languageService.langDir}}">
+  <ion-grid class="custom-cover">
+    <form #mealTransfer="ngForm">
+      <ion-row class="main-row">
+        <ion-col size="12" class="ps-card">
+          <ion-grid>
+            <ion-row>
+              <h1>{{'Receipt' | translate}}</h1>
+              <ion-col size="12" class="fixed-col">
+                <p class="sub-heading">
+                  <span >{{'Date_Time' | translate}}:</span>
+                  <span class="value2" dir="ltr">{{dateAndTime| date: 'MM/dd/yy, hh:mm:ss a'}}</span>
+                </p>
+              </ion-col>
+              <ion-col size="12" class="fixed-col">
+                <p class="sub-heading">
+                  <span>{{'Receipt_Number' | translate}}:</span>
+                  <span [ngClass]="{'value2': languageService.langDir === 'rtl', 'value': languageService.langDir === 'ltr'}">#{{ReceiptNumber}}</span>
+                </p>
+              </ion-col>
+              <ion-col size="12" class="fixed-col">
+                <p class="sub-heading">
+                  <span>{{'District' |translate}}:</span>
+                  <span  [ngClass]="{'value2': languageService.langDir === 'rtl', 'value': languageService.langDir === 'ltr'}">{{PatronDistrict}}</span>
+                </p>
+              </ion-col>
+
+              <!-- Main Content Start -->
+                <ion-row class="fixed-total-col custom-scroll" id="bar-style">
+                  <ion-col size="12"  *ngFor="let patron of groupedFeeList">
+                    <h2 *ngIf="patron.childitems[0].PatronId < 0">{{patron.childitems[0].FName}}
+                      {{patron.childitems[0].LName}}</h2>
+                    <h2 *ngIf="patron.childitems[0].PatronId > -1">{{patron.childitems[0].FName}}
+                        {{patron.childitems[0].LName}}&nbsp;({{patron.childitems[0].PatronId}})</h2> 
+                    <ion-row class="main-row" *ngFor="let child of patron.childitems">
+                      <ion-col size="9">
+                        <p class="sub-heading">
+                          <span>{{child.PaymentName}}</span>
+                        </p>
+                      </ion-col>
+                      <ion-col size="3" [ngClass]="{'align-right2': languageService.langDir === 'rtl', 'align-right': languageService.langDir === 'ltr'}">
+                        <p class="sub-heading mr10">
+                          <span>{{child.Amount}}</span>
+                        </p>
+                      </ion-col>
+                    </ion-row>
+                  </ion-col>
+                </ion-row>
+              <!-- Main content End -->
+
+              <hr class="hr1">
+              <ion-col size="12" class="fixed-total-col" style="bottom: 25%;">
+                <ion-row>
+                  <ion-col size="8">
+                    <p class="sub-heading">
+                      <span>{{'sub_total' | translate}}:</span>
+                    </p>
+                  </ion-col>
+                  <ion-col size="3" [ngClass]="{'align-right2': languageService.langDir === 'rtl', 'align-right': languageService.langDir === 'ltr'}">
+                    <p class="sub-heading" [ngClass]="{'mr25': languageService.langDir === 'ltr', 'mr225': languageService.langDir === 'rtl'}">
+                      <span>{{Subtotal}}</span>
+                    </p>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+              <ion-col size="12" class="fixed-total-col" style="bottom: 20%;">
+                <ion-row>
+                  <ion-col size="8">
+                    <p class="sub-heading">
+                      <span>{{'Total_Convenience_Fees' | translate}}:</span>
+                    </p>
+                  </ion-col>
+                  <ion-col size="3" [ngClass]="{'align-right2': languageService.langDir === 'rtl', 'align-right': languageService.langDir === 'ltr'}">
+                    <p class="sub-heading" [ngClass]="{'mr25': languageService.langDir === 'ltr', 'mr225': languageService.langDir === 'rtl'}">
+                      <span>{{InternetConvenienceFee}}</span>
+                    </p>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+              <hr class="hr2">
+              <ion-col size="12" class="fixed-total-col" style="bottom: 15%;">
+                <ion-row>
+                  <ion-col size="8">
+                    <p class="sub-heading">
+                      <span>{{'Total_Payment' | translate}}:</span>
+                    </p>
+                  </ion-col>
+                  <ion-col size="3"  [ngClass]="{'align-right2': languageService.langDir === 'rtl', 'align-right': languageService.langDir === 'ltr'}">
+                    <p class="sub-heading" [ngClass]="{'mr25': languageService.langDir === 'ltr', 'mr225': languageService.langDir === 'rtl'}">
+                      <span>{{Total}}</span>
+                    </p>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+
+              <ion-col size="12" class="below-button">
+                <ion-row>
+                  <ion-button (click)="downloadFile()" color='secondary' expand="block" class="full-width">{{'download_receipt'| translate}}
+                  </ion-button>
+                  <ion-button *ngIf="!isGuestCheckout" (click)="returnTodashboard()" color='secondary' expand="block" class="full-width">{{'return_to_dashboard' | translate}}</ion-button>  
+                  <ion-button *ngIf="isGuestCheckout" (click)="returnTodashboard()" color='secondary' expand="block" class="full-width">{{'Back' | translate}}</ion-button>
+                
+                </ion-row>
+              </ion-col>
+
+            </ion-row>
+          </ion-grid>
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-grid>
+</ion-content>

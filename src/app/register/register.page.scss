@@ -1,0 +1,81 @@
+.custom-space {
+    margin-right: 5px;
+}
+
+.terms-agree {
+    margin: 12px 0px 12px 5px;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.ion-activatable {
+    position: relative;
+    overflow: hidden;
+}
+
+ion-checkbox {
+    position: relative;
+    margin-inline-end: 5px;
+}
+
+.terms a,
+.terms-agree a {
+    text-decoration: underline;
+}
+
+:host(app-register) {
+    width: 100%;
+}
+
+.help-icon {
+    position: relative;
+    margin-top: auto;
+    margin-bottom: auto;
+    bottom: -30px;
+    font-size: 27px;
+
+}
+.postalCode{
+    width: 90%;
+    margin-top: 0px;
+}
+.main-block{
+    display: block;
+}
+.first-block{
+    display: flex;
+}
+.child-block{
+    width: 10%; 
+    border-bottom: 1px solid #dfdfe1;
+}
+.tab-bar {
+    border-bottom: 5px solid var(--ion-color-primary) !important;
+    padding-bottom: 5px;
+    border-radius: 5px;
+}
+ion-select.register-down{
+    position: relative;
+}
+ion-select.register-down::part(icon) {
+    width: .8rem;
+    height: .8rem;
+    color: #b1b1b1;
+    position: absolute;
+    right: 1%;
+}
+ion-item{
+    --padding-start: 7px;
+    --inner-padding-end: 0px;
+}
+
+
+ion-select.required-field-indicator::part(label):after {
+    content: "*";
+    font-size: 16px;
+    color: red;
+    margin-left: 8px;
+}
+ion-select.required-field-indicator::part(icon) {
+    margin-top: 25px;
+}

@@ -1,0 +1,66 @@
+.sub-header {
+    // margin: 0;
+    // padding: 2px;
+    // text-align: center;
+    // color: #fff;
+    // font-size: small;
+    // background-color: #f79548;
+    margin: 0;
+    padding: 5px;
+    /* padding-bottom: 0px; */
+    /* padding-top: 15px; */
+    /* text-align: center; */
+    color: #3CBFAE;
+    font-size: small;
+    background-color: #e8e8e8;
+}
+
+.version {
+    margin: 0;
+    text-align: center;
+    background-color: #3CBFAE;
+    font-size: small;
+    padding: 2px;
+    color: #fff;
+}
+
+.custom-margin{
+    margin-bottom:0;
+}
+
+.message-space{
+    margin-left:5px;
+}
+
+.message-count{
+    color:var(--ion-color-secondary);
+}
+
+@media only screen and (max-width:480px) {
+    .custom-text-wrap{
+        white-space: normal !important;
+    }
+}
+ion-menu {
+    --ion-background-color: var(--ion-color-primary);
+    --ion-text-color: var(--ion-color-primary-contrast);
+  
+    ion-toolbar {
+      --background: var(--ion-color-primary);
+    }
+  
+    ion-list {/* optional, but it needs when you use gradient as a background color.*/
+      background: transparent;
+    }
+    
+   
+    ion-icon[slot=start] {
+        margin-inline: 0px 16px !important;
+    }
+    
+  }
+ .mainmanuSelected
+ {
+     //color:#3CBFAE;
+     border-left: 6px solid #3CBFAE;
+ }

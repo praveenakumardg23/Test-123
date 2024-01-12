@@ -1,0 +1,178 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'Transfer_Details' | translate}}</ion-title>
+        <ion-buttons slot="start">
+            <ion-button color="light" (click)="onBack()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover">
+        <form #mealTransfer="ngForm">
+            <ion-row class="main-row">
+                <ion-col size="12" class="ps-card">
+                    <!-- <ion-text class="cafeteria-transfer-sub-header">
+                        <h3>
+                            {{'Cafeteria_Transfer' | translate }}
+                        </h3>
+                    </ion-text> -->
+                    <ion-grid>
+                        <ion-row>
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-label position="floating">{{'Patron1' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-input aria-label="FirstName" type="text" name="patron1" [readonly]="true"
+                                        [(ngModel)]="patron1FullName"
+                                        [value]="selectedPatron[0].FirstName +' '+selectedPatron[0].LastName"
+                                        #patron1="ngModel" ngModel required></ion-input>
+                                </ion-item>
+                            </ion-col>
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-label position="floating">{{'CurrentBalance' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-input aria-label="patron1CurrentBalance" type="text" class="dollar" name="patron1CurrentBalance" [readonly]="true"
+                                        [value]="selectedPatron[0].PatronAccountBalance"
+                                        [(ngModel)]="patron1CurrentBalance" #Patron1CurrentBalance="ngModel" ngModel
+                                        required></ion-input>
+                                </ion-item>
+                            </ion-col>
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-label position="floating">{{'NewBalance' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+
+                                    <ion-input aria-label="patron1NewBalance" name="patron1NewBalance" [readonly]="true" pattern="^\d*(\.\d{0,2})?$"
+                                        [(ngModel)]="patron1NewBalance" type="text" class="dollar"
+                                        [value]="Patron1NewBalance" #Patron1NewBalance="ngModel" ngModel required>
+                                    </ion-input>
+                                </ion-item>
+                            </ion-col>
+
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-icon class="ArrowStyle" [name]="'arrow-down'" *ngIf="arrowDown">
+                                    </ion-icon>
+                                    <ion-icon class="ArrowStyle" [name]="'arrow-up'" *ngIf="!arrowDown">
+                                    </ion-icon>
+                                </ion-item>
+                            </ion-col>
+
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-label position="floating">{{'Patron2' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-input aria-label="patron2" type="text" name="patron2" [readonly]="true"
+                                        [(ngModel)]="patron2FullName" #patron2="ngModel" ngModel required></ion-input>
+                                </ion-item>
+                            </ion-col>
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-label position="floating">{{'CurrentBalance' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+
+                                    <ion-input aria-label="patron2CurrentBalance" name="patron2CurrentBalance" type="text" class="dollar"
+                                        [(ngModel)]="patron2CurrentBalance"
+                                        [value]="selectedPatron[1].PatronAccountBalance" [readonly]="true"
+                                        #Patron2CurrentBalance="ngModel" ngModel required></ion-input>
+                                </ion-item>
+                            </ion-col>
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-label position="floating">{{'NewBalance' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+
+                                    <ion-input aria-label="patron2NewBalance" name="patron2NewBalance" [readonly]="true"
+                                        [(ngModel)]="patron2NewBalance" type="text" class="dollar"
+                                        [value]="Patron2NewBalance" #Patron2NewBalance="ngModel" ngModel required>
+                                    </ion-input>
+                                </ion-item>
+                            </ion-col>
+
+                            <ion-col size="12">
+                                <ion-item>
+                                    <ion-label position="floating">{{'IS_Amount_to_Transfer' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-input aria-label="amountToTransfer" name="amountToTransfer" type="text" [(ngModel)]="amountToTransfer"
+                                        inputmode="decimal" class="dollar" [value]="amountToTransfer"
+                                        (keyup)="onKeyUp($event)"
+                                        placeholder="{{'IS_Amount_to_Transfer' | translate}}"
+                                        #AmountToTransfer="ngModel" ngModel required></ion-input>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message"
+                                    *ngIf="(isApplyTermsTouched || ApplyTerms.touched) && (AmountToTransfer.invalid || amountToTransfer <= 0)">
+                                    <p class="error-text-message">{{'IS_Enter_Valid_Amount' | translate}}</p>
+                                </ion-text>
+                                <ion-text color="danger" class="error-message" *ngIf="transferAmountFlag">
+                                    <p class="error-text-message">{{'IS_Amount_Cannot_be_Greater' | translate}}</p>
+                                </ion-text>
+                            </ion-col>
+
+                            <ion-col size="12">
+                                <ion-list class="ion-no-margin" style='background: none;'>
+                                    <ion-radio-group name="selectedAttributesOptions" [value]="arrowDown" (ionChange)="selectRadioOption($event)">
+                                        <ion-row>
+                                            <ion-col col-auto text-left class="ion-no-margin ion-no-padding" (click)="showAlertToastrforFirstPatron()">
+                                                <ion-item lines="none" [ngClass]="{'changeRadioColor' : disableSendStatus}"  style='font-size: 15px;' class='radioButtonBg'>
+
+                                                    <ion-radio color="secondary" [checked]="arrowDown && !disableSendStatus"
+                                                        [value]="true" [disabled]="disableSendStatus"
+                                                        style='margin:7px;width: 17px;height: 17px;' mode="md"
+                                                        slot="start">
+                                                    </ion-radio>
+                                                    {{'Send' | translate}}
+                                                </ion-item>
+                                            </ion-col>
+                                            <ion-col col-auto text-left class="ion-no-margin ion-no-padding" (click)="showAlertToastrSecondPatron()">
+                                                <ion-item lines="none" style='font-size: 15px;' class='radioButtonBg'  [ngClass]="{'changeRadioColor' : disableReceiveStatus}">
+                                                    <ion-radio color="secondary" [value]="false" [checked]="disableSendStatus"
+                                                        style='margin:7px;width: 17px;height: 17px;' mode="md" [disabled]="disableReceiveStatus"
+                                                        slot="start" >
+                                                    </ion-radio>
+                                                    {{'Receive'|translate}}
+                                                </ion-item>
+                                            </ion-col>
+
+                                        </ion-row>
+                                    </ion-radio-group>
+                                </ion-list>
+
+                            </ion-col>
+
+                            <ion-col size="12">
+                                <ion-item lines="none">
+                                    <ion-checkbox class="custom-checkboxs ion-margin-end" aria-label="applyTerms" name="applyTerms" color="secondary" [(ngModel)]="applyTerms"
+                                        (ionChange)=onSelectApplyTerms($event) #ApplyTerms="ngModel"
+                                        ngModel required></ion-checkbox>
+                                    <ion-label class="ion-text-wrap">
+                                        {{'IS_Cafeteria_Terms'|translate}}
+                                    </ion-label>
+                                </ion-item>
+                            </ion-col>
+                            <ion-col size="12">
+                                <ion-row>
+                                    <ion-button expand="block" class="full-width" type="submit"
+                                        [disabled]="mealTransfer.invalid || disableFormByTerms || disableFormByTransferAmount || ((isApplyTermsTouched || ApplyTerms.touched) && (AmountToTransfer.invalid || amountToTransfer <= 0))"
+                                        (click)="onMealTransfer(mealTransfer)">{{'transfer' | translate | uppercase}}
+                                    </ion-button>
+                                </ion-row>
+                            </ion-col>
+
+                        </ion-row>
+                    </ion-grid>
+                </ion-col>
+            </ion-row>
+        </form>
+    </ion-grid>
+</ion-content>

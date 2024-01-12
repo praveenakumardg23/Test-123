@@ -1,0 +1,146 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary">
+        <ion-title size="small" class="ion-text-left">{{ 'freq_asked_qn'|translate}}</ion-title>
+
+        <ion-buttons slot="primary">
+            <ion-button color="light" (click)="onDismiss()">
+                <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class='ion-content'>
+    <ion-list mode="ios" lines="none" *ngIf="helpPrimaryQuestions && isHelpPrimaryQuestionsPage" class="ps-card ion-margin-vertical">
+        <ion-text color="dark">
+            <h5 class="ion-margin">
+                {{'read_qn'|translate}}
+            </h5>
+        </ion-text>
+        <ion-searchbar mode="ios" animated inputmode="search" [(ngModel)]="searchText" (ngModelChange)="filterQuestions(searchText)" placeholder="{{'Search' | translate}}"></ion-searchbar>
+        <ion-item *ngFor="let helpPrimaryQuestion of helpPrimaryQuestions"  class="ion-margin-horizontal" (click)="getHelpArticle(helpPrimaryQuestion, true)">
+            <ion-label color="secondary" [innerHTML]="helpPrimaryQuestion.question"></ion-label>
+        </ion-item>
+        <ion-text *ngIf="helpPrimaryQuestions.length == 0" class="ion-text-center">
+            <h5 class="no-results">{{'No_Results'|translate}}</h5>
+        </ion-text>
+        <ion-text color="dark">
+            <h5 class="ion-margin">
+                {{'different_qn'|translate}}
+            </h5>
+        </ion-text>
+        <ion-item  class="ion-margin-horizontal" (click)="onArticlesDoesNotAnswer()">
+            <ion-label color="secondary">{{'articles_qn'|translate}}</ion-label>
+        </ion-item>
+    </ion-list>
+
+    <ion-grid *ngIf="isArticlePage" class="custom-background ps-card ion-margin-vertical custom-grid">
+        <ion-row>
+            <ion-col size="3">
+                <ion-button class="ion-padding-horizontal button-height" color="primary" (click)="onBackToPrimaryQuestionPage()" *ngIf="isFirstScenario">
+                    <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+                </ion-button>
+                <ion-button color="primary" (click)="onBackFromArticlePage()" *ngIf="!isFirstScenario">
+                    <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+                </ion-button>
+            </ion-col>
+            <ion-col size="9">
+
+            </ion-col>
+        </ion-row>
+
+        <ion-row>
+            <ion-text class="ion-margin-horizontal">
+                <h4 [innerHTML]="selectedPrimaryQuestionHelpArticle.question">
+                </h4>
+                <p [innerHTML]="selectedPrimaryQuestionHelpArticle.article">
+                </p>
+            </ion-text>
+            <ion-text color="primary" class="ion-margin-horizontal">
+                <p tappable="true" (click)="onRedirectToTicketForm()">
+                    {{'articles_qn'|translate}}
+                </p>
+            </ion-text>
+        </ion-row>
+    </ion-grid>
+    <ion-grid *ngIf="isSubjectPage" class="custom-background ps-card ion-margin-vertical custom-grid">
+        <ion-row>
+            <ion-col size="3">
+                <ion-button color="primary" (click)="onBackToPrimaryQuestionPage()">
+                    <ion-icon slot="icon-only" name="ios-arrow-round-back"></ion-icon>
+                </ion-button>
+            </ion-col>
+            <ion-col size="9">
+
+            </ion-col>
+        </ion-row>
+        <ion-text class="ion-margin-horizontal">
+            <h5 class="continue-button">
+                {{'click_continue'|translate}}
+            </h5>
+        </ion-text>
+        <ion-item>
+            <ion-label position="floating">{{'select_item'|translate}} </ion-label>
+            <ion-select [interfaceOptions]="ArticlesActionSheetOptions" [cancelText]="'cancel' | translate" interface="action-sheet" required [(ngModel)]="selectedArticle">
+                <ion-select-option *ngFor="let articleSubject of articleSubjects" [value]="articleSubject.id" [innerHTML]="articleSubject.question"></ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-button color="primary" (click)="onRedirectToArticlePage(selectedArticle)" class="custom-continue" [disabled]="!selectedArticle">
+            {{'Continue'|translate}}
+        </ion-button>
+    </ion-grid>
+
+    <ion-grid *ngIf="isTicketForm" class="custom-background ps-card ion-margin-vertical custom-grid">
+        <!-- <ion-row>
+            <ion-col size="3">
+                <ion-button color="primary" (click)="onBackFromTicketForm()">
+                    <ion-icon slot="icon-only" name="ios-arrow-round-back"></ion-icon>
+                </ion-button>
+            </ion-col>
+            <ion-col size="9">
+
+            </ion-col>
+        </ion-row> -->
+        <form #f="ngForm" autocomplete="off">
+            <ion-item>
+                <ion-label position="floating">{{'Name'|translate}}
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input aria-label="FirstName" name="FirstName" #FirstName="ngModel" ngModel required maxlength="50" appCustomTextWithSymbol="11"></ion-input>
+            </ion-item>
+            <ion-text color="danger" class="error-message" *ngIf="!FirstName.valid && FirstName.touched">
+                <p class="error-text-message">{{'name_req'|translate}}.</p>
+            </ion-text>
+            <ion-item>
+                <ion-label position="floating">{{'email'|translate}}
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input aria-label="UserName" name="UserName" #UserName="ngModel" ngModel pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$" required></ion-input>
+            </ion-item>
+            <ion-text color="danger" class="error-message" *ngIf="UserName.touched">
+                <p class="error-text-message" *ngIf="!UserName && !UserName.valid">{{'email_required' | translate}}.</p>
+                <p class="error-text-message" *ngIf="UserName && !UserName.valid">{{'invalid_email' | translate}}.</p>
+            </ion-text>
+            <!-- <ion-item>
+                <ion-label position="floating">{{'subject'|translate}}
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input name="Subject" #Subject="ngModel" ngModel [(ngModel)]="selectedSubjectArticle" required disabled></ion-input>
+            </ion-item> -->
+            <ion-item>
+                <ion-text>
+                    <p style="opacity: .5;">{{'subject'|translate}} <span style="color: var(--ion-color-danger);">*</span></p>
+                    <p [innerHTML]="selectedSubjectArticle" style="opacity: .5;"></p>
+                </ion-text>
+            </ion-item>
+            <ion-item class="ion-margin-top">
+                <ion-label position="floating">{{'help_text'|translate}}
+                    <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-textarea name="Description" #Description="ngModel" ngModel rows="6" cols="20"></ion-textarea>
+            </ion-item>
+            <ion-button color="primary" (click)="onSend(f)" class="ion-margin-top full-width" [disabled]="!f.valid">
+                {{'support_req'|translate}}
+            </ion-button>
+        </form>
+    </ion-grid>
+</ion-content>

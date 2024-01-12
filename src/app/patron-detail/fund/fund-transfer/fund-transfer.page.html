@@ -1,0 +1,122 @@
+<ion-header  dir="{{languageService.langDir}}">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{'Fund_Transfer' | translate}}</ion-title>
+
+        <ion-buttons slot="start">
+            <ion-button color="light" (click)="onDismiss()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content class='ion-content' dir="{{languageService.langDir}}">
+    
+    <ion-grid class="custom-cover">
+        <form  [formGroup]="fundTransfer">
+       
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card">
+                <ion-text class="fund-transfer-sub-header">
+                    <h3>
+                        {{'IS_Transfer_Fund_to_Account' | translate }}
+                    </h3>
+                </ion-text>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="12">
+                            <ion-item *ngIf="isIndividualPatronFlag">
+                                <ion-label position="floating">{{'IS_Transfer_from' | translate}}
+                                    <ion-text color="danger">*</ion-text>
+                                </ion-label>
+                                <ion-input aria-label="individualPatron" type="text" [(ngModel)]="isIndividualPatronName"
+                                formControlName="individualPatron" ></ion-input>                        
+                                <!-- <span matPrefix>$</span> -->
+                              </ion-item>
+                            <ion-item *ngIf="!isIndividualPatronFlag">
+                                <ion-label position="floating">{{'IS_Transfer_from' | translate}}
+                                    <ion-text color="danger">*</ion-text>
+                                </ion-label>
+                                <ion-select class="fund-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate"  formControlName="patronFrom" required placeholder="{{'IS_Select_Patron' | translate}}" (ionChange)="onPatronFromSelection($event)">
+                                    <ion-select-option *ngFor="let patron of allPatronSourceAccounts" [value] = "patron">{{patron.FirstName}} {{patron.LastName}}</ion-select-option>
+                                </ion-select>
+                                
+                            </ion-item>
+                            <ion-text color="danger" class="error-message" *ngIf="fundTransfer.controls['patronFrom'].hasError('required') && fundTransfer.controls['patronFrom'].touched">
+                                <p class="error-text-message2">{{'IS_Select_Valid_Patron' | translate}}</p>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col size="12">
+                            <ion-item>
+                                <ion-label position="floating">{{'IS_Fund_Account' | translate}}
+                                    <ion-text color="danger">*</ion-text>
+                                </ion-label>
+                                <ion-select class="fund-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" formControlName="patronAccount" required
+                                (ionChange)="onPatronAccountSelection($event)" placeholder="{{'Select_accountType' | translate}}">
+                                    <ion-select-option *ngFor="let patronSource of patronSourceAccount" [value] = "patronSource" >{{patronSource.AccountName}}</ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                            <ion-text color="danger" class="error-message" *ngIf="fundTransfer.controls['patronAccount'].hasError('required') && fundTransfer.controls['patronAccount'].touched">
+                                <p class="error-text-message2">{{'IS_Select_Valid_Account' | translate}}</p>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col size="12">
+                            <ion-item>
+                                <ion-label position="floating">{{'Balance' | translate}}
+                                    <ion-text color="danger">*</ion-text>
+                                </ion-label>
+                               
+                                <ion-input aria-label="Balance" type="text" class="dollar" placeholder="{{'Balance' | translate}}" [(ngModel)]="patronSourceAccountBalance" formControlName="patronAccountBalance"></ion-input>
+                            </ion-item>                            
+                        </ion-col>
+                        <ion-col size="12">
+                            <ion-item>
+                                <ion-label position="floating" [ngClass]="{'class-b': !isOther, 'other-condition': isOther }">{{'IS_Amount_to_Transfer' | translate}}
+                                    <ion-text color="danger">*</ion-text>
+                                </ion-label>
+                                <ion-input aria-label="decimal" type="text" inputmode="decimal" class="dollar" [(ngModel)]="patronTransferBalance == 0 ? '' : patronTransferBalance" (keyup)="onKeyUp($event)"
+                                formControlName="patronTransferBalance" ></ion-input>
+                            </ion-item>
+                            <ion-text color="danger" class="error-message" *ngIf="((fundTransfer.controls['patronTransferBalance'].hasError('required')|| (patronTransferBalance <=0)) && (fundTransfer.controls['patronTransferBalance'].touched || isApplyTermsTouched))">
+                                <p class="error-text-message2">{{'IS_Enter_Valid_Amount' | translate}}</p>
+                            </ion-text>
+                            <ion-text color="danger" class="error-message" *ngIf="transferAmountFlag">
+                                <p class="error-text-message2">{{'IS_Amount_Cannot_be_Greater' | translate}}</p>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col size="12">
+                            <ion-item>
+                                <ion-label position="floating">{{'IS_Transfer_to' | translate}}
+                                    <ion-text color="danger">*</ion-text>
+                                </ion-label>
+                                <ion-select class="fund-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" formControlName="patronTo" required
+                                (ionChange)="onPatronToSelection($event)" placeholder="{{'IS_Select_Patron' | translate}}">
+                                    <ion-select-option *ngFor="let patronTo of filterdPatronSourceAccounts" [value]="patronTo">{{patronTo.FirstName}} {{patronTo.LastName}}</ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                            <ion-text color="danger" class="error-message" *ngIf="fundTransfer.controls['patronTo'].hasError('required') && fundTransfer.controls['patronTo'].touched">
+                                <p class="error-text-message2">{{'IS_Select_Valid_Patron' | translate}}</p>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col size="12">
+                            <ion-item lines="none" class="ion-no-padding">
+                                <ion-checkbox class="custom-checkboxs ion-margin-end" aria-label="isCheckedFT" color="secondary" formControlName="isCheckedFT" (ionChange)="ftTerms($event)"></ion-checkbox>
+                                <ion-label class="ion-text-wrap checkbox-agree">
+                                    {{'IS_Terms'|translate}}
+                                </ion-label>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="12">
+                            <ion-row>
+                                <ion-button expand="block" class="full-width" type="submit" (click)="onFundTransfer(fundTransfer)"
+                                [disabled]="!fundTransfer.valid || !ftTermsChecked || transferAmountFlag || patronTransferBalance <= 0">{{'transfer' | translate | uppercase}}</ion-button>
+                            </ion-row>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-col>
+        </ion-row>
+    </form>
+    </ion-grid>
+</ion-content>

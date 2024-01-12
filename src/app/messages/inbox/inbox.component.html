@@ -1,0 +1,35 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-button color="light" (click)="onDismiss(selectedMessage)">
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end" *ngIf="((selectedMessage.Priority != 0 && deleteButtonEnable) || selectedMessage.Priority == 0 || selectedMessage.ReadDate) && selectedMessage.ActiveSw || (selectedMessage.Priority === 2 && selectedMessage.Displayonlogin !== true && selectedMessage.ReadDate !== null )">
+            <ion-button *ngIf="selectedMessage.Displayonlogin !== true" fill="clear" (click)="onDelete(selectedMessage)">
+                <ion-icon name="trash"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end" *ngIf="selectedMessage.Priority === 2 && selectedMessage.Displayonlogin === true">
+            <ion-button fill="clear" (click)="onDismiss(selectedMessage)">{{'ok' | translate}}
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-grid class="ion-padding custom-scroll">
+    <ion-text color="dark">
+        <h4>
+            {{selectedMessage.MessageSubject}}
+        </h4>
+    </ion-text>
+    <ion-text [innerHTML]="selectedMessage.MessageText" color="primary"></ion-text>
+    <ion-row *ngIf="(selectedMessage.Priority != 0 && selectedMessage.ReadDate === null && selectedMessage.Displayonlogin !== true) ||(selectedMessage.Priority ===2 && selectedMessage.ReadDate === null && selectedMessage.Displayonlogin === false)">
+        <ion-col class="ion-text-center">
+            <ion-button fill="solid" expand="block" color="primary" (click)="markAsRead(selectedMessage)">
+                {{'mark_as_read' | translate}}
+            </ion-button>
+        </ion-col>
+    </ion-row>
+</ion-grid>

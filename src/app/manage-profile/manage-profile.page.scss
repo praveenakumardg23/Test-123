@@ -1,0 +1,30 @@
+:host(app-manage-profile) {
+    width: 100%;
+}
+
+.help-icon {
+    position: relative;
+    margin-top: auto;
+    margin-bottom: auto;
+    bottom: 0;
+}
+
+.terms-agree {
+    margin-left: 5px;
+}
+
+.help-icon-color{
+    color: #0873ba;
+}
+.list-header{
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+ion-select.always-flip::part(icon) {
+    width: 1rem;
+    height: 1rem;
+    color: #b1b1b1;
+}
+

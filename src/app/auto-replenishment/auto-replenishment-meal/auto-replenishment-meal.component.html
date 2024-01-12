@@ -1,0 +1,190 @@
+<ng-container *ngIf="mergedUserPatronDetail">
+    <ion-row>
+        <ion-col size="1">
+            <span class="slider-nav arrow-prev" (click)="slidePrev(sliderOne,slideWithNav)"
+               *ngIf="mergedUserPatronDetail.length != 1">
+                <div class="prev-icon-custom custon-nav" [class.disabled]="sliderOne.isBeginningSlide">
+                    <ion-icon name="chevron-back-circle-outline"></ion-icon>
+                </div>
+            </span>
+        </ion-col>
+        <ion-col size="10">
+            <swiper-container [options]="slideOptsOne" #slideWithNav
+                (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+                <swiper-slide *ngFor="let patronDetail of mergedUserPatronDetail;let i=index;">
+                    <form #f="ngForm" class="full-width">
+                        <ion-grid class="custom-grid">
+                            <ion-list class="custom-element ion-no-margin full-width">
+                                <ion-item lines="none">
+
+                                    <ion-row class="full-width">
+                                        <ion-col class="ion-text-center">
+                                            <ion-text class="custom-name">{{patronDetail.FirstName}}
+                                                {{patronDetail.LastName}}</ion-text>
+                                        </ion-col>
+                                    </ion-row>
+
+                                </ion-item>
+
+                                <ion-item lines="none" class="ion-margin-top" *ngIf="patronDetail.Active">
+                                    <ion-row class="full-width">
+                                        <ion-col class="ion-text-right ion-no-padding" size="7"
+                                            style="display: flex;align-items: center;">
+                                            <ion-button fill="clear" class="ion-no-padding full-width"
+                                                style="height: 50px;">
+                                                <ion-label color="dark"
+                                                    class="ion-no-padding custom-label">{{'AR_Meal_Turn_off'|translate}}</ion-label>
+                                                <ion-toggle color="secondary" name="Status" required
+                                                    #ActiveStatus="ngModel" [(ngModel)]="patronDetail.Active"
+                                                    [disabled]="patronDetail.TriggerValue == ''||patronDetail.ChargeAmount == ''|| patronDetail.ExpireDate == '' || !patronDetail.PaymentMethodId"
+                                                    [checked]="patronDetail.Active"
+                                                    (ngModelChange)="onToggleActive($event,patronDetail,i, f)"></ion-toggle>
+                                            </ion-button>
+                                        </ion-col>
+                                        <ion-col class="ion-text-right ion-no-padding" size="5"
+                                            style="display: flex;align-items: center;">
+                                            <ion-button fill="clear" class="ion-no-padding full-width"
+                                                style="height: 50px;" (click)="statusAuto(patronDetail.Status)">
+                                                <ion-label color="dark">{{'AR_Meal_Status'|translate}}</ion-label>
+                                                <!-- <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon> -->
+                                                <ion-icon name="checkmark-circle" style="font-size: 30px;" slot="end"
+                                                    color="success"
+                                                    *ngIf="patronDetail.Status == 'AR_SCHEDULED_TODAY' && patronDetail.Status != ''"></ion-icon>
+                                                <ion-icon name="close-circle" style="font-size: 30px;" slot="end"
+                                                    color="danger"
+                                                    *ngIf="patronDetail.Status != 'AR_SCHEDULED_TODAY' && patronDetail.Status != ''"></ion-icon>
+                                            </ion-button>
+                                        </ion-col>
+                                    </ion-row>
+
+                                </ion-item>
+
+                                <ion-item>
+                                    <ion-label position="floating">{{'AR_Fund_Account_Balance' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <p class="accountBalance">${{patronDetail.AccountBalance}}</p>
+                                    <!-- <ion-input  [ngClass]="{'dollar': languageService.langDir === 'ltr','dollar2': languageService.langDir === 'rtl'}"  type="text" name="AccountBalance" [(ngModel)]="patronDetail.AccountBalance" #AccountBalance="ngModel" disabled></ion-input> -->
+                                </ion-item>
+
+                                <ion-item>
+                                    <ion-label position="floating">{{'balance_level' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-select class="meal-down" toggleIcon="caret-down-sharp" name="BalanceLevel" required #BalanceLevel="ngModel" (click)="isFormModified()" [(ngModel)]="patronDetail.TriggerValue" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate">
+                                        <ion-select-option *ngFor="let denomination of denominations" [value]="denomination.value">{{denomination.option}}</ion-select-option>
+                                    </ion-select>
+
+                                </ion-item>
+                                <ion-text color="danger" class="error-message"
+                                    *ngIf="!BalanceLevel.valid && BalanceLevel.touched">
+                                    <p class="error-text-message">{{'AR_Balance_Msg' | translate}}</p>
+                                </ion-text>
+
+                                <ion-item>
+                                    <ion-label position="floating">{{'amount_to_add' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-select class="meal-down" toggleIcon="caret-down-sharp"  name="Amount" required #Amount="ngModel" (click)="isFormModified()" [(ngModel)]="patronDetail.ChargeAmount" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate">
+                                        <ion-select-option *ngFor="let amount of addAmount" [value]="amount.value">
+                                            {{amount.option}}</ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message" *ngIf="!Amount.valid && Amount.touched">
+                                    <p class="error-text-message">{{'AR_Amount_Msg'|translate}}</p>
+                                </ion-text>
+
+                                <ion-item >
+                                    <div class="main-calender-div" >
+                                        <div> <p class="floating-text"  (click)="toggleVisibility(i)">{{'stop_payment' | translate}}
+                                            <ion-text color="danger">*</ion-text>
+                                        </p></div>
+                                        <div>
+                                            <p *ngIf="stopPaymentDate == '' || stopPaymentDate == null" class="select-date" (click)="toggleVisibility(i)" >Select Date</p>
+                                            <p *ngIf="stopPaymentDate != '' ||stopPaymentDate != null " class="selected-date" (click)="toggleVisibility(i)" >{{patronDetail.ExpireDate | date :  "MM/dd/yyyy" }}</p>
+                                        </div>
+                                   
+                                    </div>
+                                    <!-- <ion-text color="danger" class="error-message"
+                                    *ngIf="!StopPayment.valid && StopPayment.touched">
+                                    <p class="error-text-message">{{'AR_Stop_Payment_Msg'|translate}}</p>
+                                </ion-text> -->
+                                </ion-item>
+                                <span class="automealDate">
+                                    <ion-datetime class="ion-no-padding" *ngIf="isVisible(i)" presentation="date" [preferWheel]="true"
+                                            placeholder="{{'select_date'|translate}}" required 
+                                        [(ngModel)]="patronDetail.ExpireDate " #StopPayment="ngModel"
+                                        (click)="isFormModified()" (ionChange)="stopPaymentDateChange($event, i)"
+                                        size="cover"
+                                        [showDefaultButtons]="true"
+                                        [min]="todaydate" [max]="maxdate"
+                                        [value]="todaydate"
+                                        name="CustomStopPayment"
+                                        (ionCancel)="toggleVisibility(i)"
+                                        >
+                                    </ion-datetime> 
+                                </span>
+                                <ion-item>
+                                    <ion-label position="floating">{{'payment_method' | translate}}
+                                        <ion-text color="danger">*</ion-text>
+                                    </ion-label>
+                                    <ion-select class="meal-down" toggleIcon="caret-down-sharp" name="PaymentMethod" required #PaymentMethod="ngModel" (click)="isFormModified()" [(ngModel)]="patronDetail.PaymentMethodId" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate">
+                                        <ion-select-option *ngFor="let payment of paymentMethod" [value]="payment">
+                                            {{payment.NickName}}</ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-text color="danger" class="error-message"
+                                    *ngIf="!PaymentMethod.valid && PaymentMethod.touched">
+                                    <p class="error-text-message">{{'AR_Payment_Method_Msg'|translate}}</p>
+                                </ion-text>
+                                <ion-row class="ion-margin">
+                                    <ion-button expand="block" color="secondary" class="full-width custom-color"
+                                        [disabled]="(!f.touched || !f.valid || patronDetail.ExpireDate == '')"
+                                        (click)="addAutoReplenishments(f, patronDetail, i )">{{'save' |
+                                        translate}}</ion-button>
+                                </ion-row>
+                                <ion-label *ngIf="patronDetail.TotalProcessingFee">
+                                    <p class="meal-note"><span
+                                            *ngIf="patronDetail.showPerTransaction">{{'ar_transactionfee_note' |
+                                            translate}}</span><span
+                                            *ngIf="!patronDetail.showPerTransaction">{{'ar_transactionfee_note_an' |
+                                            translate}}</span>
+                                        {{patronDetail.PaymentTypeMsg | translate}} {{'installment_note1' | translate}}
+                                        <span
+                                            *ngIf="languageService.langDir === 'ltr'">$</span>{{patronDetail.TotalProcessingFee}}<span
+                                            *ngIf="languageService.langDir === 'rtl'">$</span> <span
+                                            *ngIf="patronDetail.showPerTransaction">{{'ar_transactionfee_note1' |
+                                            translate}}</span>
+                                    </p>
+
+                                </ion-label>
+
+                            </ion-list>
+                        </ion-grid>
+                    </form>
+                </swiper-slide>
+            </swiper-container>
+        </ion-col>
+        <ion-col size="1">
+            <span class="slider-nav arrow-next" (click)="slideNext(sliderOne,slideWithNav)"
+                *ngIf="mergedUserPatronDetail.length != 1">
+                <div class="next-icon-custom custon-nav" [class.disabled]="sliderOne.isEndSlide">
+                    <ion-icon name="chevron-forward-circle-outline"></ion-icon>
+                </div>
+            </span>
+        </ion-col>
+    </ion-row>
+    <ion-row class="ion-margin-top">
+        <ion-button expand="block" class="full-width custom-auto-button" (click)="viewHistory()">{{'view_all_history' |
+            translate}}</ion-button>
+    </ion-row>
+    <ion-row class="ion-margin-vertical">
+        <ion-button expand="block" class="full-width custom-auto-button" (click)="turnOffAllAR()">{{'turn_off' |
+            translate}}</ion-button>
+    </ion-row>
+    <ion-row class="ion-padding" *ngIf="isNoRecordsFound">
+        <ion-col class="ion-text-center">
+            <ion-text>{{'no_records_found'|translate}}</ion-text>
+        </ion-col>
+    </ion-row>
+</ng-container>

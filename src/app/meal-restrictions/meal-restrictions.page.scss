@@ -1,0 +1,93 @@
+:host(app-meal-restrictions) {
+    width: 100%;
+}
+
+.close-icon {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.custom-scroll {
+    overflow-x: scroll;
+    max-height: 300px;
+}
+
+div[scrollx=true] {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    .scroll-item {
+        flex: 0 0 auto;
+    }
+}
+
+
+
+
+.patron-active {
+    border: 2px solid #3CBFAE !important;
+}
+
+.patron-active-color {
+    color: #3CBFAE !important;
+    font-weight: 500;
+}
+
+.patron-inactive {
+    border: 1px solid #757575;
+}
+
+.dollar::before
+{content:"$";
+margin-right:3px;
+}
+
+.notification-sub-header>h3 {
+    display: flex;
+    align-items: center;
+}
+
+.patron-image{
+    text-align: center;
+    margin:auto;
+}
+
+.patron-icon{
+    padding: 2px;
+    height: 60px;
+    width: 60px;
+    margin: auto;
+    margin-bottom: 8px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 1px solid #ccc;
+}
+
+.patron-fname{
+    margin-top: 2px;
+    display: block;
+    color: #757575;
+}
+
+.patron-lname{
+    margin-top: 2px;
+    color:#757575;
+}
+
+.amount{
+    margin-left: 11px;
+}
+
+.no-result{
+    margin-bottom: 45px;
+}
+
+.dollar{
+    display: flex;
+    align-items: center;
+}

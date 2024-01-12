@@ -1,0 +1,99 @@
+<ion-app>
+    <!-- <ion-spinner name="dots" *ngIf="loading"></ion-spinner> -->
+    <ion-grid class="app-load" *ngIf="loading"  >
+        <ion-spinner name="bubbles" class="custom-spinner" duration="0"></ion-spinner>
+    </ion-grid>
+    <!-- <ion-menu id="authenticated" contentId="content1" side="end" swipeGesture="false">
+        <ion-header>
+            <ion-toolbar color="primary" style="color:#fff;">
+                <ion-title>Menu</ion-title>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content> 
+            <ion-menu-toggle auto-hide="true">
+                <ion-list>
+                    <ion-item lines="none" tappable (click)="redirectTo('Home')">
+                        <ion-icon name="home" slot="start" color="primary"></ion-icon>
+                        <ion-label>Dashboard</ion-label>
+                    </ion-item>
+                    <p class="sub-header">Notifications</p>
+                    <ion-item lines="none" tappable (click)="redirectTo('Messages')" menuClose="left">
+                        <ion-icon name="chatbubbles" slot="start" color="primary"></ion-icon>
+                        <ion-label>Messages</ion-label>
+                    </ion-item>
+                    <ion-item lines="none" tappable (click)="redirectTo('Notifications')">
+                        <ion-icon name="notifications" slot="start" color="primary"></ion-icon>
+                        <ion-label>Notifications</ion-label>
+                    </ion-item>
+                    <p class="sub-header">Account</p>
+                    <ion-item lines="none" tappable (click)="redirectTo('YourProfile')">
+                        <ion-icon name="contact" slot="start" color="primary"></ion-icon>
+                        <ion-label>Your Profile</ion-label>
+                    </ion-item>
+                    <ion-item lines="none" tappable (click)="redirectTo('SecureAccount')">
+                        <ion-icon name="lock" slot="start" color="primary"></ion-icon>
+                        <ion-label>Secure Account</ion-label>
+                    </ion-item>
+                    <ion-item lines="none" tappable (click)="redirectTo('YourStudents')">
+                        <ion-icon name="contacts" slot="start" color="primary"></ion-icon>
+                        <ion-label>Your Students</ion-label>
+                    </ion-item>
+                    <ion-item lines="none" tappable (click)="redirectTo('PaymentMethods')">
+                        <ion-icon name="card" slot="start" color="primary"></ion-icon>
+                        <ion-label>Payment Methods</ion-label>
+                    </ion-item>
+                    <ion-item lines="none" tappable (click)="redirectTo('AutoReplenishment')">
+                        <ion-icon name="sync" slot="start" color="primary"></ion-icon>
+                        <ion-label>Auto- Replenishment</ion-label>
+                    </ion-item>
+                    <p class="sub-header">History</p>
+                    <ion-item lines="none" tappable (click)="redirectTo('PaymentHistory')">
+                        <ion-icon name="contact" slot="start" color="primary"></ion-icon>
+                        <ion-label>Payment History</ion-label>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-icon name="document" slot="start" color="primary"></ion-icon>
+                        <ion-label>Reports</ion-label>
+                    </ion-item>
+                    <p class="sub-header">School District</p>
+                    <ion-item lines="none">
+                        <ion-icon name="clipboard" slot="start" color="primary"></ion-icon>
+                        <ion-label>Free and Reduced Meal Applications</ion-label>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-icon name="share" slot="start" color="primary"></ion-icon>
+                        <ion-label>Share benefits with other Departments</ion-label>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-icon name="checkmark-circle" slot="start" color="primary"></ion-icon>
+                        <ion-label>View Completed Application</ion-label>
+                    </ion-item>
+                    <ion-item lines="none" tappable (click)="openUrl()">
+                        <ion-icon name="calendar" slot="start" color="primary"></ion-icon>
+                        <ion-label>School Events</ion-label>
+                    </ion-item>
+                    <p class="sub-header">Information</p>
+                    <ion-item lines="none">
+                        <ion-icon name="help-circle" slot="start" color="primary"></ion-icon>
+                        <ion-label>Help</ion-label>
+                    </ion-item>
+                    <ion-item lines="none" tappable (click)="redirectTo('Privacy')">
+                        <ion-icon name="lock" slot="start" color="primary"></ion-icon>
+                        <ion-label>Privacy</ion-label>
+                    </ion-item>
+                    <ion-item lines="none" tappable (click)="redirectTo('Terms')">
+                        <ion-icon name="paper" slot="start" color="primary"></ion-icon>
+                        <ion-label>Terms and Conditions</ion-label>
+                    </ion-item>
+                    <ion-item lines="none" tappable (click)="redirectTo('logout')">
+                        <ion-icon name="log-out" slot="start" color="primary"></ion-icon>
+                        <ion-label>Logout</ion-label>
+                    </ion-item>
+                    <p class="version">Version:{{appversion ? appversion : '0.0.1'}}</p>
+                </ion-list>
+            </ion-menu-toggle>
+        </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="content1" main></ion-router-outlet> -->
+    <ion-router-outlet main dir="{{languageService.langDir}}"></ion-router-outlet>
+</ion-app>

@@ -1,0 +1,83 @@
+<div dir="{{languageService.langDir}}">
+  <ion-header class='header'>
+    {{'Fee_Details' | translate}} </ion-header>
+  <ion-content class="addToCart" >
+    <ion-grid style="padding: 15px;">
+      <ion-row style="margin-bottom: 15px;">
+        <ion-col size="2" *ngIf="fee.IsFundraiser">
+          <ion-avatar class="avatar" >
+            <img class="custom-img" *ngIf="fee.FeeImage" src="data:image/png;base64,{{fee.FeeImage}}" />
+            <!-- <ion-icon class="default-icon" size="large" *ngIf="(fee.FeeImage === null || fee.FeeImage === '') && !fee.IsFundraiser" name="image"></ion-icon> -->
+            <img class="custom-img" *ngIf="(fee.FeeImage === null || fee.FeeImage === '') && fee.IsFundraiser"
+            src="../../assets/images/icn_fundraiser.png" />
+          </ion-avatar>
+        </ion-col>
+        <ion-col size="10" class='content pd10'>
+          <span>{{'fee_name'| translate}}:</span><br>
+          <span class="highlight">{{fee.FeeName}}</span>
+        </ion-col>
+      </ion-row>
+
+      <ion-row style="margin-bottom: 15px;" *ngIf="fundraiserService.schoolId === 0 && isGuestCheckout">
+        <ion-col size="12" class='content'>
+          <span>{{'School_name'|translate}}:</span><br>
+          <span class="highlight">{{fee.SchoolName}}</span>
+        </ion-col>
+      </ion-row>
+
+      <ion-row style="margin-bottom: 15px;">
+        <ion-col size="12" class='content'>
+          <span>{{'Fees_Description'|translate}}:</span><br>
+          <span class="highlight" *ngIf="fee.FeeDescription" [innerHTML]="fee.FeeDescription"></span>
+          <span class="highlight" *ngIf="!fee.FeeDescription">--</span>
+
+        </ion-col>
+      </ion-row>
+      <!-- *ngIf="fee.Attribute" -->
+      <ion-row *ngIf="fee.Attribute"  style="margin-bottom: 15px;">
+        <ion-col size="12" class='content'>
+          <span *ngIf="fee.Attribute">{{fee.Attribute.Name}}:</span><br><br>
+          <span class="highlight" *ngFor="let item of fee.Attribute.Options">
+            <span >{{item.AttributeValue}} : ${{item.Amount}}</span><br>
+          </span>
+        </ion-col>
+      </ion-row>
+
+      <!-- *ngIf="fee.Document" -->
+      <ion-row *ngIf="fee.Document" style="margin-bottom: 15px;">
+        <ion-col size="12" style="color: #91A1AE;
+        font-weight: 500;">
+          Attachments:
+        </ion-col>
+        <ion-col size="10" class='content'>
+          <span class="highlight">{{documentName? documentName:'--'}}</span>
+        </ion-col>
+        <ion-col *ngIf="!downloading" class='content' (click)="downloadFile(fee)">
+          <ion-icon name="md-download" size="large"></ion-icon>
+        </ion-col>
+        <ion-col *ngIf="downloading" class='content'>
+          <!-- <ion-progress-bar color="secondary" type="indeterminate"></ion-progress-bar> -->
+          <ion-spinner color="primary" name="crescent"></ion-spinner>
+
+        </ion-col>
+
+      </ion-row>
+
+    </ion-grid>
+
+
+  </ion-content>
+  <ion-footer style="text-align: center;" class="button footer">
+
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col size='8' style="color:white">
+        <ion-button expand="full" class=" custom-orange-btn "
+          style="color:white; font-weight: bold; margin: 0;font-size: large;" (click)="okButton()"> {{'ok'| translate}}
+        </ion-button>
+      </ion-col>
+      <ion-col></ion-col>
+
+    </ion-row>
+  </ion-footer>
+</div>

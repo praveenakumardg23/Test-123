@@ -1,0 +1,195 @@
+<ion-header dir="ltr">
+  <ion-toolbar color="primary" style="color: #fff;">
+    <ion-title>{{'Cart' | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <!-- <ion-back-button name="arrow-back" [text]="'Back' | translate" (click)="backButton('/fundraiserfee/fundraiser-fees')()"></ion-back-button> -->
+      <ion-button (click)="onDisplayLang()">
+        <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+      </ion-button>
+    </ion-buttons>
+    <!-- <ion-buttons slot="start">
+            <ion-button (click)="onDisplayLang()">
+                <ion-icon slot="icon-only" name="globe"></ion-icon>
+            </ion-button>
+        </ion-buttons> -->
+    <!-- <ion-buttons slot="primary">
+      <ion-button (click)="onGotoCart()">
+        <ion-icon slot="icon-only" name="cart"></ion-icon>
+        <ion-badge class="cart-badge">{{totalLength}}</ion-badge>
+      </ion-button>
+    </ion-buttons> -->
+    <ion-buttons slot="end" (click)="presentPopover()">
+      <ion-icon slot="icon-only" name="menu" color="light" class="custom-caret"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class='ion-content'>
+  <ion-buttons>
+    <ion-button fill="clear" (click)="backButton('/fundraiserfee/fundraiser-fees')" class="backButton">
+      <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      {{"Back" |translate}}
+    </ion-button>
+  </ion-buttons>
+  <ion-grid class="custom-cover" *ngIf="cartData">
+    <ion-row class="main-row">
+      <ion-col size="12" class="ps-card custom-padding">
+        <!-- <ion-row>
+              <ion-button fill="clear" (click)="backButton('/fundraiserfee')"  class="backButton"><ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+                {{"Back" |translate}}</ion-button>
+            </ion-row> -->
+        <ion-row style="margin-top: -4%;margin-bottom: -4%;">
+          <ion-col size="2" class="ion-padding">
+            <ion-checkbox aria-label="checkMaster" color="secondary" [(ngModel)]="masterCheck" [indeterminate]="isIndeterminate"
+              (click)="checkMaster()"></ion-checkbox>
+            <!-- <ion-label color="dark"  class="ion-text-start label-poistion" [hidden]="masterCheck || isIndeterminate">{{ 'Select_all'| translate }}</ion-label> -->
+          </ion-col>
+          <ion-col size="10" class="ion-text-end" *ngIf="(masterCheck || isIndeterminate)">
+            <ion-button fill="clear" (click)="warningmsg('deleteSelected',cartItems)">
+              <ion-label>{{ 'delete_selected'| translate }}</ion-label>
+              <ion-icon name="trash" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-item-divider class="custom-name ion-margin-top" color="medium">
+          <ion-label>
+            {{ 'cart_items' | translate }}
+          </ion-label>
+        </ion-item-divider>
+        
+        <ion-grid>
+          <ion-text color="dark" class="ion-text-center">
+            <p *ngIf="cartItems?.length == 0">{{ 'no_cart_items' | translate }}
+            </p>
+          </ion-text>
+        </ion-grid>
+        <ion-grid>
+          <ng-container *ngFor="let cartItem of cartItems;let i=index">
+            <ion-row
+              [ngStyle]="{'border-top': cartItem.patronName && i > 0? '.5px dotted var(--ion-color-medium-tint)' : ''}">
+              <ion-text color="secodary" *ngIf="cartItem.patronName" class="ion-margin-horizontal labelDiv">
+                <h4>{{cartItem.patronName}}</h4>
+              </ion-text>
+              <ng-container *ngFor="let Item of cartItem.childitems;let i=index">
+                <ion-col size="10">
+                  <ion-item class="full-width" lines="none">
+                    <ion-checkbox color="secondary" class="custom-checkbox ion-margin-end" [(ngModel)]="Item.isChecked"
+                      (ionChange)="checkEvent()"></ion-checkbox>
+                    <ion-label>
+                      <ion-row>
+                        <ion-text>
+                          <p class="sub-heading">{{ 'Items_name'|translate}}
+                            <ion-icon color='primary' *ngIf="Item.ItemName != 'Meal' && Item.Session"
+                              name="information-circle" class="information_circle">
+                            </ion-icon>
+                            <span class="item-color">{{Item.feeType | translate}}</span>
+                          </p>
+                        </ion-text>
+                      </ion-row>
+                      <ion-row>
+                        <ion-text>
+                          <p class="sub-heading" *ngIf="(Item.FeeDescription || Item.SelectedAttribute || Item.FeeName)">{{
+                            'Cart_description'|translate }}
+                            <span class="description">{{Item.FeeName + (Item.SelectedAttribute ? '-' +
+                              Item.SelectedAttribute : '')}}</span>
+                          </p>
+                        </ion-text>
+                      </ion-row>
+                      <ion-row class="ion-no-padding cart-amount-font custom-margin">
+                        <ion-col size="12" class="ion-no-padding">
+                          <ion-text *ngIf="i !== enableInput" color="secodary" class="custom-font">{{ 'Amount'|translate }}: <span *ngIf="languageService.langDir === 'ltr'">$</span>{{Item?.CartAmount |
+                            number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span>
+                          </ion-text>
+                          <ion-text  *ngIf="i === enableInput" class="input-Field">
+                            {{ 'Amount'|translate }}:
+                        <!-- $<input type="text" class="cart-amount-input" step=".01" id="resultText" onchange="validate(newAmount)"
+                        [(ngModel)]="newAmount"> -->
+                        <span *ngIf="languageService.langDir === 'ltr'">$</span><input type="number" class="cart-amount-input" (keyup)='keyup($event)' (focusout)="focusOutFunction($event)"
+                        [(ngModel)]="newAmount"><span *ngIf="languageService.langDir === 'rtl'">$</span>
+                        </ion-text>
+                        </ion-col>
+                        <ion-col size="12" class="ion-no-padding">
+                          <ion-text color="primary" *ngIf="Item.DiscountAmount">{{ 'Discount'|translate }}:
+                            <span *ngIf="languageService.langDir === 'ltr'">$</span>{{Item.DiscountAmount ? Item.DiscountAmount : null | number: '.2'}}<span *ngIf="languageService.langDir === 'ltr'">$</span>
+                          </ion-text>
+                        </ion-col>
+                      </ion-row>
+                    </ion-label>
+                  </ion-item>
+
+                </ion-col>
+                <ion-col size="2">
+                  <ion-button  class="ion-no-padding" fill="clear" color="dark" >
+                    <span [ngClass]="{'disabledEditIcon': !Item.AllowPartial && !Item.VariablePriced }" *ngIf="i !== enableInput" class="cartEdit-icn-list-img" (click)="editAmount(i,Item)">
+                        <img slot="icon-only" src="../../../assets/icon/icn_edit.svg">
+                    </span>
+                    <span class="cartEdit-icn-list-img" *ngIf="i === enableInput" (click)="saveAmount('individualSelected',Item)">
+                        <ion-icon class="editIcon" ios="ios-checkmark" md="md-checkmark"></ion-icon>
+                    </span>
+                    <span class="cart-icn-list-img" *ngIf="i === enableInput" (click)="closeInputField()">
+                        <ion-icon class="cancelIcon" ios="ios-close" md="md-close"></ion-icon>
+                    </span>
+                    
+                    <span class="cart-icn-list-img" *ngIf="i !== enableInput" (click)="warningmsg('individualSelected',Item)">
+                        <img slot="icon-only" src="../../assets/icon/bin.svg">
+                    </span>
+                </ion-button>
+                  <!-- <ion-button fill="clear" color="dark" (click)="warningmsg('individualSelected',Item)">
+                    <ion-icon color='primary' name="trash" slot="icon-only"></ion-icon>
+                  </ion-button> -->
+                </ion-col>
+              </ng-container>
+            </ion-row>
+          </ng-container>
+          <form #form="ngForm">
+            <ion-item>
+              <ion-label position="floating">{{'Enter_email' | translate}}
+                <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ion-input aria-label="email" type="string" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,8}$" #email="ngModel"
+                required name="email" [(ngModel)]="Email"></ion-input>
+            </ion-item>
+            <ion-text color="danger" class="error-message" *ngIf="!email.valid && email.touched">
+              <p class="error-text-message">{{'email_error_message' | translate}}</p>
+            </ion-text>
+            <ion-item>
+              <ion-label position="floating">{{'enter_cc' | translate}}
+              </ion-label>
+              <ion-input aria-label="CCEmail" type="string" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,8}$" #ccEmail="ngModel"
+                name="ccEmail" [(ngModel)]="CCEmail"></ion-input>
+
+            </ion-item>
+            <ion-text color="danger" class="error-message" *ngIf="!ccEmail.valid && ccEmail.touched">
+              <p class="error-text-message">{{'email_error_message' | translate}}</p>
+            </ion-text>
+          </form>
+
+          <ion-row class="ion-margin-top">
+            <ion-col size="12">
+              <ion-text>
+                <h4 class="ion-text-center checkout-label amount">{{'Cart_amount' | translate}}: <span><span *ngIf="languageService.langDir === 'ltr'">$</span>{{TotalAmountDue
+                    | number : '.2'}}<span *ngIf="languageService.langDir === 'rtl'">$</span></span></h4>
+              </ion-text>
+            </ion-col>
+            <ion-col size="12" style="padding: 0;margin-bottom: 16px;">
+              <ion-button color='secondary' style="width: 100%;padding: 0px 16px;" expand="block"
+                class="full-width ion-padding-end" (click)="onContinue(cartItems)"
+                [disabled]="cartItems.length == 0 || form.invalid"> <!--(TotalAmountDue == 0) ||  -->
+                {{'Checkout' | translate}}
+              </ion-button>
+              <ion-row class="back-login-row" style="margin-top: -4%;">
+                <ion-col size="12">
+                  <p class="back-login-para" >
+                    <a (click)="backtoLogin()" class="back-to-login">{{'Back_To_Login' | translate}}</a>
+                  </p>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

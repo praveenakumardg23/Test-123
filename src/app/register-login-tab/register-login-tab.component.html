@@ -1,0 +1,51 @@
+<ion-grid >
+    <ion-grid>
+        <ion-row dir="ltr">
+            <ion-col size="5">
+                <img src="/assets/images/new-logo.png" style="width: 90%;margin-top: 7px;">
+            </ion-col>
+            <ion-col size="5">
+               
+                <ion-button class="ion-float-right langBtn1" fill="clear" color="light"  (click)="languageChange()">
+                    <!-- <ion-icon slot="icon-only" name="globe" color="light" class="custom-globe"></ion-icon> -->
+                    <img style="width: 60%;" src="../../../assets/icon/lang.svg">
+                    <ion-icon slot="end" name="caret-down" color="light" mode="md" class="custom-caret"></ion-icon>
+
+                </ion-button>
+                    
+               
+            </ion-col>
+            <ion-col size="2">
+                <ion-button   class="ion-float-right langBtn" fill="clear" color="light" (click)="presentPopover()">
+                    <!-- <ion-icon slot="icon-only"  name="menu" color="light" class="custom-caret"></ion-icon> -->
+                    <img src="../../assets/icon/login-hamburger.svg">
+                </ion-button>
+                
+            </ion-col>
+        </ion-row>
+        <ion-row  style="margin-top: 15px;" dir="{{languageService.langDir}}">
+            <ion-col size="6" >
+               <h4 class='nopadding' style="color:#3CBFAE">{{'ImgMsg' |translate}}</h4>
+            </ion-col>
+            <ion-col size="6">
+                <ul class='nopadding'>
+                    <li class='imgPclass'>{{'ImgMsg1' |translate}}</li>
+                    <li class='imgPclass'>{{'ImgMsg2' |translate}}</li>
+                    <li class='imgPclass'>{{'ImgMsg4' |translate}}</li>
+                    <li class='imgPclass'>{{'ImgMsg3' |translate}}</li>
+                         
+                  </ul>
+               
+            </ion-col>
+        </ion-row>
+
+        <!-- <ion-row class="main-header" *ngIf="activeTab < 4">
+            <ion-col size="6" class="nav-btn">
+                <a [ngClass]="{'tab-bar' : screenName=='login'}" [ngStyle]="{'color': screenName!='login' ? '#c7c4c4' : ''}" (click)="switchTo('login')">{{'login_tab' | translate}}</a>
+            </ion-col>
+            <ion-col size="6" class="nav-btn">
+                <a [ngClass]="{'tab-bar' : screenName=='register'}" [ngStyle]="{'color' : screenName!='register' ? '#c7c4c4' : ''}" (click)="switchTo('register')">{{'register' | translate}}</a>
+            </ion-col>
+        </ion-row> -->
+    </ion-grid>
+</ion-grid>

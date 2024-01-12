@@ -1,0 +1,263 @@
+<ion-header dir="ltr">
+    <ion-toolbar color="primary" style="color: #fff;">
+        <ion-title>{{ 'notify' | translate }}</ion-title>
+        <ion-buttons slot="start">
+            <!-- <ion-back-button icon="home" text="" (click)="onGotoDashboard(f)"></ion-back-button> -->
+            <ion-button (click)="onGotoDashboard(f)">
+                <img class="cart-icn-img" src="../../assets/icon/home-icn.svg">
+            </ion-button>
+            <ion-button (click)="onLangChange()">
+                <!-- <ion-icon slot="icon-only" name="globe"></ion-icon> -->
+                <img class="cart-icn-img" src="../../../assets/icon/lang.svg">
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button (click)="onGotoCart(f)" *ngIf="phase== 'dashboard'" [disabled]="cartCount == 0">
+                <!-- <ion-icon slot="icon-only" name="cart"></ion-icon> -->
+                <img class="cart-icn-img" src="../../assets/icon/cart.svg">
+                <ion-badge class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</ion-badge>
+            </ion-button>
+            <ion-button *ngIf="phase== 'registrationPhase'" (click)="onLogout(f)">
+                <!-- <ion-icon slot="icon-only" name="log-out"></ion-icon> -->
+                <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end" *ngIf="phase == 'dashboard'" (click)="onMenuClick(f,'notification')">
+            <ion-menu-button autoHide="false">
+                <img class="hamburger-icn-img" src="../../assets/icon/hamburger-menu.png">
+            </ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content class='ion-content'>
+    <ion-grid class="custom-cover">
+        <ion-row class="main-row">
+            <ion-col size="12" class="ps-card">
+                <ion-row class="ion-justify-content-center ion-text-center" *ngIf="phase == 'registrationPhase'">
+                    <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(1)">
+                        <ion-icon name="create" class="tab-icon" color="medium"></ion-icon>
+                        <p class="tab-header-name" style="color:#989aa2;">{{'register' | translate}}</p>
+                        <ion-ripple-effect type="unbounded" color="secondary"></ion-ripple-effect>
+                    </ion-col>
+                    <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(4)">
+                        <ion-icon name="person-add" class="tab-icon" color="medium"></ion-icon>
+                        <p class="tab-header-name" style="color:#989aa2;">{{'student' | translate}}</p>
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-col>
+                    <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(5)">
+                        <ion-icon name="card" class="tab-icon" color="medium"></ion-icon>
+                        <p class="tab-header-name" style="color:#989aa2;">{{'payment' | translate}}</p>
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-col>
+                    <ion-col size="3" class="ion-activatable" tappable (click)="changeTabTo(6)">
+                        <ion-icon name="notifications" class="tab-icon" color="secondary"></ion-icon>
+                        <p class="tab-header-name" style="color:#3CBFAE;">{{'notification' | translate}}</p>
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-col>
+                </ion-row>
+                <ion-row class="ion-margin-vertical" *ngIf="phase == 'registrationPhase'">
+                    <ion-progress-bar value="1" color="success"></ion-progress-bar>
+                </ion-row>
+                <form #f="ngForm">
+                    <ion-list>
+                        <ion-item-group>
+                            <!-- <ion-item-divider class="ion-margin-vertical list-header" color="secondary">
+                            <ion-label>Meal Account</ion-label>
+                        </ion-item-divider> -->
+                            <ng-container *ngIf="districtFeaturelist?.Lunch">
+                                <ion-text class="notification-sub-header"  color='secondary'>
+                                    <h3 >
+                                        {{ 'notify_mealbal' | translate }}
+                                        <span class="ion-activatable">
+                                        <ion-icon color='primary' name="information-circle" (click)="infoAlert('meal')"></ion-icon>
+                                        <ion-ripple-effect></ion-ripple-effect>
+                                    </span>
+                                    </h3>
+                                    <!-- <ion-button expand="block" color="secondary" fill="clear" (click)="infoAlert()" style="width: 30%;display: inline-block;">
+                                <ion-icon slot="icon-only" name="information-circle"></ion-icon>
+                            </ion-button> -->
+                                </ion-text>
+                                <ion-item lines="none" style="width: 100%;">
+                                    <!-- <ion-label>{{ 'notify_bal' | translate }}
+                                    </ion-label> -->
+                                    <ion-select label="{{ 'notify_bal' | translate }}" class="notification-down" toggleIcon="caret-down-sharp" (ionChange)="onMealBalanceSelection($event,notifications.LowMealBalance)" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required name="AccountBalance" #AccountBalance="ngModel" [(ngModel)]="notifications.AccountBalance">
+                                        <ion-select-option *ngFor="let lAccountBalance of lunchAccountBalance" [value]="lAccountBalance.value">
+                                            {{lAccountBalance.option}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-item lines="none">
+                                    <!-- <ion-label>{{ 'notify_lw_mealbal' | translate }}</ion-label> -->
+                                    <ion-toggle class="toggleWidth" color="secondary" slot="end" name="LowMealBalance" #LowMealBalance="ngModel" checked="notifications.LowMealBalance" (ionChange)="ontoggleActiveSw($event.detail,notifications.AccountBalance,'Low Meals Balance',f)" [(ngModel)]="notifications.LowMealBalance">{{ 'notify_lw_mealbal' | translate }}</ion-toggle>
+                                </ion-item>
+
+                                <p></p>
+                                <ion-item lines="none">
+                                    <!-- <ion-label>{{ 'Day_of_Month' | translate }}
+                                    </ion-label> -->
+                                    <ion-select label="{{ 'Day_of_Month' | translate }}" class="notification-down" toggleIcon="caret-down-sharp" (ionChange)="onMealDayofMonthSelection($event,'change')" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required checked="notifications.DayofMonth" name="DayofMonth" #DayofMonth="ngModel" [(ngModel)]="notifications.DayofMonth">
+                                        <ion-select-option *ngFor="let bRemainder of balanceRemainder| slice:0:29" [value]="bRemainder.value">
+                                            {{ bRemainder.option | translate}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-item lines="none">
+                                    <!-- <ion-label>{{ 'notify_balrem' | translate }}</ion-label> -->
+                                    <ion-toggle class="toggleWidth" color="secondary" slot="end" name="BalanceReminder" #BalanceReminder="ngModel" (ionChange)="ontoggleActiveSw($event.detail,notifications.DayofMonth,'Meals Account Balance Remainder',f)" [(ngModel)]="notifications.BalanceReminder">{{ 'notify_balrem' | translate }}</ion-toggle>
+                                </ion-item>
+
+                            </ng-container>
+                            <!-- <ion-item-divider class="ion-margin-vertical list-header" color="secondary">
+                            <ion-label>Meal Account</ion-label>
+                        </ion-item-divider> -->
+
+                            <!-- <ion-item-divider class="ion-margin-vertical list-header" color="secondary">
+                            <ion-label>Fees</ion-label>
+                        </ion-item-divider> -->
+                            <ion-text class="notification-sub-header" color='secondary'>
+                                <h3>
+                                    {{ 'notify_fee' | translate }}
+                                    <span class="ion-activatable">
+                                        <ion-icon name="information-circle" color='primary' (click)="infoAlert('fees')"></ion-icon>
+                                        <ion-ripple-effect></ion-ripple-effect>
+                                    </span>
+                                </h3>
+
+                            </ion-text>
+                            <ion-item lines="none">
+                                <!-- <ion-label>{{ 'Days_Notice' | translate }}
+                                </ion-label> -->
+                                <ion-select label="{{ 'Days_Notice' | translate }}" class="notification-down" toggleIcon="caret-down-sharp" (ionChange)="onFeesDaysNotice1Selection($event,'change')" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required name="DaysNoticeDue" #DaysNoticeDue="ngModel" [(ngModel)]="notifications.DaysNoticeDue">
+                                    <ion-select-option *ngFor="let dNotice of daysNotice" [value]="dNotice.value">
+                                        {{dNotice.option}}
+                                    </ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                            <ion-item lines="none">
+                                <!-- <ion-label>{{ 'notify_feedue' | translate }}</ion-label> -->
+                                <ion-toggle class="toggleWidth" color="secondary" slot="end" name="FeeDue" #FeeDue="ngModel" [(ngModel)]="notifications.FeeDue" (ionChange)="ontoggleActiveSw($event.detail,notifications.DaysNoticeDue,'Fee Due',f)">
+                                    {{ 'notify_feedue' | translate }}</ion-toggle>
+                            </ion-item>
+
+                            <p></p>
+                            <ion-item lines="none">
+                                <!-- <ion-label>{{ 'Days_Notice' | translate }}
+                                </ion-label> -->
+                                <ion-select label="{{ 'Days_Notice' | translate }}" class="notification-down" toggleIcon="caret-down-sharp" (ionChange)="onFeesDaysNotice2Selection($event,'change')" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required name="DaysNoticePayment" #DaysNoticePayment="ngModel" [(ngModel)]="notifications.DaysNoticePayment">
+                                    <ion-select-option *ngFor="let dNotice of daysNotice" [value]="dNotice.value">
+                                        {{dNotice.option}}
+                                    </ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                            <ion-item lines="none">
+                                <ion-label>{{ 'notify_upcmg_pay' | translate }}</ion-label>
+                                <ion-toggle color="secondary" slot="end" name="UpcomingPayment" #UpcomingPayment="ngModel" (ionChange)="ontoggleActiveSw($event.detail,notifications.DaysNoticePayment,'Upcoming Payment',f)" [(ngModel)]="notifications.UpcomingPayment"></ion-toggle>
+                            </ion-item>
+
+                            <p></p>
+                            <ion-item lines="none">
+                                <!-- <ion-label>{{ 'Days_Overdue' | translate }}
+                                </ion-label> -->
+                                <ion-select label="{{ 'Days_Overdue' | translate }}" class="notification-down" toggleIcon="caret-down-sharp" (ionChange)="onFeesDaysOverDueSelection($event,'change')" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required name="DaysOverdueFee" #DaysOverdueFee="ngModel" [(ngModel)]="notifications.DaysOverdueFee">
+                                    <ion-select-option *ngFor="let dNotice of daysNotice" [value]="dNotice.value">
+                                        {{dNotice.option}}
+                                    </ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                            <ion-item lines="none">
+                                <!-- <ion-label>{{ 'Overdue_Fee' | translate }}</ion-label> -->
+                                <ion-toggle class="toggleWidth" color="secondary" slot="end" name="OverdueFee" #OverdueFee="ngModel" (ionChange)="ontoggleActiveSw($event.detail,notifications.DaysOverdueFee,'Overdue Fee',f)" [(ngModel)]="notifications.OverdueFee">{{ 'Overdue_Fee' | translate }}</ion-toggle>
+                            </ion-item>
+                            <!-- <ion-item-divider class="ion-margin-vertical list-header" color="secondary">
+                            <ion-label>Monthly Statement</ion-label>
+                        </ion-item-divider> -->
+                            <ng-container *ngIf="districtFeaturelist?.SourceAccount || patronSourceAccountLength > 0">
+                                <ion-text class="notification-sub-header" color='secondary'>
+                                    <h3>
+                                        {{ 'notify_fndacc' | translate }}
+                                        <span class="ion-activatable">
+                                            <ion-icon name="information-circle" color='primary' (click)="infoAlert('fund')"></ion-icon>
+                                            <ion-ripple-effect></ion-ripple-effect>
+                                        </span>
+                                    </h3>
+
+                                </ion-text>
+                                <ion-item lines="none" style="width: 100%;">
+                                    <!-- <ion-label>{{ 'notify_bal' | translate }}
+                                    </ion-label> -->
+                                    <ion-select label="{{ 'notify_bal' | translate }}" class="notification-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required name="FundAccountBalance" #FundAccountBalance="ngModel" [(ngModel)]="notifications.FundAccountBalance" (ionChange)="onFundBalanceSelection($event,'change')">
+                                        <ion-select-option *ngFor="let lAccountBalance of lunchAccountBalance" [value]="lAccountBalance.value">
+                                            {{lAccountBalance.option}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-item lines="none">
+                                    <ion-label>{{ 'notify_lw_fndbal' | translate }}</ion-label>
+                                    <ion-toggle color="secondary" slot="end" name="LowFundBalance" #LowFundBalance="ngModel" checked="notifications.LowFundBalance" (ionChange)="ontoggleActiveSw($event.detail,notifications.FundAccountBalance,'Low Fund Balance',f)" [(ngModel)]="notifications.LowFundBalance"></ion-toggle>
+                                </ion-item>
+
+                                <p></p>
+                                <ion-item lines="none">
+                                    <!-- <ion-label>{{ 'Day_of_Month' | translate }}
+                                    </ion-label> -->
+                                    <ion-select label="{{ 'Day_of_Month' | translate }}" class="notification-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required (ionChange)="onFundDayofMonthSelection($event,'change')" checked="notifications.FundDayofMonth" name="FundDayofMonth" #FundDayofMonth="ngModel" [(ngModel)]="notifications.FundDayofMonth">
+                                        <ion-select-option *ngFor="let bRemainder of balanceRemainder | slice:0:29" [value]="bRemainder.value">
+                                            {{ bRemainder.option | translate }}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-item lines="none">
+                                    <!-- <ion-label>{{ 'notify_balrem' | translate }}</ion-label> -->
+                                    <ion-toggle class="toggleWidth" labelPlacement="start" color="secondary" slot="end" name="FundBalanceReminder" #FundBalanceReminder="ngModel" (ionChange)="ontoggleActiveSw($event.detail,notifications.FundDayofMonth,'Fund Account Balance Remainder',f)" [(ngModel)]="notifications.FundBalanceReminder">{{ 'notify_balrem' | translate }}</ion-toggle>
+                                </ion-item>
+                            </ng-container>
+                            <ion-text class="notification-sub-header" color='secondary'>
+                                <h3>
+                                    {{ 'notify_mntlystmt' | translate }}
+                                    <span class="ion-activatable">
+                                        <ion-icon name="information-circle" color='primary' (click)="infoAlert('statement')"></ion-icon>
+                                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                                    </span>
+                                </h3>
+                            </ion-text>
+                            <ion-item lines="none">
+                                <!-- <ion-label>{{ 'Day_of_Month' | translate }}
+                                </ion-label> -->
+                                <ion-select label="{{ 'Day_of_Month' | translate }}" class="notification-down" toggleIcon="caret-down-sharp" [okText]="'Continue' | translate" [cancelText]="'cancel' | translate" required name="DayofMonthStatement" (ionChange)="onMonthlyDayofMonthSelection($event,'change')" #DayofMonthStatement="ngModel" [(ngModel)]="notifications.DayofMonthStatement">
+                                    <ion-select-option *ngFor="let bRemainder of balanceRemainder | slice:0:29" [value]="bRemainder.value">
+                                        {{ bRemainder.option | translate }}
+                                    </ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                            <ion-item lines="none">
+                                <!-- <ion-label>{{ 'notify_mntlystmt' | translate }}</ion-label> -->
+                                <ion-toggle class="toggleWidth" labelPlacement="start" color="secondary" slot="end" name="MonthlyStatement" #MonthlyStatement="ngModel" (ionChange)="ontoggleActiveSw($event.detail,notifications.DayofMonthStatement,'Monthly Statement',f)" [(ngModel)]="notifications.MonthlyStatement">{{ 'notify_mntlystmt' | translate }}</ion-toggle>
+                            </ion-item>
+
+                        </ion-item-group>
+                    </ion-list>
+                    <ion-row>
+                        <ion-col size="4">
+                            <ion-button expand="block" color="secondary" fill="outline" style="width: 100%;" (click)="onBack()" *ngIf="phase == 'registrationPhase'">
+                                <ion-icon slot="icon-only" name="arrow-round-back" style="margin-right: 5px;">
+                                </ion-icon>
+                            </ion-button>
+                        </ion-col>
+                        <ion-col size="8">
+                            <ion-button expand="block" style="width: 100%;" (click)="ResetAll(f)">
+                                {{ 'rst' | translate }}</ion-button>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="phase == 'registrationPhase'">
+                        <ion-button expand="block" style="width: 100%;" (click)="Continue()">
+                            {{ 'Continue' | translate }}</ion-button>
+                    </ion-row>
+                    <ion-row *ngIf="phase == 'dashboard'">
+                        <ion-button expand="block" style="width: 100%;" color='secondary' (click)="updateNotification(f)" [disabled]="updateButton">{{ 'updt' | translate }}
+                        </ion-button>
+                    </ion-row>
+                </form>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
