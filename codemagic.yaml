@@ -1,0 +1,34 @@
+scripts:
+    - name: Install npm dependencies and update Cordova version
+      script: | 
+        npm install
+        npm ci # equivalent of npm install for CI systems.
+               # Requires package-lock.json or npm-shrinkwrap.json to be present
+        cvm install 9.0.0
+        cvm use 9.0.0 
+    - name: Setup Cordova Android platform
+      script: | 
+        ionic cordova platform remove android --nosave
+        ionic cordova platform add android \
+          --confirm \
+          --no-interactive \
+          --noresources 
+    - name: Build Android Cordova App
+      script: | 
+        ionic cordova build android \
+          --release \
+          --no-interactive \
+          --prod \
+          --device
+    - name: Sign APK
+      script: | 
+        APK_PATH=$(find platforms/android/app/build/outputs/apk/release -name "*.apk" | head -1)
+        jarsigner \
+          -sigalg SHA1withRSA \
+          -digestalg SHA1 \
+          -keystore $CM_KEYSTORE_PATH \
+          -storepass $CM_KEYSTORE_PASSWORD \
+          -keypass $CM_KEY_PASSWORD \
+          $APK_PATH $CM_KEY_ALIAS         
+  artifacts:
+    - platforms/android/app/build/outputs/**/*.apk
