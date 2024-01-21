@@ -30,5 +30,5 @@ scripts:
           -storepass $CM_KEYSTORE_PASSWORD \
           -keypass $CM_KEY_PASSWORD \
           $APK_PATH $CM_KEY_ALIAS         
-  artifacts:
+artifacts:
     - platforms/android/app/build/outputs/**/*.apk
