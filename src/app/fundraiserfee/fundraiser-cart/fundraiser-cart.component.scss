@@ -209,3 +209,8 @@ input:focus, textarea:focus, select:focus{
     width: 15px;
     margin-right: 10PX;
 }
+
+ion-item::part(native){
+    padding:0px 10px;
+   
+}

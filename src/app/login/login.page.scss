@@ -64,13 +64,13 @@ hr{
 
 .eye-icn{
     margin: auto;
-    margin-top: 15%;
+    margin-top: 8%;
     height: 20%;
 }
 
 .hidden-eye{
     margin: auto;
-    margin-top: 15%;
+    margin-top: 8%;
     height: 26%;
 }
 
@@ -154,4 +154,9 @@ hr{
     height: 46%;
     width: 6%;
     margin-bottom: 1%;
+}
+
+ion-item::part(native){
+    padding:0px 10px;
+   
 }

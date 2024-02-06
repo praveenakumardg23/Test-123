@@ -6,9 +6,10 @@ import { DataService } from './../services/data/data.service';
 import { Component, OnInit, Input, ElementRef, Attribute } from '@angular/core';
 import { LanguageService } from './../services/language/language.service';
 import { Router } from '@angular/router';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { UseNewCardPage } from './use-new-card/use-new-card.page';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-cart',
@@ -53,6 +54,8 @@ export class CartPage implements OnInit {
     private appConfiguration: AppConfiguration,
     private toastController: ToastController,
     private el: ElementRef,
+    private storage: Storage,
+    private platform: Platform,
   ) { }
 
   ngOnInit() {
@@ -94,7 +97,7 @@ export class CartPage implements OnInit {
     };
     this.dataService.getCartItemsWithMMOStatus(payload)
       .subscribe(
-        (response: any) => {
+        async (response: any) => {
           // if (response.body.APIStatus === 'ERROR_GETTING_MMO_ORDEREXPIRATIONSTATUS') {
           //   this.alertService.failureToast(this.translate.instant('Error_cart_screen_1'));
           // }
@@ -107,7 +110,7 @@ export class CartPage implements OnInit {
           const mealPaymentsModifiedArray = [];
           const fundraisersModifiedArray = [];
           this.isAdjustmentOccurred = response.body.AdjustmentOccurred;
-          cartItems.forEach((cartItem) => {
+          const promises = cartItems.map(async (cartItem) => {
             cartItem.AssignedFees.forEach((Payment) => {
               const obj = {
                 "AllowPartial":Payment.AllowPartial,
@@ -258,17 +261,25 @@ export class CartPage implements OnInit {
               };
               sourceAccountModifiedArray.push(obj);
             });
-
-            const PatronAccountBalance = JSON.parse(localStorage.getItem('PatronAccountBalances'));
+            let PatronAccountBalance =[];
+            if(this.platform.is('ios')){
+               PatronAccountBalance = JSON.parse(await this.storage.get('PatronAccountBalances'));
+            }else{
+               PatronAccountBalance = JSON.parse(localStorage.getItem('PatronAccountBalances'));
+            }
+            
 
             cartItem.MealPayments.forEach((Payment) => {
               let patronBalance;
               // const balance = patronBalance && patronBalance.PreOrderBalance ? 10: 10;
-              for (let i = 0; i < PatronAccountBalance.length; i++) {
-                if (PatronAccountBalance[i].IntPatronId === cartItem.IntPatronId && Payment.IsPreorder) {
-                  patronBalance = PatronAccountBalance[i];
+              if(PatronAccountBalance.length>0){
+                for (let i = 0; i < PatronAccountBalance.length; i++) {
+                  if (PatronAccountBalance[i].IntPatronId === cartItem.IntPatronId && Payment.IsPreorder) {
+                    patronBalance = PatronAccountBalance[i];
+                  }
                 }
               }
+              
 
               // this.PatronAccountBalances.forEach(element => {
               //   if(element.IntPatronId == cartItem.IntPatronId && Payment.IsPreorder)
@@ -330,6 +341,7 @@ export class CartPage implements OnInit {
           } else if (response.body.Preorder && !response.body.Preorder.HasValidItems) {
             this.cartWarnings('mmoexpire');
           }
+          await Promise.all(promises);
           this.assignedFeesCartItems = assignedFeesPaymentsModifiedArray;
           this.optionalFeesCartItems = optionalFeesPaymentsModifiedArray;
           this.fundraisersCartItems = fundraisersModifiedArray;
@@ -590,7 +602,12 @@ export class CartPage implements OnInit {
               }
             }
             this.PatronAccountBalances.push(patronsMealdetails);
+            if(this.platform.is('ios')){
+              this.storage.set('PatronAccountBalances', JSON.stringify(this.PatronAccountBalances));
+           }else{
             localStorage.setItem('PatronAccountBalances', JSON.stringify(this.PatronAccountBalances));
+           }
+            
           }
         });
     this.sharedService.refreshCart.subscribe((refreshCartFlag) => {

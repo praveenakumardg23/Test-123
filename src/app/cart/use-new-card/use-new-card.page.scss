@@ -2,3 +2,9 @@
     display: flex;
     align-items: center;
 }
+
+
+ion-item::part(native){
+    padding:0px 10px;
+   
+}

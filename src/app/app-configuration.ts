@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 
 // Testing environment - Rashmika
 export class AppConfiguration {
-    public environment = "Alpha3";  // Local , Dev , Beta1, Beta2 , Demo , Alpha3 , alpha5, Prod, Build_ENVIRONMENT_VALUE
+    public environment = "Demo";  // Local , Dev , Beta1, Beta2 , Demo , Alpha3 , alpha5, Prod, Build_ENVIRONMENT_VALUE
     apiBaseUrl: string;
     defaultTokenValue: string;
     tokenValue: string;
@@ -36,7 +36,7 @@ export class AppConfiguration {
             this.postalcode_endpoint = "https://dev-velocity.i3verticals.com/v2/Public/postalcodes/";
             this.postalcode_token = "5d483d55b4f3fd432c55676eekVIhetQ0buAlqtccq59p";
             this.event_url = "https://www.payschoolsevents.com/events/home";
-            this.app_version = "2023.12.17.PSCM2";
+            this.app_version = "2024.01.04.PSCM2";
             this.mmoUrl = 'https://dev.mymealorder.com/login.aspx';
             this.mmoApiBaseUrl ='https://dev.mymealorder.com/';
         }
@@ -81,7 +81,7 @@ export class AppConfiguration {
             this.postalcode_endpoint = "https://dev-velocity.i3verticals.com/v2/Public/postalcodes/";
             this.postalcode_token = "5d483d55b4f3fd432c55676eekVIhetQ0buAlqtccq59p";
             this.event_url = "https://www.payschoolsevents.com/events/home";
-            this.app_version = "2023.11.21.B7";
+            this.app_version = "2024.02.02.PSCM14";
             this.mmoUrl = 'https://mymealorder.com/login.aspx';
             this.mmoApiBaseUrl = 'https://mymealorder.com/';
         }
@@ -95,7 +95,7 @@ export class AppConfiguration {
             this.recoverPasswordConfirmationUrl = 'https://alpha3.payschoolscentral.com/#/signup/activateaccount';
             this.quikappsBaseUrl = 'https://alpha3.payschoolscentral.com';
             this.event_url = "https://www.payschoolsevents.com/events/home";
-            this.app_version = "2024.01.04.PS14";
+            this.app_version = "2024.01.29.PS14";
             this.mmoUrl = 'https://dev.mymealorder.com/login.aspx';
             this.mmoApiBaseUrl ='https://dev.mymealorder.com/';
         }
@@ -121,7 +121,7 @@ export class AppConfiguration {
             this.postalcode_endpoint = "https://dev-velocity.i3verticals.com/v2/Public/postalcodes/";
             this.postalcode_token = "5d483d55b4f3fd432c55676eekVIhetQ0buAlqtccq59p";
             this.event_url = "https://www.payschoolsevents.com/events/home";
-            this.app_version = "2023.11.28.PSCM13";
+            this.app_version = "2024.01.16.PSCM14";
             this.mmoUrl = 'https://mymealorder.com/login.aspx';
             this.mmoApiBaseUrl = 'https://mymealorder.com/';
         }

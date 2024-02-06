@@ -52,8 +52,9 @@
         <ion-col size="10" class='content'>
           <span class="highlight">{{documentName? documentName:'--'}}</span>
         </ion-col>
-        <ion-col *ngIf="!downloading" class='content' (click)="downloadFile(fee)">
-          <ion-icon name="md-download" size="large"></ion-icon>
+        <ion-col *ngIf="!downloading" class='content' (click)="downloadFile(fee)" >
+          <!-- <ion-icon name="download" size="large" class="iconMargin"></ion-icon> -->
+          <ion-icon name="arrow-down" class="downloadIcon"></ion-icon>
         </ion-col>
         <ion-col *ngIf="downloading" class='content'>
           <!-- <ion-progress-bar color="secondary" type="indeterminate"></ion-progress-bar> -->

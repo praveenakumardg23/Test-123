@@ -13,12 +13,14 @@
             <ion-row class="main-row">
                 <ion-col size="12" class="ps-card3" style='padding-top: 0px;padding-bottom: 0px;'>
                     <ion-item>
-                        <ion-label position="floating">{{'email' | translate}}
+                        <!-- <ion-label position="floating">{{'email' | translate}}
                             <ion-text color="danger">*</ion-text>
-                        </ion-label>
-                        <ion-input aria-label="Email" type="string" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,8}$" required
+                        </ion-label> -->
+                        <ion-input  labelPlacement="floating" aria-label="Email" type="string" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,8}$" required
                             name="username" #username="ngModel" [(ngModel)]="Username"
-                            (ionBlur)="processemail(Username)"></ion-input>
+                            (ionBlur)="processemail(Username)">
+                            <div slot="label">{{'email' | translate}} <ion-text color="danger">*</ion-text></div>
+                        </ion-input>
                     </ion-item>
                     <ion-text color="danger" class="error-message" *ngIf="username.touched && Username?.length == 0 ">
                         <p class="error-text-message">{{'email_req_message' | translate}}</p>
@@ -27,10 +29,12 @@
                         <p class="error-text-message">{{'email_error_message' | translate}}</p>
                     </ion-text>
                     <ion-item>
-                        <ion-label position="floating">{{'password' | translate}}
+                        <!-- <ion-label position="floating">{{'password' | translate}}
                             <ion-text color="danger">*</ion-text>
-                        </ion-label>
-                        <ion-input aria-label="password" type="{{type}}" name="password" #password="ngModel" required ngModel [(ngModel)]="userPassword"></ion-input>
+                        </ion-label> -->
+                        <ion-input labelPlacement="floating" aria-label="password" type="{{type}}" name="password" #password="ngModel" required ngModel [(ngModel)]="userPassword">
+                            <div slot="label">{{'password' | translate}} <ion-text color="danger">*</ion-text></div>
+                        </ion-input>
                        
                         <img class='eye-icn'*ngIf="showPass" slot="end" src="../../assets/icon/show-eye.svg" alt="" (click)="showPassword()"
                             name="eye">

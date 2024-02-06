@@ -100,10 +100,10 @@
                                 </ion-item>
                             </ion-col>
                             <!-- <ion-text color="danger" class="error-message" *ngIf="!cardType.valid && cardType.touched">
-                            <p class="error-text-message4">Payment type is required.</p>
+                            <p class="error-text-message2">Payment type is required.</p>
                         </ion-text> -->
                             <ng-container *ngIf="cardType == 1">
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item>
                                         <ion-label position="floating">{{ 'nick_nm' | translate }}
                                             <ion-text color="danger">*</ion-text>
@@ -112,9 +112,9 @@
                                     </ion-item>
                                 </ion-col>
                                 <ion-text color="danger" class="error-message" *ngIf="!NickName.valid && NickName.touched">
-                                    <p class="error-text-message4">{{ 'nick_nm_req' | translate }}.</p>
+                                    <p class="error-text-message2">{{ 'nick_nm_req' | translate }}.</p>
                                 </ion-text>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item>
                                         <ion-label position="floating">{{ 'card_no' | translate }}
                                             <ion-text color="danger">*</ion-text>
@@ -124,14 +124,14 @@
                                     </ion-item>
                                 </ion-col>
                                 <ion-text color="danger" class="error-message" *ngIf="!Number.valid && Number.touched">
-                                    <p class="error-text-message4" *ngIf="card.Number.length == 0">
+                                    <p class="error-text-message2" *ngIf="card.Number.length == 0">
                                         {{ 'card_no_req' | translate }}.</p>
-                                    <p class="error-text-message4" *ngIf="card.Number && maxLength == 16">
+                                    <p class="error-text-message2" *ngIf="card.Number && maxLength == 16">
                                         {{ 'Enter_16digit_card_number' | translate }}</p>
-                                    <p class="error-text-message4" *ngIf="card.Number && maxLength == 15">
+                                    <p class="error-text-message2" *ngIf="card.Number && maxLength == 15">
                                         {{ 'Enter_15digit_card_number' | translate }}</p>
                                 </ion-text>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item>
                                         <ion-label position="floating">{{ 'exp_date' | translate }}
                                             <ion-text color="danger">*</ion-text>
@@ -140,12 +140,12 @@
                                     </ion-item>
                                 </ion-col>
                                 <ion-text color="danger" class="error-message" *ngIf="!expdate.valid && expdate.touched">
-                                    <p class="error-text-message4">{{ 'exp_req' | translate }}.</p>
+                                    <p class="error-text-message2">{{ 'exp_req' | translate }}.</p>
                                 </ion-text>
                                 <ion-text color="danger" class="error-message" *ngIf="card.expdate && isExpiredDateInvalid">
-                                    <p class="error-text-message4">{{ 'exp_req1' | translate }}.</p>
+                                    <p class="error-text-message2">{{ 'exp_req1' | translate }}.</p>
                                 </ion-text>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item>
                                         <ion-label position="floating">{{ 'cvv' | translate }}
                                             <ion-text color="danger">*</ion-text>
@@ -154,14 +154,14 @@
                                     </ion-item>
                                 </ion-col>
                                 <ion-text color="danger" class="error-message" *ngIf="!Cvv.valid && Cvv.touched">
-                                    <p class="error-text-message4" *ngIf="!card.Cvv">{{ 'Enter_valid_CVV' | translate }}
+                                    <p class="error-text-message2" *ngIf="!card.Cvv">{{ 'Enter_valid_CVV' | translate }}
                                     </p>
-                                    <p class="error-text-message4" *ngIf="card.Cvv && card.Cvv.length < 3 && maxLength == 16">
+                                    <p class="error-text-message2" *ngIf="card.Cvv && card.Cvv.length < 3 && maxLength == 16">
                                         {{ 'Enter_valid_3digit_CVV' | translate }}</p>
-                                    <p class="error-text-message4" *ngIf="card.Cvv && card.Cvv.length < 4 && maxLength == 15">
+                                    <p class="error-text-message2" *ngIf="card.Cvv && card.Cvv.length < 4 && maxLength == 15">
                                         {{ 'Enter_valid_4digit_CVV' | translate }}</p>
                                 </ion-text>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-row class="ion-justify-content-center">
                                         <ion-img class="ion-margin-top custom-img" src="assets/images/cc.png">
                                         </ion-img>
@@ -172,7 +172,7 @@
                                 <ion-img class="custom-img" src="assets/images/all credit cards.png"></ion-img>
                             </ion-row>
                         </ion-col> -->
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item lines="none" class="ion-margin-top">
                                         <ion-checkbox class="ion-margin-end custom-checkboxs" aria-label="TermsAndConditions" color="secondary" name="TermsAndConditions" checked="isTermsChecked" [(ngModel)]="isTermsChecked"></ion-checkbox>
                                         <ion-label class="ion-text-wrap terms-agree">{{'agree_terms' | translate}}
@@ -180,7 +180,7 @@
                                         </ion-label>
                                     </ion-item>
                                 </ion-col>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item lines="none">
                                         <ion-checkbox class="ion-margin-end custom-checkboxs" aria-label="card" color="secondary" *ngIf="cardType==1" checked="card.Default" name="Default" [(ngModel)]="card.Default"></ion-checkbox>
                                         <ion-label class="ion-text-wrap terms-agree">
@@ -189,7 +189,7 @@
                                 </ion-col>
                             </ng-container>
                             <ng-container *ngIf="cardType == 2">
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item>
                                         <ion-label position="floating">{{ 'nick_nm' | translate }}
                                             <ion-text color="danger">*</ion-text>
@@ -198,9 +198,9 @@
                                     </ion-item>
                                 </ion-col>
                                 <ion-text color="danger" class="error-message" *ngIf="!NickName.valid && NickName.touched">
-                                    <p class="error-text-message4">{{ 'nick_nm_req' | translate }}.</p>
+                                    <p class="error-text-message2">{{ 'nick_nm_req' | translate }}.</p>
                                 </ion-text>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item class="ion-margin-top">
                                         <ion-label position="floating">{{ 'acc_type' | translate }}
                                             <ion-text color="danger">*</ion-text>
@@ -214,9 +214,9 @@
                                     </ion-item>
                                 </ion-col>
                                 <ion-text color="danger" class="error-message" *ngIf="!AccountType.valid && AccountType.touched">
-                                    <p class="error-text-message4">{{ 'acc_type_req' | translate }}.</p>
+                                    <p class="error-text-message2">{{ 'acc_type_req' | translate }}.</p>
                                 </ion-text>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item>
                                         <ion-label position="floating">{{ 'acc_no' | translate }}
                                             <ion-text color="danger">*</ion-text>
@@ -226,9 +226,9 @@
                                     </ion-item>
                                 </ion-col>
                                 <ion-text color="danger" class="error-message" *ngIf="!AccountNumber.valid && AccountNumber.touched">
-                                    <p class="error-text-message4">{{ 'acc_no_req' | translate }}.</p>
+                                    <p class="error-text-message2">{{ 'acc_no_req' | translate }}.</p>
                                 </ion-text>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item>
                                         <ion-label position="floating">{{ 'rno' | translate }}
                                             <ion-text color="danger">*</ion-text>
@@ -237,15 +237,15 @@
                                     </ion-item>
                                 </ion-col>
                                 <ion-text color="danger" class="error-message" *ngIf="!RoutingNumber.valid && RoutingNumber.touched">
-                                    <p class="error-text-message4">{{ 'rno_req' | translate }}.</p>
+                                    <p class="error-text-message2">{{ 'rno_req' | translate }}.</p>
                                 </ion-text>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-row class="ion-justify-content-center">
                                         <ion-img class="ion-margin-top custom-img" src="assets/images/ach.png">
                                         </ion-img>
                                     </ion-row>
                                 </ion-col>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item lines="none" class="achterms">
                                         <ion-checkbox class="ion-margin-end custom-checkboxs" aria-label="TermsAndConditions" color="secondary" name="TermsAndConditions" checked="isTermsChecked" [(ngModel)]="isTermsChecked"></ion-checkbox>
                                         <ion-label class="ion-text-wrap terms-agree">
@@ -254,7 +254,7 @@
                                         </ion-label>
                                     </ion-item>
                                 </ion-col>
-                                <ion-col size="12">
+                                <ion-col size="12" class="ion-no-padding">
                                     <ion-item lines="none">
                                         <ion-checkbox class="ion-margin-end custom-checkboxs" aria-label="Default" color="secondary" *ngIf="cardType==2" checked="account.Default" name="Default" [(ngModel)]="account.Default"></ion-checkbox>
                                         <ion-label class="ion-text-wrap terms-agree">
@@ -262,13 +262,13 @@
                                     </ion-item>
                                 </ion-col>
                             </ng-container>
-                            <ion-col size="12" *ngIf="cardType != 0">
+                            <ion-col size="12" class="ion-no-padding" *ngIf="cardType != 0">
                                 <ion-row>
                                     <ion-button expand="block" color='secondary' class="full-width" [disabled]="!f.valid || !isTermsChecked || isExpiredDateInvalid" (click)="onAddPayment(f)">{{'Add_Payment_Method' | translate}}
                                     </ion-button>
                                 </ion-row>
                             </ion-col>
-                            <ion-col size="12">
+                            <ion-col size="12" class="ion-no-padding">
                                 <ion-row>
                                     <ion-button expand="block" class="full-width" (click)="onSkipOrContinue(f,'skip')" *ngIf="paymentMethods?.length == 0 && phase == 'registrationPhase'">
                                         {{ 'Skip' | translate }}
@@ -278,7 +278,7 @@
                                     </ion-button>
                                 </ion-row>
                             </ion-col>
-                            <ion-col size="12">
+                            <ion-col size="12" class="ion-no-padding">
                                 <ion-row>
                                     <ion-col size="4">
                                         <ion-button expand="block" color="secondary" fill="outline" class="full-width" (click)="onBack()" *ngIf="phase == 'registrationPhase'">

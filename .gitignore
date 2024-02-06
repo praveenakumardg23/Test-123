@@ -10,6 +10,7 @@ platforms/
 plugins/
 www/
 .angular/
+coverage/
 
 # Compiled Java class files
 *.class
