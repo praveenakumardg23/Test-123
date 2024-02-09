@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+declare var process: { env: { [key: string]: string | undefined; } };
 
 @Injectable({
     providedIn: 'root'
@@ -7,7 +8,7 @@ import { Injectable } from '@angular/core';
 
 // Testing environment - Rashmika
 export class AppConfiguration {
-    public environment = "Demo";  // Local , Dev , Beta1, Beta2 , Demo , Alpha3 , alpha5, Prod, Build_ENVIRONMENT_VALUE
+    public environment = process.env.BUILD_ENV || 'Dev';  // Local , Dev , Beta1, Beta2 , Demo , Alpha3 , alpha5, Prod, Build_ENVIRONMENT_VALUE
     apiBaseUrl: string;
     defaultTokenValue: string;
     tokenValue: string;
