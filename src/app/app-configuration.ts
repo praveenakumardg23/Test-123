@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-declare var process: { env: { [key: string]: string | undefined; } };
 
 @Injectable({
     providedIn: 'root'
