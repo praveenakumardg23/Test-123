@@ -7,12 +7,14 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginPaymentReceiptComponent } from './patron-detail/login-payment-receipt/login-payment-receipt.component';
 
 const routes: Routes = [
+  {
+    path: '', loadChildren: () => import('./tabs/tabs.module').then(x => x.TabsPageModule)
+  },
   { 
-    path: '',
+    path: 'login',
     component: RegisterPhaseComponent,
     canActivateChild:[AuthGuard],
     children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', loadChildren: () => import('./login/login.module').then(x => x.LoginPageModule)},
       { path: 'register', loadChildren: () => import('./register/register.module').then(x => x.RegisterPageModule)},
       { path: 'security-questions', loadChildren: () => import('./security-questions/security-questions.module').then(x => x.SecurityQuestionsPageModule)},
