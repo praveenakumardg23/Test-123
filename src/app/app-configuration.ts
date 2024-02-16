@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 
 // Testing environment - Rashmika
 export class AppConfiguration {
-    public environment = process.env.BUILD_ENV || 'Dev';  // Local , Dev , Beta1, Beta2 , Demo , Alpha3 , alpha5, Prod, Build_ENVIRONMENT_VALUE
+    public environment = import.meta.env.NG_APP_BUILD_ENV || 'Dev';  // Local , Dev , Beta1, Beta2 , Demo , Alpha3 , alpha5, Prod, Build_ENVIRONMENT_VALUE
     apiBaseUrl: string;
     defaultTokenValue: string;
     tokenValue: string;
